@@ -1,0 +1,59 @@
+import { PanelStart } from "./panel";
+import { Pane } from "./uiElements";
+
+class Canvas {
+  currentDisplayedPanelId: string;
+  panelIds: string[];
+
+  constructor() {
+    this.currentDisplayedPanelId = "";
+    this.panelIds = [];
+  }
+
+  make() {
+    //this.switchToPanel(this.panelIds[0]);
+    let p = new PanelStart(this);
+    p.add();
+    this.panelIds.push(p.id);
+    console.log("canvas made");
+    this.switchToPanel(this.panelIds[0]);
+  }
+
+  nextPage() {
+    console.log("clicked next");
+    let ind = this.panelIds.indexOf(this.currentDisplayedPanelId)
+    console.log(ind);
+    if (ind < this.panelIds.length - 1) {
+      ind = ind + 1;
+    }
+    this.switchToPanel(this.panelIds[ind]);
+  }
+
+  previousPage() {
+    console.log("clicked prev");
+    let ind = this.panelIds.indexOf(this.currentDisplayedPanelId)
+    console.log(ind);
+    if (ind > 0) {
+      ind = ind - 1;
+    }
+    this.switchToPanel(this.panelIds[ind]);
+  }
+
+  switchToPanel(id: string): void {
+    if (this.currentDisplayedPanelId) {
+      let el = document.getElementById(this.currentDisplayedPanelId);
+      if (el) {
+        el.style.display = "none";
+      }
+    }
+    let el = document.getElementById(id);
+    if (el) {
+      el.style.display = "flex";
+    }
+    this.currentDisplayedPanelId = id;
+  }
+
+  
+}
+
+export { Canvas };
