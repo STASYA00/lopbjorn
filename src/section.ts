@@ -4,19 +4,20 @@ import {Pane, PanelButton} from "./uiElements"
 enum SECTIONS {TECH, LINGUISTICS, SPORT, BOOKS, OTHER}
 enum ARTICLES {GCPRESOURCES}
 
-class Section{
-    id: string;
+class Section extends Pane{
     name: string;
-    constructor(id:string, name:string){
-        this.id = id;
-        this.name = name;
-    }
-    run(){
-        console.log("section " + this.name);
-    }
+    constructor(
+        parentId: string,
+        classname: string | null = null,
+        name: string
+  ) {
+    super(parentId, classname, null);
+    this.name = name;
+  }
+
 }
 
-class Article extends Pane{
+class Article extends Section{
 
 }
 

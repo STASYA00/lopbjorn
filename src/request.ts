@@ -8,9 +8,11 @@ class ServerRequest {
     // https://get-uuklxqul3q-uc.a.run.app/?name=gcp_resources
     method: string;
     params: any;
+    url: string;
     constructor(params: any) {
         this.params = params;
         this.method = "POST";
+        this.url = constants.SERVERURL;
     }
 
     call(): any {
@@ -18,7 +20,7 @@ class ServerRequest {
     }
 
     getBaseUrl(): string {
-        return constants.SERVERURL;
+        return this.url;
     }
 
     getUrl(): string {
@@ -65,4 +67,6 @@ class ServerRequest {
         });
     }
 }
+
+
 export {ServerRequest};

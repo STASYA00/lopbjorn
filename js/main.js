@@ -26,8 +26,13 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
         execute: function () {
             exports_1("constants", constants = {
                 ROOT_CLASSNAME: "root",
+                ARTICLE_CLASSNAME: "article",
+                SECTION_CLASSNAME: "section",
                 SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/",
-                PANEL_ID_START: uuid.v4()
+                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
+                RESPONSE_PARSE_KEY: "content",
+                PANEL_ID_START: uuid.v4(),
+                CACHE_KEY_STRUCTURE: "Blog_Structure"
             });
         }
     };
@@ -50,12 +55,13 @@ System.register("request", ["constants"], function (exports_2, context_2) {
                 function ServerRequest(params) {
                     this.params = params;
                     this.method = "POST";
+                    this.url = constants_1.constants.SERVERURL;
                 }
                 ServerRequest.prototype.call = function () {
                     return this.request();
                 };
                 ServerRequest.prototype.getBaseUrl = function () {
-                    return constants_1.constants.SERVERURL;
+                    return this.url;
                 };
                 ServerRequest.prototype.getUrl = function () {
                     var query = this.getQuery();
@@ -106,17 +112,99 @@ System.register("request", ["constants"], function (exports_2, context_2) {
         }
     };
 });
-System.register("article", ["marked", "request"], function (exports_3, context_3) {
+System.register("structure", ["constants", "request"], function (exports_3, context_3) {
     "use strict";
-    var marked_1, request_1, ArticleRenderer;
+    var constants_2, request_1, test_structure, BlogStructure, SectionStructure;
     var __moduleName = context_3 && context_3.id;
+    return {
+        setters: [
+            function (constants_2_1) {
+                constants_2 = constants_2_1;
+            },
+            function (request_1_1) {
+                request_1 = request_1_1;
+            }
+        ],
+        execute: function () {
+            test_structure = {
+                "content": {
+                    "Tech": ["Article1", "Article2"],
+                    "Other": [],
+                    "Languages": ["dasf", "gDS", "sf", "etre", "sef"]
+                }
+            };
+            BlogStructure = /** @class */ (function () {
+                function BlogStructure() {
+                    this.sections = [];
+                }
+                BlogStructure.prototype.getLength = function () {
+                    return this.sections.length;
+                };
+                BlogStructure.prototype.getSections = function () {
+                    var _sections = this.sections.map(function (x) { return x; });
+                    return _sections;
+                };
+                BlogStructure.prototype.load = function () {
+                    var s = new request_1.ServerRequest("");
+                    s.url = constants_2.constants.STRUCTURE_URL;
+                    return s.call().then(function (r) {
+                        var res = r[constants_2.constants.RESPONSE_PARSE_KEY];
+                        // make sections
+                        localStorage.setItem(constants_2.constants.CACHE_KEY_STRUCTURE, res);
+                        return res;
+                    });
+                };
+                BlogStructure.prototype.load_test = function () {
+                    var res = test_structure["content"];
+                    var _loop_1 = function (key) {
+                        var s = new SectionStructure(key);
+                        this_1.sections.push(s);
+                        res[key].forEach(function (val) {
+                            s.add(val);
+                        });
+                    };
+                    var this_1 = this;
+                    for (var key in res) {
+                        _loop_1(key);
+                    }
+                };
+                return BlogStructure;
+            }());
+            exports_3("BlogStructure", BlogStructure);
+            SectionStructure = /** @class */ (function () {
+                function SectionStructure(name) {
+                    this.name = name;
+                    this.content = [];
+                }
+                SectionStructure.prototype.add = function (article) {
+                    this.content.push(article);
+                };
+                SectionStructure.prototype.getContent = function () {
+                    var _content = this.content.map(function (x) { return x; });
+                    return _content;
+                };
+                SectionStructure.prototype.getLength = function () {
+                    return this.content.length;
+                };
+                return SectionStructure;
+            }());
+        }
+    };
+});
+System.register("articleRenderer", ["marked", "constants", "request"], function (exports_4, context_4) {
+    "use strict";
+    var marked_1, constants_3, request_2, ArticleRenderer;
+    var __moduleName = context_4 && context_4.id;
     return {
         setters: [
             function (marked_1_1) {
                 marked_1 = marked_1_1;
             },
-            function (request_1_1) {
-                request_1 = request_1_1;
+            function (constants_3_1) {
+                constants_3 = constants_3_1;
+            },
+            function (request_2_1) {
+                request_2 = request_2_1;
             }
         ],
         execute: function () {
@@ -125,31 +213,29 @@ System.register("article", ["marked", "request"], function (exports_3, context_3
                 }
                 ArticleRenderer.make = function (content) {
                     if (localStorage.getItem(content) != null) {
-                        console.log("cached");
                         return new Promise(function (res) { return res(localStorage.getItem(content)); });
                     }
-                    var s = new request_1.ServerRequest(content);
+                    var s = new request_2.ServerRequest(content);
                     return s.call().then(function (r) {
-                        var res = marked_1.marked.parse(r["content"]);
+                        var res = marked_1.marked.parse(r[constants_3.constants.RESPONSE_PARSE_KEY]);
                         localStorage.setItem(content, res);
-                        console.log("set local storage element");
                         return res;
                     });
                 };
                 return ArticleRenderer;
             }());
-            exports_3("ArticleRenderer", ArticleRenderer);
+            exports_4("ArticleRenderer", ArticleRenderer);
         }
     };
 });
-System.register("panel", ["constants", "uiElements", "section", "article"], function (exports_4, context_4) {
+System.register("panel", ["constants", "uiElements", "section", "structure"], function (exports_5, context_5) {
     "use strict";
-    var constants_2, uiElements_1, section_1, article_1, PanelStart;
-    var __moduleName = context_4 && context_4.id;
+    var constants_4, uiElements_1, section_1, structure_1, PanelStart;
+    var __moduleName = context_5 && context_5.id;
     return {
         setters: [
-            function (constants_2_1) {
-                constants_2 = constants_2_1;
+            function (constants_4_1) {
+                constants_4 = constants_4_1;
             },
             function (uiElements_1_1) {
                 uiElements_1 = uiElements_1_1;
@@ -157,8 +243,8 @@ System.register("panel", ["constants", "uiElements", "section", "article"], func
             function (section_1_1) {
                 section_1 = section_1_1;
             },
-            function (article_1_1) {
-                article_1 = article_1_1;
+            function (structure_1_1) {
+                structure_1 = structure_1_1;
             }
         ],
         execute: function () {
@@ -166,27 +252,38 @@ System.register("panel", ["constants", "uiElements", "section", "article"], func
                 __extends(PanelStart, _super);
                 function PanelStart(parent) {
                     var _this = this;
-                    var id = constants_2.constants.PANEL_ID_START;
+                    var id = constants_4.constants.PANEL_ID_START;
                     _this = _super.call(this, id, parent) || this;
                     return _this;
                 }
                 PanelStart.prototype.getElements = function () {
-                    var _this = this;
-                    return article_1.ArticleRenderer.make("gcp_resources").then(function (r) { return [
-                        new section_1.Article(_this.id, "article"),
-                        new uiElements_1.PanelText(r, "articletext")
-                    ]; });
+                    // return ArticleRenderer.make("gcp_resources").then(r => [
+                    //   new Article(this.id, "article"),
+                    //   new PanelText(r, "articletext")
+                    // ]);
+                    var structure = new structure_1.BlogStructure();
+                    structure.load_test();
+                    var _sections = structure.getSections();
+                    var _elements = [];
+                    for (var s = 0; s < _sections.length; s++) {
+                        var _articles = _sections[s].getContent();
+                        _elements.push(new section_1.Section(this.id, constants_4.constants.SECTION_CLASSNAME, _sections[s].name));
+                        for (var a = 0; a < _articles.length; a++) {
+                            _elements.push(new section_1.Article(this.id, constants_4.constants.ARTICLE_CLASSNAME, _articles[a]));
+                        }
+                    }
+                    return new Promise(function (res) { return res(_elements); });
                 };
                 return PanelStart;
             }(uiElements_1.Panel));
-            exports_4("PanelStart", PanelStart);
+            exports_5("PanelStart", PanelStart);
         }
     };
 });
-System.register("canvas", ["panel"], function (exports_5, context_5) {
+System.register("canvas", ["panel"], function (exports_6, context_6) {
     "use strict";
     var panel_1, Canvas;
-    var __moduleName = context_5 && context_5.id;
+    var __moduleName = context_6 && context_6.id;
     return {
         setters: [
             function (panel_1_1) {
@@ -201,6 +298,7 @@ System.register("canvas", ["panel"], function (exports_5, context_5) {
                 }
                 Canvas.prototype.make = function () {
                     //this.switchToPanel(this.panelIds[0]);
+                    console.log("new canvas!");
                     var p = new panel_1.PanelStart(this);
                     p.add();
                     this.panelIds.push(p.id);
@@ -234,27 +332,27 @@ System.register("canvas", ["panel"], function (exports_5, context_5) {
                     }
                     var el = document.getElementById(id);
                     if (el) {
-                        el.style.display = "flex";
+                        el.style.display = "grid"; //flex
                     }
                     this.currentDisplayedPanelId = id;
                 };
                 return Canvas;
             }());
-            exports_5("Canvas", Canvas);
+            exports_6("Canvas", Canvas);
         }
     };
 });
-System.register("uiElements", ["uuid", "constants"], function (exports_6, context_6) {
+System.register("uiElements", ["uuid", "constants"], function (exports_7, context_7) {
     "use strict";
-    var uuid, constants_3, PanelElement, PanelText, Pane, PanelButton, Panel, PanelImage;
-    var __moduleName = context_6 && context_6.id;
+    var uuid, constants_5, PanelElement, PanelText, Pane, PanelButton, Panel, PanelImage;
+    var __moduleName = context_7 && context_7.id;
     return {
         setters: [
             function (uuid_2) {
                 uuid = uuid_2;
             },
-            function (constants_3_1) {
-                constants_3 = constants_3_1;
+            function (constants_5_1) {
+                constants_5 = constants_5_1;
             }
         ],
         execute: function () {
@@ -296,7 +394,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_6, contex
                 PanelElement.prototype.postprocess = function (el) { };
                 return PanelElement;
             }());
-            exports_6("PanelElement", PanelElement);
+            exports_7("PanelElement", PanelElement);
             PanelText = /** @class */ (function (_super) {
                 __extends(PanelText, _super);
                 function PanelText(text, classname, id) {
@@ -315,7 +413,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_6, contex
                 };
                 return PanelText;
             }(PanelElement));
-            exports_6("PanelText", PanelText);
+            exports_7("PanelText", PanelText);
             Pane = /** @class */ (function (_super) {
                 __extends(Pane, _super);
                 function Pane(parentId, classname, parent) {
@@ -352,7 +450,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_6, contex
                 };
                 return Pane;
             }(PanelElement));
-            exports_6("Pane", Pane);
+            exports_7("Pane", Pane);
             PanelButton = /** @class */ (function (_super) {
                 __extends(PanelButton, _super);
                 function PanelButton(label, onclickFn, classname, css, disabled) {
@@ -380,14 +478,14 @@ System.register("uiElements", ["uuid", "constants"], function (exports_6, contex
                 };
                 return PanelButton;
             }(PanelElement));
-            exports_6("PanelButton", PanelButton);
+            exports_7("PanelButton", PanelButton);
             Panel = /** @class */ (function () {
                 function Panel(id, parent) {
                     if (id === void 0) { id = null; }
                     this.id = id ? id : uuid.v4();
                     this.classname = "panel";
                     this.parent = parent;
-                    this.parentId = constants_3.constants.ROOT_CLASSNAME;
+                    this.parentId = constants_5.constants.ROOT_CLASSNAME;
                 }
                 Panel.prototype.getElements = function () {
                     return new Promise(function (res) { return res([]); });
@@ -415,7 +513,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_6, contex
                 Panel.prototype.postActions = function () { };
                 return Panel;
             }());
-            exports_6("Panel", Panel);
+            exports_7("Panel", Panel);
             PanelImage = /** @class */ (function (_super) {
                 __extends(PanelImage, _super);
                 function PanelImage(id, src, css, classname, onchangeFn) {
@@ -437,14 +535,14 @@ System.register("uiElements", ["uuid", "constants"], function (exports_6, contex
                 };
                 return PanelImage;
             }(PanelElement));
-            exports_6("PanelImage", PanelImage);
+            exports_7("PanelImage", PanelImage);
         }
     };
 });
-System.register("section", ["uiElements"], function (exports_7, context_7) {
+System.register("section", ["uiElements"], function (exports_8, context_8) {
     "use strict";
     var uiElements_2, SECTIONS, ARTICLES, Section, Article;
-    var __moduleName = context_7 && context_7.id;
+    var __moduleName = context_8 && context_8.id;
     return {
         setters: [
             function (uiElements_2_1) {
@@ -462,47 +560,41 @@ System.register("section", ["uiElements"], function (exports_7, context_7) {
             (function (ARTICLES) {
                 ARTICLES[ARTICLES["GCPRESOURCES"] = 0] = "GCPRESOURCES";
             })(ARTICLES || (ARTICLES = {}));
-            Section = /** @class */ (function () {
-                function Section(id, name) {
-                    this.id = id;
-                    this.name = name;
+            Section = /** @class */ (function (_super) {
+                __extends(Section, _super);
+                function Section(parentId, classname, name) {
+                    if (classname === void 0) { classname = null; }
+                    var _this = _super.call(this, parentId, classname, null) || this;
+                    _this.name = name;
+                    return _this;
                 }
-                Section.prototype.run = function () {
-                    console.log("section " + this.name);
-                };
                 return Section;
-            }());
-            exports_7("Section", Section);
+            }(uiElements_2.Pane));
+            exports_8("Section", Section);
             Article = /** @class */ (function (_super) {
                 __extends(Article, _super);
                 function Article() {
                     return _super !== null && _super.apply(this, arguments) || this;
                 }
                 return Article;
-            }(uiElements_2.Pane));
-            exports_7("Article", Article);
+            }(Section));
+            exports_8("Article", Article);
         }
     };
 });
-System.register("main", ["section", "canvas"], function (exports_8, context_8) {
+System.register("main", ["canvas"], function (exports_9, context_9) {
     "use strict";
-    var section_2, canvas_1, s, c;
-    var __moduleName = context_8 && context_8.id;
+    var canvas_1, c;
+    var __moduleName = context_9 && context_9.id;
     return {
         setters: [
-            function (section_2_1) {
-                section_2 = section_2_1;
-            },
             function (canvas_1_1) {
                 canvas_1 = canvas_1_1;
             }
         ],
         execute: function () {
-            console.log("Hey");
-            s = new section_2.Section("123", "newsection");
             c = new canvas_1.Canvas();
             c.make();
-            s.run();
         }
     };
 });

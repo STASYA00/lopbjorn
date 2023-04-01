@@ -12,6 +12,7 @@ class Canvas {
 
   make() {
     //this.switchToPanel(this.panelIds[0]);
+    console.log("new canvas!");
     let p = new PanelStart(this);
     p.add();
     this.panelIds.push(p.id);
@@ -48,7 +49,7 @@ class Canvas {
     }
     let el = document.getElementById(id);
     if (el) {
-      el.style.display = "flex";
+      el.style.display = "grid"; //flex
     }
     this.currentDisplayedPanelId = id;
   }
