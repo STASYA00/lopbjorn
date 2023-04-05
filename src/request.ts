@@ -31,7 +31,12 @@ class ServerRequest {
         return `${this.getBaseUrl()}?${query}`;
     }
     getQuery(): any {
-        return `name=${this.params}`;
+        let s = "";
+        for (let key in this.params){
+            s += `${key}=${this.params[key]}\&`;
+        }
+        console.log(`query: ${s}`);
+        return s;
     }
 
     request(callback: any = null): Promise<Response> {

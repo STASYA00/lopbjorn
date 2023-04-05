@@ -6,13 +6,19 @@ enum ARTICLES {GCPRESOURCES}
 
 class Section extends Pane{
     name: string;
+    onChangefn: any;
     constructor(
         parentId: string,
         classname: string | null = null,
-        name: string
+        name: string,
+        onChangefn: any = ()=>{}
   ) {
     super(parentId, classname, null);
     this.name = name;
+    this.onChangefn = onChangefn;
+  }
+  postprocess(el: HTMLElement): void {
+    el.onclick = this.onChangefn;
   }
 
 }

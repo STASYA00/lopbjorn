@@ -1,4 +1,4 @@
-import { PanelStart } from "./panel";
+import { PanelArticle, PanelStart } from "./panel";
 import { Pane } from "./uiElements";
 
 class Canvas {
@@ -13,9 +13,13 @@ class Canvas {
   make() {
     //this.switchToPanel(this.panelIds[0]);
     console.log("new canvas!");
+    
     let p = new PanelStart(this);
+    let p1 = new PanelArticle(this, "Tech", "Parsing_ifc_file");
     p.add();
+    p1.add();
     this.panelIds.push(p.id);
+    this.panelIds.push(p1.id);
     console.log("canvas made");
     this.switchToPanel(this.panelIds[0]);
   }

@@ -10,7 +10,10 @@ export const constants = {
     RESPONSE_PARSE_KEY: "content" as string,
     
     PANEL_ID_START: uuid.v4(),
+    PANEL_ID_ARTICLE: uuid.v4(),
 
     CACHE_KEY_STRUCTURE: "Blog_Structure" as string,
+
+    LOCAL_STORAGE: false as boolean,
 
 }

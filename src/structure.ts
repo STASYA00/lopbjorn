@@ -3,7 +3,7 @@ import { ServerRequest } from "./request";
 
 const test_structure = {
     "content": {
-        "Tech": ["Article1", "Article2"],
+        "Tech": ["Simple_Website_with_Typescript", "Simple_Website_with_Typescript"],
         "Other": [],
         "Languages": ["dasf", "gDS", "sf", "etre", "sef"]
 

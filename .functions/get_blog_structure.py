@@ -22,7 +22,7 @@ def get_structure(request):
     DEFAULT - name of the default article that we get from storage
     KEY - key to parse the request
 
-    From terminal: curl -m 70 -X POST https://get-uuklxqul3q-uc.a.run.app -H "Content-Type: application/json" -d '{"name": "gcp_resources"}'
+    From terminal: curl -m 70 -X POST https://get-uuklxqul3q-uc.a.run.app -H "Content-Type: application/json" -d 
 
     Cloud function requires following IAM roles:
     - Storage Object Viewer

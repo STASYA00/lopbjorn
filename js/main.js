@@ -32,7 +32,9 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
                 PANEL_ID_START: uuid.v4(),
-                CACHE_KEY_STRUCTURE: "Blog_Structure"
+                PANEL_ID_ARTICLE: uuid.v4(),
+                CACHE_KEY_STRUCTURE: "Blog_Structure",
+                LOCAL_STORAGE: false
             });
         }
     };
@@ -71,7 +73,12 @@ System.register("request", ["constants"], function (exports_2, context_2) {
                     return "".concat(this.getBaseUrl(), "?").concat(query);
                 };
                 ServerRequest.prototype.getQuery = function () {
-                    return "name=".concat(this.params);
+                    var s = "";
+                    for (var key in this.params) {
+                        s += "".concat(key, "=").concat(this.params[key], "&");
+                    }
+                    console.log("query: ".concat(s));
+                    return s;
                 };
                 ServerRequest.prototype.request = function (callback) {
                     var _this = this;
@@ -128,7 +135,7 @@ System.register("structure", ["constants", "request"], function (exports_3, cont
         execute: function () {
             test_structure = {
                 "content": {
-                    "Tech": ["Article1", "Article2"],
+                    "Tech": ["Simple_Website_with_Typescript", "Simple_Website_with_Typescript"],
                     "Other": [],
                     "Languages": ["dasf", "gDS", "sf", "etre", "sef"]
                 }
@@ -211,7 +218,7 @@ System.register("articleRenderer", ["marked", "constants", "request"], function 
             ArticleRenderer = /** @class */ (function () {
                 function ArticleRenderer() {
                 }
-                ArticleRenderer.make = function (content) {
+                ArticleRenderer._make = function (content) {
                     if (localStorage.getItem(content) != null) {
                         return new Promise(function (res) { return res(localStorage.getItem(content)); });
                     }
@@ -222,15 +229,31 @@ System.register("articleRenderer", ["marked", "constants", "request"], function 
                         return res;
                     });
                 };
+                ArticleRenderer.makeArticleInterface = function (section, name) {
+                    return { "section": section, "name": name };
+                };
+                ArticleRenderer.make = function (section, name) {
+                    if (constants_3.constants.LOCAL_STORAGE) {
+                        if (localStorage.getItem(name) != null) {
+                            return new Promise(function (res) { return res(localStorage.getItem(name)); });
+                        }
+                    }
+                    var s = new request_2.ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
+                    return s.call().then(function (r) {
+                        var res = marked_1.marked.parse(r[constants_3.constants.RESPONSE_PARSE_KEY]);
+                        localStorage.setItem(name, res);
+                        return res;
+                    });
+                };
                 return ArticleRenderer;
             }());
             exports_4("ArticleRenderer", ArticleRenderer);
         }
     };
 });
-System.register("panel", ["constants", "uiElements", "section", "structure"], function (exports_5, context_5) {
+System.register("panel", ["constants", "uiElements", "section", "structure", "articleRenderer"], function (exports_5, context_5) {
     "use strict";
-    var constants_4, uiElements_1, section_1, structure_1, PanelStart;
+    var constants_4, uiElements_1, section_1, structure_1, articleRenderer_1, PanelStart, PanelArticle;
     var __moduleName = context_5 && context_5.id;
     return {
         setters: [
@@ -245,18 +268,19 @@ System.register("panel", ["constants", "uiElements", "section", "structure"], fu
             },
             function (structure_1_1) {
                 structure_1 = structure_1_1;
+            },
+            function (articleRenderer_1_1) {
+                articleRenderer_1 = articleRenderer_1_1;
             }
         ],
         execute: function () {
             PanelStart = /** @class */ (function (_super) {
                 __extends(PanelStart, _super);
                 function PanelStart(parent) {
-                    var _this = this;
-                    var id = constants_4.constants.PANEL_ID_START;
-                    _this = _super.call(this, id, parent) || this;
-                    return _this;
+                    return _super.call(this, constants_4.constants.PANEL_ID_START, parent) || this;
                 }
                 PanelStart.prototype.getElements = function () {
+                    var _this = this;
                     // return ArticleRenderer.make("gcp_resources").then(r => [
                     //   new Article(this.id, "article"),
                     //   new PanelText(r, "articletext")
@@ -265,18 +289,48 @@ System.register("panel", ["constants", "uiElements", "section", "structure"], fu
                     structure.load_test();
                     var _sections = structure.getSections();
                     var _elements = [];
-                    for (var s = 0; s < _sections.length; s++) {
+                    var _loop_2 = function (s) {
                         var _articles = _sections[s].getContent();
-                        _elements.push(new section_1.Section(this.id, constants_4.constants.SECTION_CLASSNAME, _sections[s].name));
+                        _elements.push(new section_1.Section(this_2.id, constants_4.constants.SECTION_CLASSNAME, _sections[s].name, function () {
+                            console.log("Section", _sections[s].name, _sections[s].getContent());
+                            _this.parent.switchToPanel(constants_4.constants.PANEL_ID_ARTICLE);
+                        }));
+                        var _loop_3 = function (a) {
+                            _elements.push(new section_1.Article(this_2.id, constants_4.constants.ARTICLE_CLASSNAME, _articles[a], function () {
+                                _this.parent.switchToPanel(constants_4.constants.PANEL_ID_ARTICLE);
+                                console.log("Article", _articles[a]);
+                            }));
+                        };
                         for (var a = 0; a < _articles.length; a++) {
-                            _elements.push(new section_1.Article(this.id, constants_4.constants.ARTICLE_CLASSNAME, _articles[a]));
+                            _loop_3(a);
                         }
+                    };
+                    var this_2 = this;
+                    for (var s = 0; s < _sections.length; s++) {
+                        _loop_2(s);
                     }
                     return new Promise(function (res) { return res(_elements); });
                 };
                 return PanelStart;
             }(uiElements_1.Panel));
             exports_5("PanelStart", PanelStart);
+            PanelArticle = /** @class */ (function (_super) {
+                __extends(PanelArticle, _super);
+                function PanelArticle(parent, section, article) {
+                    var _this = _super.call(this, constants_4.constants.PANEL_ID_ARTICLE, parent) || this;
+                    _this.section = section;
+                    _this.article = article;
+                    return _this;
+                }
+                PanelArticle.prototype.getElements = function () {
+                    console.log("Getting elements", this.section, this.article);
+                    return articleRenderer_1.ArticleRenderer.make(this.section, this.article).then(function (r) { return [
+                        new uiElements_1.PanelText(r, "articletext")
+                    ]; });
+                };
+                return PanelArticle;
+            }(uiElements_1.Panel));
+            exports_5("PanelArticle", PanelArticle);
         }
     };
 });
@@ -300,8 +354,11 @@ System.register("canvas", ["panel"], function (exports_6, context_6) {
                     //this.switchToPanel(this.panelIds[0]);
                     console.log("new canvas!");
                     var p = new panel_1.PanelStart(this);
+                    var p1 = new panel_1.PanelArticle(this, "Tech", "Parsing_ifc_file");
                     p.add();
+                    p1.add();
                     this.panelIds.push(p.id);
+                    this.panelIds.push(p1.id);
                     console.log("canvas made");
                     this.switchToPanel(this.panelIds[0]);
                 };
@@ -562,12 +619,17 @@ System.register("section", ["uiElements"], function (exports_8, context_8) {
             })(ARTICLES || (ARTICLES = {}));
             Section = /** @class */ (function (_super) {
                 __extends(Section, _super);
-                function Section(parentId, classname, name) {
+                function Section(parentId, classname, name, onChangefn) {
                     if (classname === void 0) { classname = null; }
+                    if (onChangefn === void 0) { onChangefn = function () { }; }
                     var _this = _super.call(this, parentId, classname, null) || this;
                     _this.name = name;
+                    _this.onChangefn = onChangefn;
                     return _this;
                 }
+                Section.prototype.postprocess = function (el) {
+                    el.onclick = this.onChangefn;
+                };
                 return Section;
             }(uiElements_2.Pane));
             exports_8("Section", Section);

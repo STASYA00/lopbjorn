@@ -9,8 +9,7 @@ import { ArticleRenderer } from "./articleRenderer";
 
 class PanelStart extends Panel {
     constructor(parent: Canvas) {
-      let id = constants.PANEL_ID_START;
-      super(id, parent);
+      super(constants.PANEL_ID_START, parent);
     }
     getElements(): Promise<PanelElement[]> {
       
@@ -24,9 +23,24 @@ class PanelStart extends Panel {
       let _elements:PanelElement[] = [];
       for (let s=0; s< _sections.length; s++){
         let _articles = _sections[s].getContent();
-        _elements.push(new Section(this.id, constants.SECTION_CLASSNAME, _sections[s].name));
+        _elements.push(new Section(this.id, 
+                                   constants.SECTION_CLASSNAME, 
+                                   _sections[s].name,
+
+                                   ()=>{console.log("Section", _sections[s].name, _sections[s].getContent());
+                                  this.parent.switchToPanel(constants.PANEL_ID_ARTICLE);
+                                  }
+                                   
+                                   ));
         for (let a=0; a< _articles.length; a++){
-          _elements.push(new Article(this.id, constants.ARTICLE_CLASSNAME, _articles[a]));
+          _elements.push(new Article(this.id, constants.ARTICLE_CLASSNAME, _articles[a],
+
+            ()=>{
+              this.parent.switchToPanel(constants.PANEL_ID_ARTICLE);
+              console.log("Article", _articles[a])
+            }
+
+            ));
         }
       }
       return new Promise((res)=>res(
@@ -34,4 +48,23 @@ class PanelStart extends Panel {
       ));
     }
   }
-  export {PanelStart};
+
+class PanelArticle extends Panel{
+  section: string;
+  article: string;
+  constructor(parent: Canvas, section:string, article:string) {
+    super(constants.PANEL_ID_ARTICLE, parent);
+    this.section = section;
+    this.article = article;
+  }
+
+  getElements(): Promise<PanelElement[]> {
+    console.log("Getting elements", this.section, this.article);
+    return ArticleRenderer.make(this.section, this.article).then(r => [
+      new PanelText(r, "articletext")
+    ]);
+    
+  }
+}
+
+  export {PanelStart, PanelArticle};
