@@ -29,8 +29,9 @@ class PageManager{
         if (result){
             let section = "Tech";
             article = "Parsing_ifc_file";
-            urlManager.redirectURL();
-            urlManager.rewriteURL(article);
+
+            console.log(urlManager.rewriteURL(article));
+            console.log(`new url ${urlManager.getCurrentURL()}`);
             // redirect to article page - no need
             //redirectURL(`${constants.HOME_URL}`);
             

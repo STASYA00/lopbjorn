@@ -422,8 +422,8 @@ System.register("404/pageManager", ["constants", "urlManager", "panel"], functio
                     if (result) {
                         var section = "Tech";
                         article = "Parsing_ifc_file";
-                        urlManager_1.urlManager.redirectURL();
-                        urlManager_1.urlManager.rewriteURL(article);
+                        console.log(urlManager_1.urlManager.rewriteURL(article));
+                        console.log("new url ".concat(urlManager_1.urlManager.getCurrentURL()));
                         // redirect to article page - no need
                         //redirectURL(`${constants.HOME_URL}`);
                         return new panel_1.PanelArticle(canvas, section, article);
