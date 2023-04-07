@@ -353,19 +353,10 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
         }
     };
 });
-System.register("utils", ["constants"], function (exports_6, context_6) {
+System.register("urlManager", ["constants"], function (exports_6, context_6) {
     "use strict";
-    var constants_5;
+    var constants_5, urlManager;
     var __moduleName = context_6 && context_6.id;
-    function getCurrentURL() {
-        return window.location.href;
-    }
-    exports_6("getCurrentURL", getCurrentURL);
-    function redirectURL(url) {
-        if (url === void 0) { url = constants_5.constants.HOME_URL; }
-        return window.location.replace(url);
-    }
-    exports_6("redirectURL", redirectURL);
     return {
         setters: [
             function (constants_5_1) {
@@ -373,20 +364,38 @@ System.register("utils", ["constants"], function (exports_6, context_6) {
             }
         ],
         execute: function () {
+            urlManager = /** @class */ (function () {
+                function urlManager() {
+                }
+                urlManager.getCurrentURL = function () {
+                    return window.location.href;
+                };
+                urlManager.redirectURL = function (url) {
+                    if (url === void 0) { url = constants_5.constants.HOME_URL; }
+                    return window.location.replace(url);
+                };
+                urlManager.rewriteURL = function (endpoint) {
+                    if (endpoint === void 0) { endpoint = ""; }
+                    history.pushState({ "name": "lopbjorn" }, "", endpoint);
+                    return "".concat(constants_5.constants.HOME_URL, "/").concat(endpoint) == this.getCurrentURL();
+                };
+                return urlManager;
+            }());
+            exports_6("urlManager", urlManager);
         }
     };
 });
-System.register("404/pageManager", ["constants", "utils", "panel"], function (exports_7, context_7) {
+System.register("404/pageManager", ["constants", "urlManager", "panel"], function (exports_7, context_7) {
     "use strict";
-    var constants_6, utils_1, panel_1, PageManager;
+    var constants_6, urlManager_1, panel_1, PageManager;
     var __moduleName = context_7 && context_7.id;
     return {
         setters: [
             function (constants_6_1) {
                 constants_6 = constants_6_1;
             },
-            function (utils_1_1) {
-                utils_1 = utils_1_1;
+            function (urlManager_1_1) {
+                urlManager_1 = urlManager_1_1;
             },
             function (panel_1_1) {
                 panel_1 = panel_1_1;
@@ -397,24 +406,26 @@ System.register("404/pageManager", ["constants", "utils", "panel"], function (ex
                 function PageManager() {
                 }
                 PageManager.prototype.getArticle = function () {
-                    var url = utils_1.getCurrentURL();
+                    var url = urlManager_1.urlManager.getCurrentURL();
                     url = url.substring(0, url.length - 1);
                     return url.substring(url.lastIndexOf("/"), url.length);
                 };
                 PageManager.prototype.start = function (canvas) {
-                    console.log("get current ".concat(utils_1.getCurrentURL()));
+                    console.log("get current ".concat(urlManager_1.urlManager.getCurrentURL()));
                     console.log("home ".concat(constants_6.constants.HOME_URL));
-                    if (utils_1.getCurrentURL() == constants_6.constants.HOME_URL) {
+                    if (urlManager_1.urlManager.getCurrentURL() == constants_6.constants.HOME_URL) {
                         return new panel_1.PanelStart(canvas);
                     }
                     var article = this.getArticle();
                     // check that article is on GCP
                     var result = true;
                     if (result) {
-                        // redirect to article page - no need
-                        //redirectURL(`${constants.HOME_URL}`);
                         var section = "Tech";
                         article = "Parsing_ifc_file";
+                        urlManager_1.urlManager.redirectURL();
+                        urlManager_1.urlManager.rewriteURL(article);
+                        // redirect to article page - no need
+                        //redirectURL(`${constants.HOME_URL}`);
                         return new panel_1.PanelArticle(canvas, section, article);
                     }
                     return new panel_1.PanelNotFound(canvas);
