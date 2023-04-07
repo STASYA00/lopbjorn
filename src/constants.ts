@@ -1,6 +1,8 @@
 import * as uuid from "uuid";
 
 export const constants = {
+    HOME_URL: "https://stasya00.github.io/lopbjorn" as string,
+    ARTICLE_HTML: "html/article.html" as string,
     ROOT_CLASSNAME: "root" as string,
     ARTICLE_CLASSNAME: "article" as string,
     SECTION_CLASSNAME: "section" as string,
@@ -11,6 +13,7 @@ export const constants = {
     
     PANEL_ID_START: uuid.v4(),
     PANEL_ID_ARTICLE: uuid.v4(),
+    PANEL_ID_NOTFOUND: uuid.v4(),
 
     CACHE_KEY_STRUCTURE: "Blog_Structure" as string,
 

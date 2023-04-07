@@ -31,9 +31,7 @@ class ArticleRenderer{
             if (localStorage.getItem(name)!=null){
                 return new Promise((res)=>res(localStorage.getItem(name)))
             }
-
         }
-        
         
         let s = new ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
         return s.call().then( r => {

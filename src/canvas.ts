@@ -1,25 +1,28 @@
 import { PanelArticle, PanelStart } from "./panel";
+import { PageManager } from "./404/errorPageManager";
 import { Pane } from "./uiElements";
 
 class Canvas {
   currentDisplayedPanelId: string;
   panelIds: string[];
+  manager: PageManager;
 
   constructor() {
     this.currentDisplayedPanelId = "";
     this.panelIds = [];
+    this.manager = new PageManager();
   }
 
   make() {
     //this.switchToPanel(this.panelIds[0]);
     console.log("new canvas!");
-    
-    let p = new PanelStart(this);
-    let p1 = new PanelArticle(this, "Tech", "Parsing_ifc_file");
+    let p = this.manager.start(this);
+    // let p = new PanelStart(this);
+    // let p1 = new PanelArticle(this, "Tech", "Parsing_ifc_file");
     p.add();
-    p1.add();
+    // p1.add();
     this.panelIds.push(p.id);
-    this.panelIds.push(p1.id);
+    // this.panelIds.push(p1.id);
     console.log("canvas made");
     this.switchToPanel(this.panelIds[0]);
   }

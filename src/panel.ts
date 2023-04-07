@@ -68,4 +68,20 @@ class PanelArticle extends Panel{
   }
 }
 
-  export {PanelStart, PanelArticle};
+class PanelNotFound extends Panel{
+  
+  constructor(parent: Canvas) {
+    super(constants.PANEL_ID_NOTFOUND, parent);
+    this.classname = "panelnotfound";
+  }
+
+  getElements(): Promise<PanelElement[]> {
+    
+    return new Promise((res) => res([
+      new PanelText("ERROR 404")
+    ]));
+    
+  }
+}
+
+  export {PanelStart, PanelArticle, PanelNotFound};
