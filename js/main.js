@@ -25,6 +25,8 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
         ],
         execute: function () {
             exports_1("constants", constants = {
+                HOME_URL: "https://stasya00.github.io/lopbjorn",
+                ARTICLE_HTML: "html/article.html",
                 ROOT_CLASSNAME: "root",
                 ARTICLE_CLASSNAME: "article",
                 SECTION_CLASSNAME: "section",
@@ -33,6 +35,7 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 RESPONSE_PARSE_KEY: "content",
                 PANEL_ID_START: uuid.v4(),
                 PANEL_ID_ARTICLE: uuid.v4(),
+                PANEL_ID_NOTFOUND: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
                 LOCAL_STORAGE: true
             });
@@ -253,7 +256,7 @@ System.register("articleRenderer", ["marked", "constants", "request"], function 
 });
 System.register("panel", ["constants", "uiElements", "section", "structure", "articleRenderer"], function (exports_5, context_5) {
     "use strict";
-    var constants_4, uiElements_1, section_1, structure_1, articleRenderer_1, PanelStart, PanelArticle;
+    var constants_4, uiElements_1, section_1, structure_1, articleRenderer_1, PanelStart, PanelArticle, PanelNotFound;
     var __moduleName = context_5 && context_5.id;
     return {
         setters: [
@@ -332,17 +335,104 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                 return PanelArticle;
             }(uiElements_1.Panel));
             exports_5("PanelArticle", PanelArticle);
+            PanelNotFound = /** @class */ (function (_super) {
+                __extends(PanelNotFound, _super);
+                function PanelNotFound(parent) {
+                    var _this = _super.call(this, constants_4.constants.PANEL_ID_NOTFOUND, parent) || this;
+                    _this.classname = "panelnotfound";
+                    return _this;
+                }
+                PanelNotFound.prototype.getElements = function () {
+                    return new Promise(function (res) { return res([
+                        new uiElements_1.PanelText("ERROR 404")
+                    ]); });
+                };
+                return PanelNotFound;
+            }(uiElements_1.Panel));
+            exports_5("PanelNotFound", PanelNotFound);
         }
     };
 });
-System.register("canvas", ["panel"], function (exports_6, context_6) {
+System.register("utils", ["constants"], function (exports_6, context_6) {
     "use strict";
-    var panel_1, Canvas;
+    var constants_5;
     var __moduleName = context_6 && context_6.id;
+    function getCurrentURL() {
+        return window.location.href;
+    }
+    exports_6("getCurrentURL", getCurrentURL);
+    function redirectURL(url) {
+        if (url === void 0) { url = constants_5.constants.HOME_URL; }
+        return window.location.replace(url);
+    }
+    exports_6("redirectURL", redirectURL);
     return {
         setters: [
+            function (constants_5_1) {
+                constants_5 = constants_5_1;
+            }
+        ],
+        execute: function () {
+        }
+    };
+});
+System.register("404/pageManager", ["constants", "utils", "panel"], function (exports_7, context_7) {
+    "use strict";
+    var constants_6, utils_1, panel_1, PageManager;
+    var __moduleName = context_7 && context_7.id;
+    return {
+        setters: [
+            function (constants_6_1) {
+                constants_6 = constants_6_1;
+            },
+            function (utils_1_1) {
+                utils_1 = utils_1_1;
+            },
             function (panel_1_1) {
                 panel_1 = panel_1_1;
+            }
+        ],
+        execute: function () {
+            PageManager = /** @class */ (function () {
+                function PageManager() {
+                }
+                PageManager.prototype.getArticle = function () {
+                    var url = utils_1.getCurrentURL();
+                    url = url.substring(0, url.length - 1);
+                    return url.substring(url.lastIndexOf("/"), url.length);
+                };
+                PageManager.prototype.start = function (canvas) {
+                    console.log("get current ".concat(utils_1.getCurrentURL()));
+                    console.log("home ".concat(constants_6.constants.HOME_URL));
+                    if (utils_1.getCurrentURL() == constants_6.constants.HOME_URL) {
+                        return new panel_1.PanelStart(canvas);
+                    }
+                    var article = this.getArticle();
+                    // check that article is on GCP
+                    var result = true;
+                    if (result) {
+                        // redirect to article page - no need
+                        //redirectURL(`${constants.HOME_URL}`);
+                        var section = "Tech";
+                        article = "Parsing_ifc_file";
+                        return new panel_1.PanelArticle(canvas, section, article);
+                    }
+                    return new panel_1.PanelNotFound(canvas);
+                };
+                return PageManager;
+            }());
+            exports_7("PageManager", PageManager);
+        }
+    };
+});
+System.register("canvas", ["404/pageManager"], function (exports_8, context_8) {
+    "use strict";
+    var pageManager_1, Canvas;
+    var __moduleName = context_8 && context_8.id;
+    return {
+        setters: [
+            function (pageManager_1_1) {
+                pageManager_1 = pageManager_1_1;
             }
         ],
         execute: function () {
@@ -350,16 +440,18 @@ System.register("canvas", ["panel"], function (exports_6, context_6) {
                 function Canvas() {
                     this.currentDisplayedPanelId = "";
                     this.panelIds = [];
+                    this.manager = new pageManager_1.PageManager();
                 }
                 Canvas.prototype.make = function () {
                     //this.switchToPanel(this.panelIds[0]);
                     console.log("new canvas!");
-                    var p = new panel_1.PanelStart(this);
-                    var p1 = new panel_1.PanelArticle(this, "Tech", "Parsing_ifc_file");
+                    var p = this.manager.start(this);
+                    // let p = new PanelStart(this);
+                    // let p1 = new PanelArticle(this, "Tech", "Parsing_ifc_file");
                     p.add();
-                    p1.add();
+                    // p1.add();
                     this.panelIds.push(p.id);
-                    this.panelIds.push(p1.id);
+                    // this.panelIds.push(p1.id);
                     console.log("canvas made");
                     this.switchToPanel(this.panelIds[0]);
                 };
@@ -396,21 +488,21 @@ System.register("canvas", ["panel"], function (exports_6, context_6) {
                 };
                 return Canvas;
             }());
-            exports_6("Canvas", Canvas);
+            exports_8("Canvas", Canvas);
         }
     };
 });
-System.register("uiElements", ["uuid", "constants"], function (exports_7, context_7) {
+System.register("uiElements", ["uuid", "constants"], function (exports_9, context_9) {
     "use strict";
-    var uuid, constants_5, PanelElement, PanelText, Pane, PanelButton, Panel, PanelImage;
-    var __moduleName = context_7 && context_7.id;
+    var uuid, constants_7, PanelElement, PanelText, Pane, PanelButton, Panel, PanelImage;
+    var __moduleName = context_9 && context_9.id;
     return {
         setters: [
             function (uuid_2) {
                 uuid = uuid_2;
             },
-            function (constants_5_1) {
-                constants_5 = constants_5_1;
+            function (constants_7_1) {
+                constants_7 = constants_7_1;
             }
         ],
         execute: function () {
@@ -452,7 +544,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_7, contex
                 PanelElement.prototype.postprocess = function (el) { };
                 return PanelElement;
             }());
-            exports_7("PanelElement", PanelElement);
+            exports_9("PanelElement", PanelElement);
             PanelText = /** @class */ (function (_super) {
                 __extends(PanelText, _super);
                 function PanelText(text, classname, id) {
@@ -471,7 +563,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_7, contex
                 };
                 return PanelText;
             }(PanelElement));
-            exports_7("PanelText", PanelText);
+            exports_9("PanelText", PanelText);
             Pane = /** @class */ (function (_super) {
                 __extends(Pane, _super);
                 function Pane(parentId, classname, parent) {
@@ -508,7 +600,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_7, contex
                 };
                 return Pane;
             }(PanelElement));
-            exports_7("Pane", Pane);
+            exports_9("Pane", Pane);
             PanelButton = /** @class */ (function (_super) {
                 __extends(PanelButton, _super);
                 function PanelButton(label, onclickFn, classname, css, disabled) {
@@ -536,14 +628,14 @@ System.register("uiElements", ["uuid", "constants"], function (exports_7, contex
                 };
                 return PanelButton;
             }(PanelElement));
-            exports_7("PanelButton", PanelButton);
+            exports_9("PanelButton", PanelButton);
             Panel = /** @class */ (function () {
                 function Panel(id, parent) {
                     if (id === void 0) { id = null; }
                     this.id = id ? id : uuid.v4();
                     this.classname = "panel";
                     this.parent = parent;
-                    this.parentId = constants_5.constants.ROOT_CLASSNAME;
+                    this.parentId = constants_7.constants.ROOT_CLASSNAME;
                 }
                 Panel.prototype.getElements = function () {
                     return new Promise(function (res) { return res([]); });
@@ -571,7 +663,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_7, contex
                 Panel.prototype.postActions = function () { };
                 return Panel;
             }());
-            exports_7("Panel", Panel);
+            exports_9("Panel", Panel);
             PanelImage = /** @class */ (function (_super) {
                 __extends(PanelImage, _super);
                 function PanelImage(id, src, css, classname, onchangeFn) {
@@ -593,14 +685,14 @@ System.register("uiElements", ["uuid", "constants"], function (exports_7, contex
                 };
                 return PanelImage;
             }(PanelElement));
-            exports_7("PanelImage", PanelImage);
+            exports_9("PanelImage", PanelImage);
         }
     };
 });
-System.register("section", ["uiElements"], function (exports_8, context_8) {
+System.register("section", ["uiElements"], function (exports_10, context_10) {
     "use strict";
     var uiElements_2, SECTIONS, ARTICLES, Section, Article;
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_10 && context_10.id;
     return {
         setters: [
             function (uiElements_2_1) {
@@ -633,7 +725,7 @@ System.register("section", ["uiElements"], function (exports_8, context_8) {
                 };
                 return Section;
             }(uiElements_2.Pane));
-            exports_8("Section", Section);
+            exports_10("Section", Section);
             Article = /** @class */ (function (_super) {
                 __extends(Article, _super);
                 function Article() {
@@ -641,14 +733,14 @@ System.register("section", ["uiElements"], function (exports_8, context_8) {
                 }
                 return Article;
             }(Section));
-            exports_8("Article", Article);
+            exports_10("Article", Article);
         }
     };
 });
-System.register("main", ["canvas"], function (exports_9, context_9) {
+System.register("main", ["canvas"], function (exports_11, context_11) {
     "use strict";
     var canvas_1, c;
-    var __moduleName = context_9 && context_9.id;
+    var __moduleName = context_11 && context_11.id;
     return {
         setters: [
             function (canvas_1_1) {

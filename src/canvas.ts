@@ -1,5 +1,5 @@
 import { PanelArticle, PanelStart } from "./panel";
-import { PageManager } from "./404/errorPageManager";
+import { PageManager } from "./404/pageManager";
 import { Pane } from "./uiElements";
 
 class Canvas {
