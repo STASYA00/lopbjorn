@@ -61,6 +61,22 @@ body {
     background-color: var(--main-bg-color);
     margin: 10px;
   }
+  .panelarticle{
+    display: grid;
+    
+    grid-template-columns: 1fr;
+    
+    grid-gap: var(--main-stroke);
+    
+    flex-wrap: wrap;
+    flex-basis: auto;
+    flex-direction: row;
+
+    align-items: flex-start;
+    /* height: 80%; */
+    background-color: var(--main-bg-color);
+    margin: 10px;
+  }
 
   .section{
     grid-column: span 2;

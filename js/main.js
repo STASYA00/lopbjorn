@@ -34,7 +34,7 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 PANEL_ID_START: uuid.v4(),
                 PANEL_ID_ARTICLE: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
-                LOCAL_STORAGE: false
+                LOCAL_STORAGE: true
             });
         }
     };
@@ -320,6 +320,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                     var _this = _super.call(this, constants_4.constants.PANEL_ID_ARTICLE, parent) || this;
                     _this.section = section;
                     _this.article = article;
+                    _this.classname = "panelarticle";
                     return _this;
                 }
                 PanelArticle.prototype.getElements = function () {

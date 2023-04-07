@@ -56,6 +56,7 @@ class PanelArticle extends Panel{
     super(constants.PANEL_ID_ARTICLE, parent);
     this.section = section;
     this.article = article;
+    this.classname = "panelarticle";
   }
 
   getElements(): Promise<PanelElement[]> {

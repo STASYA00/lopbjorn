@@ -14,6 +14,6 @@ export const constants = {
 
     CACHE_KEY_STRUCTURE: "Blog_Structure" as string,
 
-    LOCAL_STORAGE: false as boolean,
+    LOCAL_STORAGE: true as boolean,
 
 }
