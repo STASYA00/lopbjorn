@@ -894,26 +894,10 @@ System.register("structure", ["constants", "request"], function (exports_10, con
         }
     };
 });
-//import { EmojiConvertor } from "emoji-js";
-//import EmojiConvertor from 'emoji-js';
-System.register("utils", [], function (exports_11, context_11) {
+System.register("articleRenderer", ["marked", "constants", "request"], function (exports_11, context_11) {
     "use strict";
+    var marked_1, constants_8, request_2, ArticleRenderer;
     var __moduleName = context_11 && context_11.id;
-    function emoji(content) {
-        return content;
-    }
-    exports_11("emoji", emoji);
-    return {
-        setters: [],
-        execute: function () {//import { EmojiConvertor } from "emoji-js";
-            //import EmojiConvertor from 'emoji-js';
-        }
-    };
-});
-System.register("articleRenderer", ["marked", "constants", "request", "utils"], function (exports_12, context_12) {
-    "use strict";
-    var marked_1, constants_8, request_2, utils_1, ArticleRenderer;
-    var __moduleName = context_12 && context_12.id;
     return {
         setters: [
             function (marked_1_1) {
@@ -924,9 +908,6 @@ System.register("articleRenderer", ["marked", "constants", "request", "utils"], 
             },
             function (request_2_1) {
                 request_2 = request_2_1;
-            },
-            function (utils_1_1) {
-                utils_1 = utils_1_1;
             }
         ],
         execute: function () {
@@ -950,26 +931,26 @@ System.register("articleRenderer", ["marked", "constants", "request", "utils"], 
                 ArticleRenderer.make = function (section, name) {
                     if (constants_8.constants.LOCAL_STORAGE) {
                         if (localStorage.getItem(name) != null) {
-                            return new Promise(function (res) { return res(utils_1.emoji(marked_1.marked.parse(JSON.parse(localStorage.getItem(name))["text"]))); });
+                            return new Promise(function (res) { return res(marked_1.marked.parse(JSON.parse(localStorage.getItem(name))["text"])); });
                         }
                     }
                     var s = new request_2.ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
                     return s.call().then(function (r) {
-                        var res = utils_1.emoji(marked_1.marked.parse(r[constants_8.constants.RESPONSE_PARSE_KEY]));
+                        var res = marked_1.marked.parse(r[constants_8.constants.RESPONSE_PARSE_KEY]);
                         localStorage.setItem(name, res);
                         return res;
                     });
                 };
                 return ArticleRenderer;
             }());
-            exports_12("ArticleRenderer", ArticleRenderer);
+            exports_11("ArticleRenderer", ArticleRenderer);
         }
     };
 });
-System.register("panel", ["constants", "uiElements", "section", "structure", "articleRenderer"], function (exports_13, context_13) {
+System.register("panel", ["constants", "uiElements", "section", "structure", "articleRenderer"], function (exports_12, context_12) {
     "use strict";
     var constants_9, uiElements_2, section_1, structure_1, articleRenderer_1, PanelStart, PanelArticle, PanelNotFound;
-    var __moduleName = context_13 && context_13.id;
+    var __moduleName = context_12 && context_12.id;
     return {
         setters: [
             function (constants_9_1) {
@@ -1024,7 +1005,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                 };
                 return PanelStart;
             }(uiElements_2.Panel));
-            exports_13("PanelStart", PanelStart);
+            exports_12("PanelStart", PanelStart);
             PanelArticle = /** @class */ (function (_super) {
                 __extends(PanelArticle, _super);
                 function PanelArticle(parent, section, article) {
@@ -1041,7 +1022,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                 };
                 return PanelArticle;
             }(uiElements_2.Panel));
-            exports_13("PanelArticle", PanelArticle);
+            exports_12("PanelArticle", PanelArticle);
             PanelNotFound = /** @class */ (function (_super) {
                 __extends(PanelNotFound, _super);
                 function PanelNotFound(parent) {
@@ -1056,14 +1037,14 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                 };
                 return PanelNotFound;
             }(uiElements_2.Panel));
-            exports_13("PanelNotFound", PanelNotFound);
+            exports_12("PanelNotFound", PanelNotFound);
         }
     };
 });
-System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssigner", "panel", "request"], function (exports_14, context_14) {
+System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssigner", "panel", "request"], function (exports_13, context_13) {
     "use strict";
     var constants_10, urlManager_2, pageTagAssigner_1, panel_1, request_3, PageManager;
-    var __moduleName = context_14 && context_14.id;
+    var __moduleName = context_13 && context_13.id;
     return {
         setters: [
             function (constants_10_1) {
@@ -1145,14 +1126,14 @@ System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssig
                 };
                 return PageManager;
             }());
-            exports_14("PageManager", PageManager);
+            exports_13("PageManager", PageManager);
         }
     };
 });
-System.register("canvas", ["404/pageManager", "panel"], function (exports_15, context_15) {
+System.register("canvas", ["404/pageManager", "panel"], function (exports_14, context_14) {
     "use strict";
     var pageManager_1, panel_2, PanelEnum, Canvas;
-    var __moduleName = context_15 && context_15.id;
+    var __moduleName = context_14 && context_14.id;
     return {
         setters: [
             function (pageManager_1_1) {
@@ -1168,7 +1149,7 @@ System.register("canvas", ["404/pageManager", "panel"], function (exports_15, co
                 PanelEnum[PanelEnum["PANEL_ARTICLE"] = 1] = "PANEL_ARTICLE";
                 PanelEnum[PanelEnum["PANEL_NOTFOUND"] = 2] = "PANEL_NOTFOUND";
             })(PanelEnum || (PanelEnum = {}));
-            exports_15("PanelEnum", PanelEnum);
+            exports_14("PanelEnum", PanelEnum);
             Canvas = /** @class */ (function () {
                 function Canvas() {
                     this.currentDisplayedPanelId = "";
@@ -1225,14 +1206,14 @@ System.register("canvas", ["404/pageManager", "panel"], function (exports_15, co
                 };
                 return Canvas;
             }());
-            exports_15("Canvas", Canvas);
+            exports_14("Canvas", Canvas);
         }
     };
 });
-System.register("main", ["canvas"], function (exports_16, context_16) {
+System.register("main", ["canvas"], function (exports_15, context_15) {
     "use strict";
     var canvas_1, c;
-    var __moduleName = context_16 && context_16.id;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (canvas_1_1) {
