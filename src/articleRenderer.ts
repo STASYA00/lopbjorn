@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import {EmojiConvertor} from "emoji-js";
+import {EmojiConvertor} from "../js/emoji";
 import {constants} from "./constants";
 import { ServerRequest } from "./request";
 
@@ -28,7 +28,6 @@ class ArticleRenderer{
     }
     static make(section:string, name:string){
         let e = new EmojiConvertor();
-        e.replace_colons(":sushi:");
         if (constants.LOCAL_STORAGE){
             if (localStorage.getItem(name)!=null){
                 return new Promise((res)=>res(marked.parse(JSON.parse(localStorage.getItem(name))["text"])));
