@@ -899,8 +899,8 @@ System.register("utils", ["emoji-js"], function (exports_11, context_11) {
     var emoji_js_1;
     var __moduleName = context_11 && context_11.id;
     function emoji(content) {
-        var emoji = new emoji_js_1.EmojiConvertor();
-        return emoji.replace_colons(content);
+        var em = new emoji_js_1.EmojiConvertor();
+        return em.replace_colons(content);
     }
     exports_11("emoji", emoji);
     return {
