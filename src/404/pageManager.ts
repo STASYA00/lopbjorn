@@ -23,6 +23,8 @@ class PageManager{
     }
 
     private isHome(): boolean{
+        console.log(`Current url: ${urlManager.getCurrentURL()}`);
+        
         if (!urlManager.runsLocally()){
             return (urlManager.getCurrentURL() == constants.HOME_URL) || (urlManager.getCurrentURL() == constants.HOME_URL+"/");
              }
