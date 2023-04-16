@@ -80,7 +80,6 @@ class PageManager{
         if (article){
             new_url = `${constants.HOME_URL}/${article}`;
         }
-        console.log("new url:", new_url);
         return urlManager.redirectURL(new_url);
     }
         

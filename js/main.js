@@ -49,7 +49,7 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 ARTICLE_CLASSNAME: "article",
                 SECTION_CLASSNAME: "section",
                 SERVERURL: "https://get-uuklxqul3q-uc1.a.run.app/",
-                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc1.a.run.app/",
+                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
                 ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc1.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
                 NOTFOUND: uuid.v4(),
@@ -85,6 +85,7 @@ System.register("urlManager", ["constants"], function (exports_2, context_2) {
                     if (url === void 0) { url = constants_1.constants.HOME_URL; }
                     console.log("redirecting from ".concat(urlManager.getCurrentURL(), " to ").concat(url));
                     if (urlManager.getCurrentURL() != url && urlManager.getCurrentURL() != url + "/") {
+                        console.log("executing redirect");
                         return window.location.replace(url);
                     }
                 };
@@ -1131,7 +1132,6 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     if (article) {
                         new_url = "".concat(constants_10.constants.HOME_URL, "/").concat(article);
                     }
-                    console.log("new url:", new_url);
                     return urlManager_2.urlManager.redirectURL(new_url);
                 };
                 return PageManager;
@@ -1206,7 +1206,6 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                     }
                     this.currentDisplayedPanelId = id;
                     this.manager["switch"](this, section, article);
-                    throw new Error();
                 };
                 return Canvas;
             }());
