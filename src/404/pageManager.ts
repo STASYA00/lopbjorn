@@ -52,23 +52,37 @@ class PageManager{
         console.log("getting article");
         let article = this.getArticle();
         // check that article is on GCP
-        
-        if (this.articleExists(article)){
+        console.log("article", article);
+        return this.articleExists(article).then(res =>{
+            console.log("result", res);
             let section = "Tech";
-            let article1 = "Parsing_ifc_file";
             try{
-                urlManager.rewriteURL(article1);
+                urlManager.rewriteURL(article);
             }
             catch (e){
                 console.log(e as Error);
                 console.log("Local dev environment, no URL rewriting possible");
             }
-            
             this.assigner.make(PANEL_ID_ARTICLE, article);
             return new PanelArticle(canvas, section, article);
-        }
-        this.assigner.make(PANEL_ID_ARTICLE, article);
-        return new PanelNotFound(canvas);
+
+        });
+        // if (this.articleExists(article)){
+        //     let section = "Tech";
+        //     let article1 = "Parsing_ifc_file";
+        //     try{
+        //         urlManager.rewriteURL(article1);
+        //     }
+        //     catch (e){
+        //         console.log(e as Error);
+        //         console.log("Local dev environment, no URL rewriting possible");
+        //     }
+            
+        //     this.assigner.make(PANEL_ID_ARTICLE, article);
+        //     return new PanelArticle(canvas, section, article);
+        // }
+        // this.assigner.make(PANEL_ID_ARTICLE, article);
+        // return new PanelNotFound(canvas);
     }
 
     switch(canvas: Canvas, section?: string, article?: string){

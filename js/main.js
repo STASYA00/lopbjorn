@@ -1100,6 +1100,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     });
                 };
                 PageManager.prototype.start = function (canvas) {
+                    var _this = this;
                     if (this.isHome()) {
                         console.log("Home panel");
                         this.assigner.make(constants_10.PANEL_ID_START, constants_10.constants.SITE_NAME);
@@ -1109,21 +1110,35 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     console.log("getting article");
                     var article = this.getArticle();
                     // check that article is on GCP
-                    if (this.articleExists(article)) {
+                    console.log("article", article);
+                    return this.articleExists(article).then(function (res) {
+                        console.log("result", res);
                         var section = "Tech";
-                        var article1 = "Parsing_ifc_file";
                         try {
-                            urlManager_2.urlManager.rewriteURL(article1);
+                            urlManager_2.urlManager.rewriteURL(article);
                         }
                         catch (e) {
                             console.log(e);
                             console.log("Local dev environment, no URL rewriting possible");
                         }
-                        this.assigner.make(constants_10.PANEL_ID_ARTICLE, article);
+                        _this.assigner.make(constants_10.PANEL_ID_ARTICLE, article);
                         return new panel_1.PanelArticle(canvas, section, article);
-                    }
-                    this.assigner.make(constants_10.PANEL_ID_ARTICLE, article);
-                    return new panel_1.PanelNotFound(canvas);
+                    });
+                    // if (this.articleExists(article)){
+                    //     let section = "Tech";
+                    //     let article1 = "Parsing_ifc_file";
+                    //     try{
+                    //         urlManager.rewriteURL(article1);
+                    //     }
+                    //     catch (e){
+                    //         console.log(e as Error);
+                    //         console.log("Local dev environment, no URL rewriting possible");
+                    //     }
+                    //     this.assigner.make(PANEL_ID_ARTICLE, article);
+                    //     return new PanelArticle(canvas, section, article);
+                    // }
+                    // this.assigner.make(PANEL_ID_ARTICLE, article);
+                    // return new PanelNotFound(canvas);
                 };
                 PageManager.prototype["switch"] = function (canvas, section, article) {
                     if (urlManager_2.urlManager.runsLocally()) {
