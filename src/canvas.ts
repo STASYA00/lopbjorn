@@ -65,6 +65,7 @@ class Canvas {
     this.currentDisplayedPanelId = id;
     
     this.manager.switch(this, section, article);
+    throw new Error();
   } 
 
 }

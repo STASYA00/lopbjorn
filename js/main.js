@@ -1203,6 +1203,7 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                     }
                     this.currentDisplayedPanelId = id;
                     this.manager["switch"](this, section, article);
+                    throw new Error();
                 };
                 return Canvas;
             }());
