@@ -1091,7 +1091,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     return urlManager_2.urlManager.getCurrentURL().includes(urlManager_2.HTMLFilesEnum.HOME);
                 };
                 PageManager.prototype.articleExists = function (article) {
-                    var s = new request_3.ServerRequest(article, constants_10.constants.ARTICLEEXISTS_URL);
+                    var s = new request_3.ServerRequest({ "name": article }, constants_10.constants.ARTICLEEXISTS_URL);
                     return s.call().then(function (r) {
                         var res = marked_2.marked.parse(r[constants_10.constants.RESPONSE_PARSE_KEY]);
                         localStorage.setItem(article, res);

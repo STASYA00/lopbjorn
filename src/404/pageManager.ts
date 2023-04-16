@@ -33,7 +33,7 @@ class PageManager{
         }
 
     private articleExists(article:string){
-        let s = new ServerRequest(article, constants.ARTICLEEXISTS_URL);
+        let s = new ServerRequest({"name": article}, constants.ARTICLEEXISTS_URL);
         return s.call().then( r => {
             let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
             localStorage.setItem(article, res);
