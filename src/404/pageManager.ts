@@ -48,6 +48,8 @@ class PageManager{
             this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
             return new PanelStart(canvas);
         }
+        console.log("getting article");
+        throw new Error();
         let article = this.getArticle();
         // check that article is on GCP
         

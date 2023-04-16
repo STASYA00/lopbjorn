@@ -854,6 +854,8 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                         this.assigner.make(constants_9.PANEL_ID_START, constants_9.constants.SITE_NAME);
                         return new panel_1.PanelStart(canvas);
                     }
+                    console.log("getting article");
+                    throw new Error();
                     var article = this.getArticle();
                     // check that article is on GCP
                     if (this.articleExists(article)) {
