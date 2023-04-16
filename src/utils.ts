@@ -1,9 +1,8 @@
 //import { EmojiConvertor } from "emoji-js";
-import EmojiConvertor from '../js/emoji';
+//import EmojiConvertor from 'emoji-js';
 
 function emoji(content: string): string{
-    let em = new EmojiConvertor();
-    return em.replace_colons(content);
+    return content;
 }
 
 export {emoji};
