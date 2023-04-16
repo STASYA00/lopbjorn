@@ -1022,6 +1022,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                 }
                 PanelArticle.prototype.getElements = function () {
                     console.log("Getting elements", this.section, this.article);
+                    throw new Error();
                     return articleRenderer_1.ArticleRenderer.make(this.section, this.article).then(function (r) { return [
                         new uiElements_2.PanelText(r, "articletext")
                     ]; });

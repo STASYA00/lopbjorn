@@ -64,6 +64,7 @@ class PanelArticle extends Panel{
 
   getElements(): Promise<PanelElement[]> {
     console.log("Getting elements", this.section, this.article);
+    throw new Error();
     return ArticleRenderer.make(this.section, this.article).then(r => [
       new PanelText(r, "articletext")
     ]);
