@@ -933,6 +933,7 @@ System.register("articleRenderer", ["marked", "emoji-js", "constants", "request"
                 };
                 ArticleRenderer.make = function (section, name) {
                     var e = new emoji_js_1.EmojiConvertor();
+                    e.replace_colons(":sushi:");
                     if (constants_8.constants.LOCAL_STORAGE) {
                         if (localStorage.getItem(name) != null) {
                             return new Promise(function (res) { return res(marked_1.marked.parse(JSON.parse(localStorage.getItem(name))["text"])); });
