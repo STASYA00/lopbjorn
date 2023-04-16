@@ -1104,13 +1104,10 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     if (this.isHome()) {
                         console.log("Home panel");
                         this.assigner.make(constants_10.PANEL_ID_START, constants_10.constants.SITE_NAME);
-                        console.log("assigned");
-                        return new panel_1.PanelStart(canvas);
+                        return new Promise(function (res) { return res(new panel_1.PanelStart(canvas)); });
                     }
                     console.log("getting article");
                     var article = this.getArticle();
-                    // check that article is on GCP
-                    console.log("article", article);
                     return this.articleExists(article).then(function (res) {
                         console.log("result", res);
                         var section = "Tech";
@@ -1182,15 +1179,14 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                     console.log("canvas initiated");
                 }
                 Canvas.prototype.make = function () {
+                    var _this = this;
                     //this.switchToPanel(this.panelIds[0]);
                     console.log("new canvas!");
-                    var p = this.manager.start(this);
-                    // let p = new PanelStart(this);
-                    // let p1 = new PanelArticle(this, "Tech", "Parsing_ifc_file");
-                    p.add();
-                    // p1.add();
-                    this.panelIds.push(p.id);
-                    this.switchToPanel(this.panelIds[0]);
+                    this.manager.start(this).then(function (p) {
+                        p.add();
+                        _this.panelIds.push(p.id);
+                        _this.switchToPanel(_this.panelIds[0]);
+                    });
                 };
                 Canvas.prototype.nextPage = function () {
                     console.log("clicked next");

@@ -22,13 +22,11 @@ class Canvas {
   make() {
     //this.switchToPanel(this.panelIds[0]);
     console.log("new canvas!");
-    let p = this.manager.start(this);
-    // let p = new PanelStart(this);
-    // let p1 = new PanelArticle(this, "Tech", "Parsing_ifc_file");
-    p.add();
-    // p1.add();
-    this.panelIds.push(p.id);
-    this.switchToPanel(this.panelIds[0]);
+    this.manager.start(this).then(p => {
+      p.add();
+      this.panelIds.push(p.id);
+      this.switchToPanel(this.panelIds[0]);
+    });
   }
 
   nextPage() {

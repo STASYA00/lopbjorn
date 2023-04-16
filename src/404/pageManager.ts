@@ -42,18 +42,17 @@ class PageManager{
         });
     }
 
-    start(canvas: Canvas): Panel{
+    start(canvas: Canvas): Promise<Panel>{
         
         if (this.isHome()){
             console.log("Home panel");
             this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
-            console.log("assigned");
-            return new PanelStart(canvas);
+            
+            return new Promise((res)=>res(new PanelStart(canvas)));
         }
         console.log("getting article");
         let article = this.getArticle();
-        // check that article is on GCP
-        console.log("article", article);
+        
         return this.articleExists(article).then(res =>{
             console.log("result", res);
             let section = "Tech";
