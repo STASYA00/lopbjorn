@@ -16,7 +16,7 @@ class Canvas {
     this.panelIds = [];
     this.manager = new PageManager();
     console.log("canvas initiated");
-    throw new Error();
+    
   }
 
   make() {
@@ -65,7 +65,8 @@ class Canvas {
       el.style.display = "grid"; //flex
     }
     this.currentDisplayedPanelId = id;
-
+    console.log(window.location.href);
+    throw new Error();
     this.manager.switch(this, section, article);
   } 
 

@@ -1159,7 +1159,6 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                     this.panelIds = [];
                     this.manager = new pageManager_1.PageManager();
                     console.log("canvas initiated");
-                    throw new Error();
                 }
                 Canvas.prototype.make = function () {
                     //this.switchToPanel(this.panelIds[0]);
@@ -1204,6 +1203,8 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                         el.style.display = "grid"; //flex
                     }
                     this.currentDisplayedPanelId = id;
+                    console.log(window.location.href);
+                    throw new Error();
                     this.manager["switch"](this, section, article);
                 };
                 return Canvas;
@@ -1226,8 +1227,6 @@ System.register("main", ["canvas", "urlManager"], function (exports_15, context_
             }
         ],
         execute: function () {
-            console.log(window.location.href);
-            throw new Error();
             c = new canvas_1.Canvas();
             console.log(window.location.href);
             console.log("error");
