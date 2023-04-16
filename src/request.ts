@@ -9,10 +9,10 @@ class ServerRequest {
     method: string;
     params: any;
     url: string;
-    constructor(params: any) {
+    constructor(params: any, url?: string | null) {
         this.params = params;
         this.method = "POST";
-        this.url = constants.SERVERURL;
+        this.url = url ? url : constants.SERVERURL;
     }
 
     call(): any {

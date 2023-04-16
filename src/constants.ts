@@ -14,6 +14,7 @@ export const constants = {
 
     SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/" as string,
     STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/" as string,
+    ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/" as string,
     RESPONSE_PARSE_KEY: "content" as string,
     
     CACHE_KEY_STRUCTURE: "Blog_Structure" as string,

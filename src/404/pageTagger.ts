@@ -19,8 +19,10 @@ class PageTagger{
         this.init();
     }
     private init(){
-        for (let tag in TAGS){
-            this.tagsetters[tag] = this.factory.make(tag);
+        let a = Object.getOwnPropertyDescriptors(TAGS);
+        for (let i=0; i<Object(TAGS).length; i++){
+            console.log(a[i]);
+            this.tagsetters[a[i].value] = this.factory.make(a[i].value);
         }
     }
     make(id: string, article: string=""){

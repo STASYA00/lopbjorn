@@ -3,7 +3,7 @@ import { urlManager } from "../urlManager";
 import { constants, PANEL_ID_START, PANEL_ID_ARTICLE, PANEL_ID_NOTFOUND } from "../constants";
 
 class TagSetterFactory{
-    private content: EnumDictionary<string, typeof>;
+    private content: EnumDictionary<TAGS, typeof TagSetter>;
     constructor(){
         this.content = {
             [TAGS.URL]: TagSetterURL,
@@ -16,8 +16,8 @@ class TagSetterFactory{
             [TAGS.TYPE]: TagSetterType,
         }
     }
-    make(tag:string): TagSetter{
-        return new this.content[tag]();
+    make(tag:TAGS): TagSetter{
+        return new this.content[tag](tag);
     }
 }
 

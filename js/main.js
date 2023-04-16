@@ -50,6 +50,7 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 SECTION_CLASSNAME: "section",
                 SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/",
                 STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
+                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
                 LOCAL_STORAGE: true
@@ -72,10 +73,10 @@ System.register("request", ["constants"], function (exports_2, context_2) {
         ],
         execute: function () {
             ServerRequest = /** @class */ (function () {
-                function ServerRequest(params) {
+                function ServerRequest(params, url) {
                     this.params = params;
                     this.method = "POST";
-                    this.url = constants_1.constants.SERVERURL;
+                    this.url = url ? url : constants_1.constants.SERVERURL;
                 }
                 ServerRequest.prototype.call = function () {
                     return this.request();
@@ -510,7 +511,7 @@ System.register("404/tagsetter", ["404/tagManager", "urlManager", "constants"], 
                         _a);
                 }
                 TagSetterFactory.prototype.make = function (tag) {
-                    return new this.content[tag]();
+                    return new this.content[tag](tag);
                 };
                 return TagSetterFactory;
             }());
@@ -678,8 +679,10 @@ System.register("404/pageTagger", ["constants", "404/tagManager", "404/tagsetter
                     this.init();
                 }
                 PageTagger.prototype.init = function () {
-                    for (var tag in tagManager_2.TAGS) {
-                        this.tagsetters[tag] = this.factory.make(tag);
+                    var a = Object.getOwnPropertyDescriptors(tagManager_2.TAGS);
+                    for (var i = 0; i < Object(tagManager_2.TAGS).length; i++) {
+                        console.log(a[i]);
+                        this.tagsetters[a[i].value] = this.factory.make(a[i].value);
                     }
                 };
                 PageTagger.prototype.make = function (id, article) {
@@ -746,12 +749,15 @@ System.register("404/pageTagAssigner", ["constants", "404/pageTagger", "404/tagM
         }
     };
 });
-System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssigner", "panel"], function (exports_11, context_11) {
+System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pageTagAssigner", "panel", "request"], function (exports_11, context_11) {
     "use strict";
-    var constants_9, urlManager_2, pageTagAssigner_1, panel_1, PageManager;
+    var marked_2, constants_9, urlManager_2, pageTagAssigner_1, panel_1, request_3, PageManager;
     var __moduleName = context_11 && context_11.id;
     return {
         setters: [
+            function (marked_2_1) {
+                marked_2 = marked_2_1;
+            },
             function (constants_9_1) {
                 constants_9 = constants_9_1;
             },
@@ -763,6 +769,9 @@ System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssig
             },
             function (panel_1_1) {
                 panel_1 = panel_1_1;
+            },
+            function (request_3_1) {
+                request_3 = request_3_1;
             }
         ],
         execute: function () {
@@ -779,7 +788,12 @@ System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssig
                     return (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL) || (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL + "/");
                 };
                 PageManager.prototype.articleExists = function (article) {
-                    return true;
+                    var s = new request_3.ServerRequest(article, constants_9.constants.ARTICLEEXISTS_URL);
+                    return s.call().then(function (r) {
+                        var res = marked_2.marked.parse(r[constants_9.constants.RESPONSE_PARSE_KEY]);
+                        localStorage.setItem(article, res);
+                        return res;
+                    });
                 };
                 PageManager.prototype.start = function (canvas) {
                     if (this.isHome()) {

@@ -1,8 +1,11 @@
+import { marked } from "marked";
+
 import { PANEL_ID_ARTICLE, PANEL_ID_START, constants } from "../constants";
 // import { getCurrentURL, redirectURL } from "../utils";
 import { urlManager } from "../urlManager";
 import { PageTagAssigner } from "./pageTagAssigner";
 import { PanelArticle, PanelNotFound, PanelStart } from "../panel";
+import { ServerRequest } from "../request";
 import { Canvas } from "../canvas";
 import { Panel } from "../uiElements";
 
@@ -10,6 +13,7 @@ class PageManager{
     private assigner: PageTagAssigner;
     constructor(){
         this.assigner = new PageTagAssigner();
+        
     }
 
     private getArticle(): string{
@@ -23,7 +27,12 @@ class PageManager{
     }
 
     private articleExists(article:string){
-        return true;
+        let s = new ServerRequest(article, constants.ARTICLEEXISTS_URL);
+        return s.call().then( r => {
+            let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
+            localStorage.setItem(article, res);
+            return res;
+        });
     }
 
     start(canvas: Canvas): Panel{
