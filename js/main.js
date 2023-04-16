@@ -1118,7 +1118,6 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                             console.log(e);
                             console.log("Local dev environment, no URL rewriting possible");
                         }
-                        throw new Error();
                         this.assigner.make(constants_10.PANEL_ID_ARTICLE, article);
                         return new panel_1.PanelArticle(canvas, section, article);
                     }

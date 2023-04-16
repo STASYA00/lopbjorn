@@ -63,7 +63,7 @@ class PageManager{
                 console.log(e as Error);
                 console.log("Local dev environment, no URL rewriting possible");
             }
-            throw new Error();
+            
             this.assigner.make(PANEL_ID_ARTICLE, article);
             return new PanelArticle(canvas, section, article);
         }
