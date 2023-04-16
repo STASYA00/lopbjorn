@@ -894,17 +894,14 @@ System.register("structure", ["constants", "request"], function (exports_10, con
         }
     };
 });
-System.register("articleRenderer", ["marked", "emoji-js", "constants", "request"], function (exports_11, context_11) {
+System.register("articleRenderer", ["marked", "constants", "request"], function (exports_11, context_11) {
     "use strict";
-    var marked_1, emoji_js_1, constants_8, request_2, ArticleRenderer;
+    var marked_1, constants_8, request_2, ArticleRenderer;
     var __moduleName = context_11 && context_11.id;
     return {
         setters: [
             function (marked_1_1) {
                 marked_1 = marked_1_1;
-            },
-            function (emoji_js_1_1) {
-                emoji_js_1 = emoji_js_1_1;
             },
             function (constants_8_1) {
                 constants_8 = constants_8_1;
@@ -932,7 +929,8 @@ System.register("articleRenderer", ["marked", "emoji-js", "constants", "request"
                     return { "section": section, "name": name };
                 };
                 ArticleRenderer.make = function (section, name) {
-                    var e = new emoji_js_1.EmojiConvertor();
+                    var EmojiConvertor = require("emoji-js");
+                    var e = new EmojiConvertor();
                     console.log(e.replace_colons(":smile:"));
                     if (constants_8.constants.LOCAL_STORAGE) {
                         if (localStorage.getItem(name) != null) {
