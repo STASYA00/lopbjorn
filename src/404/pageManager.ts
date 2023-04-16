@@ -45,7 +45,6 @@ class PageManager{
         return s.call().then( r => {
             console.log("RESPONSE:", r);
             console.log(r[constants.RESPONSE_PARSE_KEY]);
-            let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]["text"]);
             localStorage.setItem(article, r[constants.RESPONSE_PARSE_KEY]);
             return r[constants.RESPONSE_PARSE_KEY];
         });
@@ -76,22 +75,6 @@ class PageManager{
             return new PanelArticle(canvas, res["section"], res["article"]);
 
         });
-        // if (this.articleExists(article)){
-        //     let section = "Tech";
-        //     let article1 = "Parsing_ifc_file";
-        //     try{
-        //         urlManager.rewriteURL(article1);
-        //     }
-        //     catch (e){
-        //         console.log(e as Error);
-        //         console.log("Local dev environment, no URL rewriting possible");
-        //     }
-            
-        //     this.assigner.make(PANEL_ID_ARTICLE, article);
-        //     return new PanelArticle(canvas, section, article);
-        // }
-        // this.assigner.make(PANEL_ID_ARTICLE, article);
-        // return new PanelNotFound(canvas);
     }
 
     switch(canvas: Canvas, section?: string, article?: string){

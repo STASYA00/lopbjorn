@@ -12,13 +12,7 @@ class PanelStart extends Panel {
       super(PANEL_ID_START, parent);
     }
     getElements(): Promise<PanelElement[]> {
-      
-      // return ArticleRenderer.make("gcp_resources").then(r => [
-      //   new Article(this.id, "article"),
-      //   new PanelText(r, "articletext")
-      // ]);
       let structure = new BlogStructure();
-      //structure.load_test();
       return structure.load().then(
         r=>{
           let _sections = structure.getSections();
@@ -48,7 +42,6 @@ class PanelStart extends Panel {
           ));
         }
       );
-      
     }
   }
 
@@ -63,8 +56,7 @@ class PanelArticle extends Panel{
   }
 
   getElements(): Promise<PanelElement[]> {
-    console.log("Getting elements", this.section, this.article);
-    throw new Error();
+    
     return ArticleRenderer.make(this.section, this.article).then(r => [
       new PanelText(r, "articletext")
     ]);

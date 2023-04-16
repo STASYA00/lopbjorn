@@ -17,7 +17,6 @@ class PageTagAssigner{
         for (let tag of TagIterator.run()){
             this.manager.updateTag(tag, result[tag]);
         }
-        
     }
 }
 

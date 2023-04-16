@@ -977,12 +977,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                 }
                 PanelStart.prototype.getElements = function () {
                     var _this = this;
-                    // return ArticleRenderer.make("gcp_resources").then(r => [
-                    //   new Article(this.id, "article"),
-                    //   new PanelText(r, "articletext")
-                    // ]);
                     var structure = new structure_1.BlogStructure();
-                    //structure.load_test();
                     return structure.load().then(function (r) {
                         var _sections = structure.getSections();
                         var _elements = [];
@@ -1021,8 +1016,6 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                     return _this;
                 }
                 PanelArticle.prototype.getElements = function () {
-                    console.log("Getting elements", this.section, this.article);
-                    throw new Error();
                     return articleRenderer_1.ArticleRenderer.make(this.section, this.article).then(function (r) { return [
                         new uiElements_2.PanelText(r, "articletext")
                     ]; });
@@ -1048,15 +1041,12 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
         }
     };
 });
-System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pageTagAssigner", "panel", "request"], function (exports_13, context_13) {
+System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssigner", "panel", "request"], function (exports_13, context_13) {
     "use strict";
-    var marked_2, constants_10, urlManager_2, pageTagAssigner_1, panel_1, request_3, PageManager;
+    var constants_10, urlManager_2, pageTagAssigner_1, panel_1, request_3, PageManager;
     var __moduleName = context_13 && context_13.id;
     return {
         setters: [
-            function (marked_2_1) {
-                marked_2 = marked_2_1;
-            },
             function (constants_10_1) {
                 constants_10 = constants_10_1;
             },
@@ -1096,7 +1086,6 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     return s.call().then(function (r) {
                         console.log("RESPONSE:", r);
                         console.log(r[constants_10.constants.RESPONSE_PARSE_KEY]);
-                        var res = marked_2.marked.parse(r[constants_10.constants.RESPONSE_PARSE_KEY]["text"]);
                         localStorage.setItem(article, r[constants_10.constants.RESPONSE_PARSE_KEY]);
                         return r[constants_10.constants.RESPONSE_PARSE_KEY];
                     });
@@ -1122,21 +1111,6 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                         _this.assigner.make(constants_10.PANEL_ID_ARTICLE, res["article"]);
                         return new panel_1.PanelArticle(canvas, res["section"], res["article"]);
                     });
-                    // if (this.articleExists(article)){
-                    //     let section = "Tech";
-                    //     let article1 = "Parsing_ifc_file";
-                    //     try{
-                    //         urlManager.rewriteURL(article1);
-                    //     }
-                    //     catch (e){
-                    //         console.log(e as Error);
-                    //         console.log("Local dev environment, no URL rewriting possible");
-                    //     }
-                    //     this.assigner.make(PANEL_ID_ARTICLE, article);
-                    //     return new PanelArticle(canvas, section, article);
-                    // }
-                    // this.assigner.make(PANEL_ID_ARTICLE, article);
-                    // return new PanelNotFound(canvas);
                 };
                 PageManager.prototype["switch"] = function (canvas, section, article) {
                     if (urlManager_2.urlManager.runsLocally()) {
@@ -1155,14 +1129,17 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
         }
     };
 });
-System.register("canvas", ["404/pageManager"], function (exports_14, context_14) {
+System.register("canvas", ["404/pageManager", "panel"], function (exports_14, context_14) {
     "use strict";
-    var pageManager_1, PanelEnum, Canvas;
+    var pageManager_1, panel_2, PanelEnum, Canvas;
     var __moduleName = context_14 && context_14.id;
     return {
         setters: [
             function (pageManager_1_1) {
                 pageManager_1 = pageManager_1_1;
+            },
+            function (panel_2_1) {
+                panel_2 = panel_2_1;
             }
         ],
         execute: function () {
@@ -1184,9 +1161,15 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                     //this.switchToPanel(this.panelIds[0]);
                     console.log("new canvas!");
                     this.manager.start(this).then(function (p) {
+                        console.log("addind");
                         p.add();
                         _this.panelIds.push(p.id);
-                        _this.switchToPanel(_this.panelIds[0]);
+                        var article, section = undefined;
+                        if (p instanceof panel_2.PanelArticle) {
+                            section = p.section;
+                            article = p.article;
+                        }
+                        _this.switchToPanel(p.id, section, article);
                     });
                 };
                 Canvas.prototype.nextPage = function () {

@@ -1,4 +1,5 @@
 import { PageManager } from "./404/pageManager";
+import { PanelArticle } from "./panel";
 
 
   enum PanelEnum{
@@ -23,9 +24,15 @@ class Canvas {
     //this.switchToPanel(this.panelIds[0]);
     console.log("new canvas!");
     this.manager.start(this).then(p => {
+      console.log("addind");
       p.add();
       this.panelIds.push(p.id);
-      this.switchToPanel(this.panelIds[0]);
+      let article, section = undefined;
+      if (p instanceof PanelArticle){
+        section= p.section;
+        article =p.article;
+      }
+      this.switchToPanel(p.id, section, article);     
     });
   }
 
