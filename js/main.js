@@ -1122,12 +1122,16 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                 PageManager.prototype["switch"] = function (canvas, section, article) {
                     if (urlManager_2.urlManager.runsLocally()) {
                         console.log(section == undefined);
+                        throw new Error();
                         return urlManager_2.urlManager.redirectLocalURL(section == undefined, article);
                     }
                     var new_url = constants_10.constants.SITE_NAME;
+                    console.log(new_url);
                     if (article) {
                         new_url = "".concat(constants_10.constants.SITE_NAME, "/").concat(article);
                     }
+                    console.log(new_url);
+                    throw new Error();
                     return urlManager_2.urlManager.redirectURL(new_url);
                 };
                 return PageManager;
@@ -1169,8 +1173,6 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                     p.add();
                     // p1.add();
                     this.panelIds.push(p.id);
-                    // this.panelIds.push(p1.id);
-                    console.log("canvas made");
                     this.switchToPanel(this.panelIds[0]);
                 };
                 Canvas.prototype.nextPage = function () {
@@ -1213,23 +1215,18 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
         }
     };
 });
-System.register("main", ["canvas", "urlManager"], function (exports_15, context_15) {
+System.register("main", ["canvas"], function (exports_15, context_15) {
     "use strict";
-    var canvas_1, urlManager_3, c;
+    var canvas_1, c;
     var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (canvas_1_1) {
                 canvas_1 = canvas_1_1;
-            },
-            function (urlManager_3_1) {
-                urlManager_3 = urlManager_3_1;
             }
         ],
         execute: function () {
             c = new canvas_1.Canvas();
-            console.log(window.location.href);
-            console.log(urlManager_3.urlManager.getCurrentURL());
             c.make();
         }
     };

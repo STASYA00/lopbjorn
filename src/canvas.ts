@@ -28,8 +28,6 @@ class Canvas {
     p.add();
     // p1.add();
     this.panelIds.push(p.id);
-    // this.panelIds.push(p1.id);
-    console.log("canvas made");
     this.switchToPanel(this.panelIds[0]);
   }
 
