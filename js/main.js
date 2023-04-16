@@ -931,7 +931,7 @@ System.register("articleRenderer", ["marked", "constants", "request"], function 
                 ArticleRenderer.make = function (section, name) {
                     if (constants_8.constants.LOCAL_STORAGE) {
                         if (localStorage.getItem(name) != null) {
-                            return new Promise(function (res) { return res(localStorage.getItem(name)); });
+                            return new Promise(function (res) { return res(JSON.parse(localStorage.getItem(name))["text"]); });
                         }
                     }
                     var s = new request_2.ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
@@ -1084,9 +1084,10 @@ System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssig
                 PageManager.prototype.articleExists = function (article) {
                     var s = new request_3.ServerRequest({ "name": article }, constants_10.constants.ARTICLEEXISTS_URL);
                     return s.call().then(function (r) {
+                        r = r;
                         console.log("RESPONSE:", r);
                         console.log(r[constants_10.constants.RESPONSE_PARSE_KEY]);
-                        localStorage.setItem(article, r[constants_10.constants.RESPONSE_PARSE_KEY]);
+                        localStorage.setItem(article, JSON.stringify(r[constants_10.constants.RESPONSE_PARSE_KEY]));
                         return r[constants_10.constants.RESPONSE_PARSE_KEY];
                     });
                 };
@@ -1161,7 +1162,6 @@ System.register("canvas", ["404/pageManager", "panel"], function (exports_14, co
                     //this.switchToPanel(this.panelIds[0]);
                     console.log("new canvas!");
                     this.manager.start(this).then(function (p) {
-                        console.log("addind");
                         p.add();
                         _this.panelIds.push(p.id);
                         var article, section = undefined;

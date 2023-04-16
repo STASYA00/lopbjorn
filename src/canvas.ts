@@ -24,7 +24,7 @@ class Canvas {
     //this.switchToPanel(this.panelIds[0]);
     console.log("new canvas!");
     this.manager.start(this).then(p => {
-      console.log("addind");
+      
       p.add();
       this.panelIds.push(p.id);
       let article, section = undefined;

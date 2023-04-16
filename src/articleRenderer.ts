@@ -29,7 +29,7 @@ class ArticleRenderer{
     static make(section:string, name:string){
         if (constants.LOCAL_STORAGE){
             if (localStorage.getItem(name)!=null){
-                return new Promise((res)=>res(localStorage.getItem(name)))
+                return new Promise((res)=>res(JSON.parse(localStorage.getItem(name))["text"]));
             }
         }
         

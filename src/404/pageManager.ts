@@ -43,9 +43,11 @@ class PageManager{
     private articleExists(article:string):Promise<ArticleResponse>{
         let s = new ServerRequest({"name": article}, constants.ARTICLEEXISTS_URL);
         return s.call().then( r => {
+            r = r as ArticleResponse;
             console.log("RESPONSE:", r);
             console.log(r[constants.RESPONSE_PARSE_KEY]);
-            localStorage.setItem(article, r[constants.RESPONSE_PARSE_KEY]);
+            
+            localStorage.setItem(article, JSON.stringify(r[constants.RESPONSE_PARSE_KEY]));
             return r[constants.RESPONSE_PARSE_KEY];
         });
     }

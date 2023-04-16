@@ -22,7 +22,6 @@ class PanelStart extends Panel {
             _elements.push(new Section(this.id, 
                                       constants.SECTION_CLASSNAME, 
                                       _sections[s].name,
-
                                       ()=>{console.log("Section", _sections[s].name, _sections[s].getContent());
                                       this.parent.switchToPanel(PANEL_ID_ARTICLE);
                                       }
