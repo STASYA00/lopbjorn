@@ -46,10 +46,10 @@ class PageManager{
         if (this.isHome()){
             console.log("Home panel");
             this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
+            console.log("assigned");
             return new PanelStart(canvas);
         }
         console.log("getting article");
-        throw new Error();
         let article = this.getArticle();
         // check that article is on GCP
         
@@ -80,7 +80,7 @@ class PageManager{
         if (article){
             new_url = `${constants.HOME_URL}/${article}`;
         }
-        
+        console.log("new url:", new_url);
         return urlManager.redirectURL(new_url);
     }
         

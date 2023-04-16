@@ -1097,10 +1097,10 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     if (this.isHome()) {
                         console.log("Home panel");
                         this.assigner.make(constants_10.PANEL_ID_START, constants_10.constants.SITE_NAME);
+                        console.log("assigned");
                         return new panel_1.PanelStart(canvas);
                     }
                     console.log("getting article");
-                    throw new Error();
                     var article = this.getArticle();
                     // check that article is on GCP
                     if (this.articleExists(article)) {
@@ -1128,6 +1128,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     if (article) {
                         new_url = "".concat(constants_10.constants.HOME_URL, "/").concat(article);
                     }
+                    console.log("new url:", new_url);
                     return urlManager_2.urlManager.redirectURL(new_url);
                 };
                 return PageManager;
