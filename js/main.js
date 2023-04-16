@@ -1122,7 +1122,6 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                 PageManager.prototype["switch"] = function (canvas, section, article) {
                     if (urlManager_2.urlManager.runsLocally()) {
                         console.log(section == undefined);
-                        throw new Error();
                         return urlManager_2.urlManager.redirectLocalURL(section == undefined, article);
                     }
                     var new_url = constants_10.constants.HOME_URL;

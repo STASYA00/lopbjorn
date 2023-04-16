@@ -74,7 +74,6 @@ class PageManager{
     switch(canvas: Canvas, section?: string, article?: string){
         if (urlManager.runsLocally()){
             console.log(section==undefined);
-            throw new Error();
             return urlManager.redirectLocalURL(section==undefined, article);
         }
         let new_url = constants.HOME_URL;
