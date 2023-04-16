@@ -50,7 +50,7 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 SECTION_CLASSNAME: "section",
                 SERVERURL: "https://get-uuklxqul3q-uc1.a.run.app/",
                 STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
-                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc1.a.run.app/",
+                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
                 NOTFOUND: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
@@ -1080,7 +1080,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                 PageManager.prototype.getArticle = function () {
                     var url = urlManager_2.urlManager.getCurrentURL();
                     url = url.substring(0, url.length - 1);
-                    return url.substring(url.lastIndexOf("/"), url.length);
+                    return url.substring(url.lastIndexOf("/") + 1, url.length);
                 };
                 PageManager.prototype.isHome = function () {
                     console.log("Current url: ".concat(urlManager_2.urlManager.getCurrentURL()));

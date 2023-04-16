@@ -19,7 +19,7 @@ class PageManager{
     private getArticle(): string{
         let url = urlManager.getCurrentURL();
         url = url.substring(0, url.length-1);
-        return url.substring(url.lastIndexOf("/"), url.length);
+        return url.substring(url.lastIndexOf("/") + 1, url.length);
     }
 
     private isHome(): boolean{
