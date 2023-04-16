@@ -48,9 +48,9 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 ROOT_CLASSNAME: "root",
                 ARTICLE_CLASSNAME: "article",
                 SECTION_CLASSNAME: "section",
-                SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/",
-                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
-                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/",
+                SERVERURL: "https://get-uuklxqul3q-uc1.a.run.app/",
+                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc1.a.run.app/",
+                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc1.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
                 NOTFOUND: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
@@ -833,6 +833,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     return url.substring(url.lastIndexOf("/"), url.length);
                 };
                 PageManager.prototype.isHome = function () {
+                    console.log("Current url: ".concat(urlManager_2.urlManager.getCurrentURL()));
                     if (!urlManager_2.urlManager.runsLocally()) {
                         return (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL) || (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL + "/");
                     }
@@ -1207,18 +1208,22 @@ System.register("section", ["uiElements"], function (exports_14, context_14) {
         }
     };
 });
-System.register("main", ["canvas"], function (exports_15, context_15) {
+System.register("main", ["canvas", "urlManager"], function (exports_15, context_15) {
     "use strict";
-    var canvas_1, c;
+    var canvas_1, urlManager_3, c;
     var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (canvas_1_1) {
                 canvas_1 = canvas_1_1;
+            },
+            function (urlManager_3_1) {
+                urlManager_3 = urlManager_3_1;
             }
         ],
         execute: function () {
             c = new canvas_1.Canvas();
+            console.log(urlManager_3.urlManager.getCurrentURL());
             c.make();
         }
     };
