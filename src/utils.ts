@@ -1,13 +1,8 @@
-// import { constants } from "./constants";
+import { EmojiConvertor } from "emoji-js";
 
-// function getCurrentURL () {
-//     return window.location.href
-//   }
+function emoji(content: string): string{
+    let emoji = new EmojiConvertor();
+    return emoji.replace_colons(content);
+}
 
-// function redirectURL(url: string = constants.HOME_URL){
-//   return window.location.replace(url);
-// }
-
-
-
-//   export {getCurrentURL, redirectURL};
+export {emoji};
