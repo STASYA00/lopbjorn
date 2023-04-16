@@ -19,6 +19,8 @@ class Canvas {
     this.currentDisplayedPanelId = "";
     this.panelIds = [];
     this.manager = new PageManager();
+    console.log("canvas initiated");
+    throw new Error();
   }
 
   make() {
