@@ -1,4 +1,5 @@
 import { marked } from "marked";
+import {EmojiConvertor} from "emoji-js";
 import {constants} from "./constants";
 import { ServerRequest } from "./request";
 
