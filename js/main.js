@@ -13,9 +13,20 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 System.register("constants", ["uuid"], function (exports_1, context_1) {
     "use strict";
-    var uuid, constants;
+    var uuid, PANEL_ID_START, PANEL_ID_ARTICLE, PANEL_ID_NOTFOUND, constants;
     var __moduleName = context_1 && context_1.id;
     return {
         setters: [
@@ -24,8 +35,15 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
+            PANEL_ID_START = uuid.v4();
+            exports_1("PANEL_ID_START", PANEL_ID_START);
+            PANEL_ID_ARTICLE = uuid.v4();
+            exports_1("PANEL_ID_ARTICLE", PANEL_ID_ARTICLE);
+            PANEL_ID_NOTFOUND = uuid.v4();
+            exports_1("PANEL_ID_NOTFOUND", PANEL_ID_NOTFOUND);
             exports_1("constants", constants = {
                 HOME_URL: "https://stasya00.github.io/lopbjorn",
+                SITE_NAME: "Lopbjorn, Stasja Fedorova's personal blog",
                 ARTICLE_HTML: "html/article.html",
                 ROOT_CLASSNAME: "root",
                 ARTICLE_CLASSNAME: "article",
@@ -33,9 +51,6 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/",
                 STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
-                PANEL_ID_START: uuid.v4(),
-                PANEL_ID_ARTICLE: uuid.v4(),
-                PANEL_ID_NOTFOUND: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
                 LOCAL_STORAGE: true
             });
@@ -280,7 +295,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
             PanelStart = /** @class */ (function (_super) {
                 __extends(PanelStart, _super);
                 function PanelStart(parent) {
-                    return _super.call(this, constants_4.constants.PANEL_ID_START, parent) || this;
+                    return _super.call(this, constants_4.PANEL_ID_START, parent) || this;
                 }
                 PanelStart.prototype.getElements = function () {
                     var _this = this;
@@ -296,11 +311,11 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                         var _articles = _sections[s].getContent();
                         _elements.push(new section_1.Section(this_2.id, constants_4.constants.SECTION_CLASSNAME, _sections[s].name, function () {
                             console.log("Section", _sections[s].name, _sections[s].getContent());
-                            _this.parent.switchToPanel(constants_4.constants.PANEL_ID_ARTICLE);
+                            _this.parent.switchToPanel(constants_4.PANEL_ID_ARTICLE);
                         }));
                         var _loop_3 = function (a) {
                             _elements.push(new section_1.Article(this_2.id, constants_4.constants.ARTICLE_CLASSNAME, _articles[a], function () {
-                                _this.parent.switchToPanel(constants_4.constants.PANEL_ID_ARTICLE);
+                                _this.parent.switchToPanel(constants_4.PANEL_ID_ARTICLE);
                                 console.log("Article", _articles[a]);
                             }));
                         };
@@ -320,7 +335,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
             PanelArticle = /** @class */ (function (_super) {
                 __extends(PanelArticle, _super);
                 function PanelArticle(parent, section, article) {
-                    var _this = _super.call(this, constants_4.constants.PANEL_ID_ARTICLE, parent) || this;
+                    var _this = _super.call(this, constants_4.PANEL_ID_ARTICLE, parent) || this;
                     _this.section = section;
                     _this.article = article;
                     _this.classname = "panelarticle";
@@ -338,7 +353,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
             PanelNotFound = /** @class */ (function (_super) {
                 __extends(PanelNotFound, _super);
                 function PanelNotFound(parent) {
-                    var _this = _super.call(this, constants_4.constants.PANEL_ID_NOTFOUND, parent) || this;
+                    var _this = _super.call(this, constants_4.PANEL_ID_NOTFOUND, parent) || this;
                     _this.classname = "panelnotfound";
                     return _this;
                 }
@@ -385,17 +400,366 @@ System.register("urlManager", ["constants"], function (exports_6, context_6) {
         }
     };
 });
-System.register("404/pageManager", ["constants", "urlManager", "panel"], function (exports_7, context_7) {
+System.register("404/tagManager", [], function (exports_7, context_7) {
     "use strict";
-    var constants_6, urlManager_1, panel_1, PageManager;
+    var _a, TagManager, TagFactory, TAGTYPES, TAGS, LANGUAGES, PAGETYPES, tagDict;
     var __moduleName = context_7 && context_7.id;
     return {
+        setters: [],
+        execute: function () {
+            TagManager = /** @class */ (function () {
+                function TagManager() {
+                    this.attr = "content";
+                    this.collection = {};
+                    this.load();
+                }
+                TagManager.prototype.load = function () {
+                    for (var tag in TAGS) {
+                        this.collection[tag] = TagFactory.make(tag);
+                    }
+                };
+                TagManager.prototype.updateTag = function (tagT, content) {
+                    var tag = this.collection[tagT];
+                    var query = document.querySelector("meta[".concat(tag.property, "=\"").concat(tag.name, "\"]"));
+                    if (query) {
+                        query.setAttribute(this.attr, content);
+                        return true;
+                    }
+                    console.log("".concat(tag.property, " of meta \"").concat(tag.name, "\" was not found in the document."));
+                    return false;
+                };
+                return TagManager;
+            }());
+            exports_7("TagManager", TagManager);
+            TagFactory = /** @class */ (function () {
+                function TagFactory() {
+                }
+                TagFactory.make = function (tag) {
+                    return { "name": tag, "property": tagDict[tag] };
+                };
+                return TagFactory;
+            }());
+            TAGTYPES = {
+                NAME: "name",
+                PROPERTY: "property"
+            };
+            (function (TAGS) {
+                TAGS["DESCR"] = "description";
+                TAGS["KEYWORDS"] = "keywords";
+                TAGS["TITLE"] = "og:title";
+                TAGS["TYPE"] = "og:type";
+                TAGS["IMAGE"] = "og:image";
+                TAGS["URL"] = "og:url";
+                TAGS["SITE_NAME"] = "og:site_name";
+                TAGS["LOCALE"] = "og:locale";
+            })(TAGS || (TAGS = {}));
+            exports_7("TAGS", TAGS);
+            (function (LANGUAGES) {
+                LANGUAGES["ENG"] = "en_GB";
+                LANGUAGES["IT"] = "it_IT";
+                LANGUAGES["SE"] = "sv_SE";
+                LANGUAGES["RU"] = "ru_RU";
+            })(LANGUAGES || (LANGUAGES = {}));
+            exports_7("LANGUAGES", LANGUAGES);
+            (function (PAGETYPES) {
+                PAGETYPES["ARTICLE"] = "article";
+                PAGETYPES["WEBSITE"] = "website";
+                PAGETYPES["PROFILE"] = "profile";
+            })(PAGETYPES || (PAGETYPES = {}));
+            exports_7("PAGETYPES", PAGETYPES);
+            tagDict = (_a = {},
+                _a[TAGS.DESCR] = TAGTYPES.NAME,
+                _a[TAGS.KEYWORDS] = TAGTYPES.NAME,
+                _a[TAGS.TITLE] = TAGTYPES.PROPERTY,
+                _a[TAGS.TYPE] = TAGTYPES.PROPERTY,
+                _a[TAGS.IMAGE] = TAGTYPES.PROPERTY,
+                _a[TAGS.URL] = TAGTYPES.PROPERTY,
+                _a);
+        }
+    };
+});
+System.register("404/tagsetter", ["404/tagManager", "urlManager", "constants"], function (exports_8, context_8) {
+    "use strict";
+    var _a, tagManager_1, urlManager_1, constants_6, TagSetterFactory, TagSetter, TagSetterLang, TagSetterKwrds, TagSetterDescr, TagSetterImage, TagSetterTitle, TagSetterURL, TagSetterType, TagSetterSitename, tagsettersdict;
+    var __moduleName = context_8 && context_8.id;
+    return {
         setters: [
-            function (constants_6_1) {
-                constants_6 = constants_6_1;
+            function (tagManager_1_1) {
+                tagManager_1 = tagManager_1_1;
             },
             function (urlManager_1_1) {
                 urlManager_1 = urlManager_1_1;
+            },
+            function (constants_6_1) {
+                constants_6 = constants_6_1;
+            }
+        ],
+        execute: function () {
+            TagSetterFactory = /** @class */ (function () {
+                function TagSetterFactory() {
+                    var _a;
+                    this.content = (_a = {},
+                        _a[tagManager_1.TAGS.URL] = TagSetterURL,
+                        _a[tagManager_1.TAGS.DESCR] = TagSetterDescr,
+                        _a[tagManager_1.TAGS.IMAGE] = TagSetterImage,
+                        _a[tagManager_1.TAGS.KEYWORDS] = TagSetterKwrds,
+                        _a[tagManager_1.TAGS.LOCALE] = TagSetterLang,
+                        _a[tagManager_1.TAGS.SITE_NAME] = TagSetterSitename,
+                        _a[tagManager_1.TAGS.TITLE] = TagSetterTitle,
+                        _a[tagManager_1.TAGS.TYPE] = TagSetterType,
+                        _a);
+                }
+                TagSetterFactory.prototype.make = function (tag) {
+                    return new this.content[tag]();
+                };
+                return TagSetterFactory;
+            }());
+            exports_8("TagSetterFactory", TagSetterFactory);
+            TagSetter = /** @class */ (function () {
+                function TagSetter(tag) {
+                    this.tag = tag;
+                }
+                TagSetter.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return "";
+                };
+                return TagSetter;
+            }());
+            exports_8("TagSetter", TagSetter);
+            TagSetterLang = /** @class */ (function (_super) {
+                __extends(TagSetterLang, _super);
+                function TagSetterLang(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.LOCALE; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterLang.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return tagManager_1.LANGUAGES.SE;
+                };
+                return TagSetterLang;
+            }(TagSetter));
+            TagSetterKwrds = /** @class */ (function (_super) {
+                __extends(TagSetterKwrds, _super);
+                function TagSetterKwrds(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.KEYWORDS; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterKwrds.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return "tech, article, ifc, parsing";
+                };
+                return TagSetterKwrds;
+            }(TagSetter));
+            TagSetterDescr = /** @class */ (function (_super) {
+                __extends(TagSetterDescr, _super);
+                // IDEA: take intro from each article's readme - first stycke
+                function TagSetterDescr(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.KEYWORDS; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterDescr.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return "test description";
+                };
+                return TagSetterDescr;
+            }(TagSetter));
+            TagSetterImage = /** @class */ (function (_super) {
+                __extends(TagSetterImage, _super);
+                function TagSetterImage(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.IMAGE; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterImage.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return "image.png";
+                };
+                return TagSetterImage;
+            }(TagSetter));
+            TagSetterTitle = /** @class */ (function (_super) {
+                __extends(TagSetterTitle, _super);
+                function TagSetterTitle(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.TITLE; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterTitle.prototype.get = function (id, article) {
+                    return article;
+                };
+                return TagSetterTitle;
+            }(TagSetter));
+            TagSetterURL = /** @class */ (function (_super) {
+                __extends(TagSetterURL, _super);
+                function TagSetterURL(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.URL; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterURL.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return urlManager_1.urlManager.getCurrentURL();
+                };
+                return TagSetterURL;
+            }(TagSetter));
+            TagSetterType = /** @class */ (function (_super) {
+                __extends(TagSetterType, _super);
+                function TagSetterType(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.TYPE; }
+                    var _this = _super.call(this, tag) || this;
+                    _this.pagetypes = {
+                        PANEL_ID_START: tagManager_1.PAGETYPES.WEBSITE,
+                        PANEL_ID_ARTICLE: tagManager_1.PAGETYPES.ARTICLE,
+                        PANEL_ID_NOTFOUND: tagManager_1.PAGETYPES.ARTICLE
+                    };
+                    return _this;
+                }
+                TagSetterType.prototype.get = function (id, article) {
+                    if (article === void 0) { article = ""; }
+                    return this.pagetypes[id];
+                };
+                return TagSetterType;
+            }(TagSetter));
+            TagSetterSitename = /** @class */ (function (_super) {
+                __extends(TagSetterSitename, _super);
+                function TagSetterSitename(tag) {
+                    if (tag === void 0) { tag = tagManager_1.TAGS.SITE_NAME; }
+                    return _super.call(this, tag) || this;
+                }
+                TagSetterSitename.prototype.get = function (id, article) {
+                    if (id === void 0) { id = ""; }
+                    if (article === void 0) { article = ""; }
+                    return constants_6.constants.SITE_NAME;
+                };
+                return TagSetterSitename;
+            }(TagSetter));
+            tagsettersdict = (_a = {},
+                _a[tagManager_1.TAGS.URL] = TagSetterURL,
+                _a[tagManager_1.TAGS.DESCR] = TagSetterDescr,
+                _a[tagManager_1.TAGS.IMAGE] = TagSetterImage,
+                _a[tagManager_1.TAGS.KEYWORDS] = TagSetterKwrds,
+                _a[tagManager_1.TAGS.LOCALE] = TagSetterLang,
+                _a[tagManager_1.TAGS.SITE_NAME] = TagSetterSitename,
+                _a[tagManager_1.TAGS.TITLE] = TagSetterTitle,
+                _a[tagManager_1.TAGS.TYPE] = TagSetterType,
+                _a);
+            exports_8("tagsettersdict", tagsettersdict);
+        }
+    };
+});
+System.register("404/pageTagger", ["constants", "404/tagManager", "404/tagsetter"], function (exports_9, context_9) {
+    "use strict";
+    var constants_7, tagManager_2, tagsetter_1, PageTagger;
+    var __moduleName = context_9 && context_9.id;
+    return {
+        setters: [
+            function (constants_7_1) {
+                constants_7 = constants_7_1;
+            },
+            function (tagManager_2_1) {
+                tagManager_2 = tagManager_2_1;
+            },
+            function (tagsetter_1_1) {
+                tagsetter_1 = tagsetter_1_1;
+            }
+        ],
+        execute: function () {
+            PageTagger = /** @class */ (function () {
+                function PageTagger(panelId, name) {
+                    if (panelId === void 0) { panelId = constants_7.PANEL_ID_START; }
+                    if (name === void 0) { name = ""; }
+                    this.id = panelId;
+                    this.name = name;
+                    this.factory = new tagsetter_1.TagSetterFactory();
+                    this.tags = {};
+                    this.tagsetters = {};
+                    this.init();
+                }
+                PageTagger.prototype.init = function () {
+                    for (var tag in tagManager_2.TAGS) {
+                        this.tagsetters[tag] = this.factory.make(tag);
+                    }
+                };
+                PageTagger.prototype.make = function (id, article) {
+                    if (article === void 0) { article = ""; }
+                    this.setData(id, article);
+                    for (var tag in tagManager_2.TAGS) {
+                        this.tags[tag] = this.tagsetters[tag].get(this.id, this.name);
+                    }
+                };
+                PageTagger.prototype.getContent = function () {
+                    var _tags = __assign({}, this.tags);
+                    return _tags;
+                };
+                PageTagger.prototype.setName = function (article) {
+                    this.name = article;
+                };
+                PageTagger.prototype.setPage = function (id) {
+                    this.id = id;
+                };
+                PageTagger.prototype.setData = function (id, article) {
+                    this.name = article;
+                    this.id = id;
+                };
+                return PageTagger;
+            }());
+            exports_9("PageTagger", PageTagger);
+        }
+    };
+});
+System.register("404/pageTagAssigner", ["constants", "404/pageTagger", "404/tagManager"], function (exports_10, context_10) {
+    "use strict";
+    var constants_8, pageTagger_1, tagManager_3, PageTagAssigner;
+    var __moduleName = context_10 && context_10.id;
+    return {
+        setters: [
+            function (constants_8_1) {
+                constants_8 = constants_8_1;
+            },
+            function (pageTagger_1_1) {
+                pageTagger_1 = pageTagger_1_1;
+            },
+            function (tagManager_3_1) {
+                tagManager_3 = tagManager_3_1;
+            }
+        ],
+        execute: function () {
+            PageTagAssigner = /** @class */ (function () {
+                function PageTagAssigner() {
+                    this.tagger = new pageTagger_1.PageTagger();
+                    this.manager = new tagManager_3.TagManager();
+                }
+                PageTagAssigner.prototype.make = function (id, article) {
+                    if (id === void 0) { id = constants_8.PANEL_ID_START; }
+                    if (article === void 0) { article = ""; }
+                    this.tagger.make(id, article);
+                    var result = this.tagger.getContent();
+                    for (var tag in tagManager_3.TAGS) {
+                        this.manager.updateTag(tag, result[tag]);
+                    }
+                };
+                return PageTagAssigner;
+            }());
+            exports_10("PageTagAssigner", PageTagAssigner);
+        }
+    };
+});
+System.register("404/pageManager", ["constants", "urlManager", "404/pageTagAssigner", "panel"], function (exports_11, context_11) {
+    "use strict";
+    var constants_9, urlManager_2, pageTagAssigner_1, panel_1, PageManager;
+    var __moduleName = context_11 && context_11.id;
+    return {
+        setters: [
+            function (constants_9_1) {
+                constants_9 = constants_9_1;
+            },
+            function (urlManager_2_1) {
+                urlManager_2 = urlManager_2_1;
+            },
+            function (pageTagAssigner_1_1) {
+                pageTagAssigner_1 = pageTagAssigner_1_1;
             },
             function (panel_1_1) {
                 panel_1 = panel_1_1;
@@ -404,42 +768,46 @@ System.register("404/pageManager", ["constants", "urlManager", "panel"], functio
         execute: function () {
             PageManager = /** @class */ (function () {
                 function PageManager() {
+                    this.assigner = new pageTagAssigner_1.PageTagAssigner();
                 }
                 PageManager.prototype.getArticle = function () {
-                    var url = urlManager_1.urlManager.getCurrentURL();
+                    var url = urlManager_2.urlManager.getCurrentURL();
                     url = url.substring(0, url.length - 1);
                     return url.substring(url.lastIndexOf("/"), url.length);
                 };
+                PageManager.prototype.isHome = function () {
+                    return (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL) || (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL + "/");
+                };
+                PageManager.prototype.articleExists = function (article) {
+                    return true;
+                };
                 PageManager.prototype.start = function (canvas) {
-                    console.log("get current ".concat(urlManager_1.urlManager.getCurrentURL()));
-                    console.log("home ".concat(constants_6.constants.HOME_URL));
-                    if (urlManager_1.urlManager.getCurrentURL() == constants_6.constants.HOME_URL) {
+                    if (this.isHome()) {
+                        this.assigner.make(constants_9.PANEL_ID_START);
                         return new panel_1.PanelStart(canvas);
                     }
                     var article = this.getArticle();
                     // check that article is on GCP
-                    var result = true;
-                    if (result) {
+                    if (this.articleExists(article)) {
                         var section = "Tech";
-                        article = "Parsing_ifc_file";
-                        console.log(urlManager_1.urlManager.rewriteURL(article));
-                        console.log("new url ".concat(urlManager_1.urlManager.getCurrentURL()));
-                        // redirect to article page - no need
-                        //redirectURL(`${constants.HOME_URL}`);
+                        var article1 = "Parsing_ifc_file";
+                        urlManager_2.urlManager.rewriteURL(article1);
+                        this.assigner.make(constants_9.PANEL_ID_ARTICLE, article);
                         return new panel_1.PanelArticle(canvas, section, article);
                     }
+                    this.assigner.make(constants_9.PANEL_ID_ARTICLE, article);
                     return new panel_1.PanelNotFound(canvas);
                 };
                 return PageManager;
             }());
-            exports_7("PageManager", PageManager);
+            exports_11("PageManager", PageManager);
         }
     };
 });
-System.register("canvas", ["404/pageManager"], function (exports_8, context_8) {
+System.register("canvas", ["404/pageManager"], function (exports_12, context_12) {
     "use strict";
     var pageManager_1, Canvas;
-    var __moduleName = context_8 && context_8.id;
+    var __moduleName = context_12 && context_12.id;
     return {
         setters: [
             function (pageManager_1_1) {
@@ -499,21 +867,21 @@ System.register("canvas", ["404/pageManager"], function (exports_8, context_8) {
                 };
                 return Canvas;
             }());
-            exports_8("Canvas", Canvas);
+            exports_12("Canvas", Canvas);
         }
     };
 });
-System.register("uiElements", ["uuid", "constants"], function (exports_9, context_9) {
+System.register("uiElements", ["uuid", "constants"], function (exports_13, context_13) {
     "use strict";
-    var uuid, constants_7, PanelElement, PanelText, Pane, PanelButton, Panel, PanelImage;
-    var __moduleName = context_9 && context_9.id;
+    var uuid, constants_10, PanelElement, PanelText, Pane, PanelButton, Panel, PanelImage;
+    var __moduleName = context_13 && context_13.id;
     return {
         setters: [
             function (uuid_2) {
                 uuid = uuid_2;
             },
-            function (constants_7_1) {
-                constants_7 = constants_7_1;
+            function (constants_10_1) {
+                constants_10 = constants_10_1;
             }
         ],
         execute: function () {
@@ -555,7 +923,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_9, contex
                 PanelElement.prototype.postprocess = function (el) { };
                 return PanelElement;
             }());
-            exports_9("PanelElement", PanelElement);
+            exports_13("PanelElement", PanelElement);
             PanelText = /** @class */ (function (_super) {
                 __extends(PanelText, _super);
                 function PanelText(text, classname, id) {
@@ -574,7 +942,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_9, contex
                 };
                 return PanelText;
             }(PanelElement));
-            exports_9("PanelText", PanelText);
+            exports_13("PanelText", PanelText);
             Pane = /** @class */ (function (_super) {
                 __extends(Pane, _super);
                 function Pane(parentId, classname, parent) {
@@ -611,7 +979,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_9, contex
                 };
                 return Pane;
             }(PanelElement));
-            exports_9("Pane", Pane);
+            exports_13("Pane", Pane);
             PanelButton = /** @class */ (function (_super) {
                 __extends(PanelButton, _super);
                 function PanelButton(label, onclickFn, classname, css, disabled) {
@@ -639,14 +1007,14 @@ System.register("uiElements", ["uuid", "constants"], function (exports_9, contex
                 };
                 return PanelButton;
             }(PanelElement));
-            exports_9("PanelButton", PanelButton);
+            exports_13("PanelButton", PanelButton);
             Panel = /** @class */ (function () {
                 function Panel(id, parent) {
                     if (id === void 0) { id = null; }
                     this.id = id ? id : uuid.v4();
                     this.classname = "panel";
                     this.parent = parent;
-                    this.parentId = constants_7.constants.ROOT_CLASSNAME;
+                    this.parentId = constants_10.constants.ROOT_CLASSNAME;
                 }
                 Panel.prototype.getElements = function () {
                     return new Promise(function (res) { return res([]); });
@@ -674,7 +1042,7 @@ System.register("uiElements", ["uuid", "constants"], function (exports_9, contex
                 Panel.prototype.postActions = function () { };
                 return Panel;
             }());
-            exports_9("Panel", Panel);
+            exports_13("Panel", Panel);
             PanelImage = /** @class */ (function (_super) {
                 __extends(PanelImage, _super);
                 function PanelImage(id, src, css, classname, onchangeFn) {
@@ -696,14 +1064,14 @@ System.register("uiElements", ["uuid", "constants"], function (exports_9, contex
                 };
                 return PanelImage;
             }(PanelElement));
-            exports_9("PanelImage", PanelImage);
+            exports_13("PanelImage", PanelImage);
         }
     };
 });
-System.register("section", ["uiElements"], function (exports_10, context_10) {
+System.register("section", ["uiElements"], function (exports_14, context_14) {
     "use strict";
     var uiElements_2, SECTIONS, ARTICLES, Section, Article;
-    var __moduleName = context_10 && context_10.id;
+    var __moduleName = context_14 && context_14.id;
     return {
         setters: [
             function (uiElements_2_1) {
@@ -736,7 +1104,7 @@ System.register("section", ["uiElements"], function (exports_10, context_10) {
                 };
                 return Section;
             }(uiElements_2.Pane));
-            exports_10("Section", Section);
+            exports_14("Section", Section);
             Article = /** @class */ (function (_super) {
                 __extends(Article, _super);
                 function Article() {
@@ -744,14 +1112,14 @@ System.register("section", ["uiElements"], function (exports_10, context_10) {
                 }
                 return Article;
             }(Section));
-            exports_10("Article", Article);
+            exports_14("Article", Article);
         }
     };
 });
-System.register("main", ["canvas"], function (exports_11, context_11) {
+System.register("main", ["canvas"], function (exports_15, context_15) {
     "use strict";
     var canvas_1, c;
-    var __moduleName = context_11 && context_11.id;
+    var __moduleName = context_15 && context_15.id;
     return {
         setters: [
             function (canvas_1_1) {

@@ -1,14 +1,15 @@
-import { constants } from "../constants";
+import { PANEL_ID_ARTICLE, PANEL_ID_START, constants } from "../constants";
 // import { getCurrentURL, redirectURL } from "../utils";
 import { urlManager } from "../urlManager";
+import { PageTagAssigner } from "./pageTagAssigner";
 import { PanelArticle, PanelNotFound, PanelStart } from "../panel";
 import { Canvas } from "../canvas";
 import { Panel } from "../uiElements";
 
 class PageManager{
-
+    private assigner: PageTagAssigner;
     constructor(){
-
+        this.assigner = new PageTagAssigner();
     }
 
     private getArticle(): string{
@@ -17,26 +18,31 @@ class PageManager{
         return url.substring(url.lastIndexOf("/"), url.length);
     }
 
+    private isHome(): boolean{
+        return (urlManager.getCurrentURL() == constants.HOME_URL) || (urlManager.getCurrentURL() == constants.HOME_URL+"/");
+    }
+
+    private articleExists(article:string){
+        return true;
+    }
+
     start(canvas: Canvas): Panel{
-        console.log(`get current ${urlManager.getCurrentURL()}`);
-        console.log(`home ${constants.HOME_URL}`);
-        if (urlManager.getCurrentURL() == constants.HOME_URL){
+        
+        if (this.isHome()){
+            this.assigner.make(PANEL_ID_START);
             return new PanelStart(canvas);
         }
         let article = this.getArticle();
         // check that article is on GCP
-        let result = true;
-        if (result){
+        
+        if (this.articleExists(article)){
             let section = "Tech";
-            article = "Parsing_ifc_file";
-
-            console.log(urlManager.rewriteURL(article));
-            console.log(`new url ${urlManager.getCurrentURL()}`);
-            // redirect to article page - no need
-            //redirectURL(`${constants.HOME_URL}`);
-            
+            let article1 = "Parsing_ifc_file";
+            urlManager.rewriteURL(article1);
+            this.assigner.make(PANEL_ID_ARTICLE, article);
             return new PanelArticle(canvas, section, article);
         }
+        this.assigner.make(PANEL_ID_ARTICLE, article);
         return new PanelNotFound(canvas);
     }
 }

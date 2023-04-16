@@ -1,4 +1,4 @@
-import { constants } from "./constants";
+import { constants, PANEL_ID_ARTICLE, PANEL_ID_NOTFOUND, PANEL_ID_START } from "./constants";
 import { Canvas } from "./canvas";
 import {
   Panel, PanelText, PanelElement
@@ -9,7 +9,7 @@ import { ArticleRenderer } from "./articleRenderer";
 
 class PanelStart extends Panel {
     constructor(parent: Canvas) {
-      super(constants.PANEL_ID_START, parent);
+      super(PANEL_ID_START, parent);
     }
     getElements(): Promise<PanelElement[]> {
       
@@ -28,7 +28,7 @@ class PanelStart extends Panel {
                                    _sections[s].name,
 
                                    ()=>{console.log("Section", _sections[s].name, _sections[s].getContent());
-                                  this.parent.switchToPanel(constants.PANEL_ID_ARTICLE);
+                                  this.parent.switchToPanel(PANEL_ID_ARTICLE);
                                   }
                                    
                                    ));
@@ -36,7 +36,7 @@ class PanelStart extends Panel {
           _elements.push(new Article(this.id, constants.ARTICLE_CLASSNAME, _articles[a],
 
             ()=>{
-              this.parent.switchToPanel(constants.PANEL_ID_ARTICLE);
+              this.parent.switchToPanel(PANEL_ID_ARTICLE);
               console.log("Article", _articles[a])
             }
 
@@ -53,7 +53,7 @@ class PanelArticle extends Panel{
   section: string;
   article: string;
   constructor(parent: Canvas, section:string, article:string) {
-    super(constants.PANEL_ID_ARTICLE, parent);
+    super(PANEL_ID_ARTICLE, parent);
     this.section = section;
     this.article = article;
     this.classname = "panelarticle";
@@ -71,7 +71,7 @@ class PanelArticle extends Panel{
 class PanelNotFound extends Panel{
   
   constructor(parent: Canvas) {
-    super(constants.PANEL_ID_NOTFOUND, parent);
+    super(PANEL_ID_NOTFOUND, parent);
     this.classname = "panelnotfound";
   }
 
