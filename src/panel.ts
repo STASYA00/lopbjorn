@@ -18,34 +18,37 @@ class PanelStart extends Panel {
       //   new PanelText(r, "articletext")
       // ]);
       let structure = new BlogStructure();
-      structure.load_test();
-      let _sections = structure.getSections();
-      let _elements:PanelElement[] = [];
-      for (let s=0; s< _sections.length; s++){
-        let _articles = _sections[s].getContent();
-        _elements.push(new Section(this.id, 
-                                   constants.SECTION_CLASSNAME, 
-                                   _sections[s].name,
+      //structure.load_test();
+      return structure.load().then(
+        r=>{
+          let _sections = structure.getSections();
+          let _elements:PanelElement[] = [];
+          for (let s=0; s< _sections.length; s++){
+            let _articles = _sections[s].getContent()[0];
+            _elements.push(new Section(this.id, 
+                                      constants.SECTION_CLASSNAME, 
+                                      _sections[s].name,
 
-                                   ()=>{console.log("Section", _sections[s].name, _sections[s].getContent());
-                                  this.parent.switchToPanel(PANEL_ID_ARTICLE);
-                                  }
-                                   
-                                   ));
-        for (let a=0; a< _articles.length; a++){
-          _elements.push(new Article(this.id, constants.ARTICLE_CLASSNAME, _articles[a],
+                                      ()=>{console.log("Section", _sections[s].name, _sections[s].getContent());
+                                      this.parent.switchToPanel(PANEL_ID_ARTICLE);
+                                      }
+                                      ));
+            for (let a=0; a<_articles.length; a++){
+              _elements.push(new Article(this.id, constants.ARTICLE_CLASSNAME, _articles[a],
 
-            ()=>{
-              this.parent.switchToPanel(PANEL_ID_ARTICLE);
-              console.log("Article", _articles[a])
+                ()=>{
+                  this.parent.switchToPanel(PANEL_ID_ARTICLE, _sections[s].name, _articles[a]);
+                  console.log("Article", _articles[a]);
+                }
+                ));
             }
-
-            ));
+          }
+          return new Promise((res)=>res(
+            _elements
+          ));
         }
-      }
-      return new Promise((res)=>res(
-        _elements
-      ));
+      );
+      
     }
   }
 

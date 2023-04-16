@@ -55,7 +55,7 @@ class Canvas {
     this.switchToPanel(this.panelIds[ind]);
   }
 
-  switchToPanel(id: string): void {
+  switchToPanel(id: string, section?: string, article?: string): void {
     if (this.currentDisplayedPanelId) {
       let el = document.getElementById(this.currentDisplayedPanelId);
       if (el) {
@@ -67,7 +67,10 @@ class Canvas {
       el.style.display = "grid"; //flex
     }
     this.currentDisplayedPanelId = id;
+
+    this.manager.switch(this, section, article);
   } 
+
 }
 
 export { Canvas , PanelEnum};

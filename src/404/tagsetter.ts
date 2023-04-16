@@ -94,8 +94,6 @@ class TagSetterType extends TagSetter{
         
     }
     get(id:string, article:string=""): string {
-        console.log(this.pagetypes);
-        console.log(id);
         return this.pagetypes[id];
     }
 }

@@ -48,9 +48,9 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 ROOT_CLASSNAME: "root",
                 ARTICLE_CLASSNAME: "article",
                 SECTION_CLASSNAME: "section",
-                SERVERURL: "https://get-uuklxqul3q-uc1.a.run.app/",
-                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc1.a.run.app/",
-                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc1.a.run.app/",
+                SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/",
+                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
+                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
                 NOTFOUND: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
@@ -172,10 +172,16 @@ System.register("structure", ["constants", "request"], function (exports_3, cont
                     return _sections;
                 };
                 BlogStructure.prototype.load = function () {
+                    var _this = this;
                     var s = new request_1.ServerRequest("");
                     s.url = constants_2.constants.STRUCTURE_URL;
                     return s.call().then(function (r) {
                         var res = r[constants_2.constants.RESPONSE_PARSE_KEY];
+                        for (var r_1 in res) {
+                            var structure = new SectionStructure(r_1);
+                            structure.add(res[r_1]);
+                            _this.sections.push(structure);
+                        }
                         // make sections
                         localStorage.setItem(constants_2.constants.CACHE_KEY_STRUCTURE, res);
                         return res;
@@ -306,30 +312,31 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
                     //   new PanelText(r, "articletext")
                     // ]);
                     var structure = new structure_1.BlogStructure();
-                    structure.load_test();
-                    var _sections = structure.getSections();
-                    var _elements = [];
-                    var _loop_2 = function (s) {
-                        var _articles = _sections[s].getContent();
-                        _elements.push(new section_1.Section(this_2.id, constants_4.constants.SECTION_CLASSNAME, _sections[s].name, function () {
-                            console.log("Section", _sections[s].name, _sections[s].getContent());
-                            _this.parent.switchToPanel(constants_4.PANEL_ID_ARTICLE);
-                        }));
-                        var _loop_3 = function (a) {
-                            _elements.push(new section_1.Article(this_2.id, constants_4.constants.ARTICLE_CLASSNAME, _articles[a], function () {
+                    //structure.load_test();
+                    return structure.load().then(function (r) {
+                        var _sections = structure.getSections();
+                        var _elements = [];
+                        var _loop_2 = function (s) {
+                            var _articles = _sections[s].getContent()[0];
+                            _elements.push(new section_1.Section(_this.id, constants_4.constants.SECTION_CLASSNAME, _sections[s].name, function () {
+                                console.log("Section", _sections[s].name, _sections[s].getContent());
                                 _this.parent.switchToPanel(constants_4.PANEL_ID_ARTICLE);
-                                console.log("Article", _articles[a]);
                             }));
+                            var _loop_3 = function (a) {
+                                _elements.push(new section_1.Article(_this.id, constants_4.constants.ARTICLE_CLASSNAME, _articles[a], function () {
+                                    _this.parent.switchToPanel(constants_4.PANEL_ID_ARTICLE, _sections[s].name, _articles[a]);
+                                    console.log("Article", _articles[a]);
+                                }));
+                            };
+                            for (var a = 0; a < _articles.length; a++) {
+                                _loop_3(a);
+                            }
                         };
-                        for (var a = 0; a < _articles.length; a++) {
-                            _loop_3(a);
+                        for (var s = 0; s < _sections.length; s++) {
+                            _loop_2(s);
                         }
-                    };
-                    var this_2 = this;
-                    for (var s = 0; s < _sections.length; s++) {
-                        _loop_2(s);
-                    }
-                    return new Promise(function (res) { return res(_elements); });
+                        return new Promise(function (res) { return res(_elements); });
+                    });
                 };
                 return PanelStart;
             }(uiElements_1.Panel));
@@ -372,7 +379,7 @@ System.register("panel", ["constants", "uiElements", "section", "structure", "ar
 });
 System.register("urlManager", ["constants"], function (exports_6, context_6) {
     "use strict";
-    var constants_5, urlManager;
+    var constants_5, HTMLFilesEnum, urlManager;
     var __moduleName = context_6 && context_6.id;
     return {
         setters: [
@@ -381,6 +388,11 @@ System.register("urlManager", ["constants"], function (exports_6, context_6) {
             }
         ],
         execute: function () {
+            (function (HTMLFilesEnum) {
+                HTMLFilesEnum["HOME"] = "index";
+                HTMLFilesEnum["ERROR"] = "404";
+            })(HTMLFilesEnum || (HTMLFilesEnum = {}));
+            exports_6("HTMLFilesEnum", HTMLFilesEnum);
             urlManager = /** @class */ (function () {
                 function urlManager() {
                 }
@@ -391,9 +403,21 @@ System.register("urlManager", ["constants"], function (exports_6, context_6) {
                     if (url === void 0) { url = constants_5.constants.HOME_URL; }
                     return window.location.replace(url);
                 };
+                urlManager.redirectLocalURL = function (toHome, article) {
+                    if (toHome === void 0) { toHome = true; }
+                    var new_url = toHome ? this.getCurrentURL().replace(HTMLFilesEnum.ERROR, HTMLFilesEnum.HOME) :
+                        "".concat(this.getCurrentURL().replace(HTMLFilesEnum.HOME, HTMLFilesEnum.ERROR), "/").concat(article);
+                    console.log(new_url);
+                    if (new_url == this.getCurrentURL()) {
+                        return;
+                    }
+                    return this.redirectURL(new_url);
+                };
                 urlManager.rewriteURL = function (endpoint) {
                     if (endpoint === void 0) { endpoint = ""; }
-                    history.pushState({ "name": "lopbjorn" }, "", endpoint);
+                    if (!this.runsLocally()) {
+                        history.pushState({ "name": "lopbjorn" }, "", endpoint);
+                    }
                     return "".concat(constants_5.constants.HOME_URL, "/").concat(endpoint) == this.getCurrentURL();
                 };
                 urlManager.runsLocally = function () {
@@ -641,8 +665,6 @@ System.register("404/tagsetter", ["404/tagManager", "urlManager", "constants"], 
                 }
                 TagSetterType.prototype.get = function (id, article) {
                     if (article === void 0) { article = ""; }
-                    console.log(this.pagetypes);
-                    console.log(id);
                     return this.pagetypes[id];
                 };
                 return TagSetterType;
@@ -814,7 +836,8 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     if (!urlManager_2.urlManager.runsLocally()) {
                         return (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL) || (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL + "/");
                     }
-                    return true;
+                    // check locally
+                    return urlManager_2.urlManager.getCurrentURL().includes(urlManager_2.HTMLFilesEnum.HOME);
                 };
                 PageManager.prototype.articleExists = function (article) {
                     var s = new request_3.ServerRequest(article, constants_9.constants.ARTICLEEXISTS_URL);
@@ -847,6 +870,17 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     }
                     this.assigner.make(constants_9.PANEL_ID_ARTICLE, article);
                     return new panel_1.PanelNotFound(canvas);
+                };
+                PageManager.prototype["switch"] = function (canvas, section, article) {
+                    if (urlManager_2.urlManager.runsLocally()) {
+                        console.log(section == undefined);
+                        return urlManager_2.urlManager.redirectLocalURL(section == undefined, article);
+                    }
+                    var new_url = constants_9.constants.SITE_NAME;
+                    if (article) {
+                        new_url = "".concat(constants_9.constants.SITE_NAME, "/").concat(article);
+                    }
+                    return urlManager_2.urlManager.redirectURL(new_url);
                 };
                 return PageManager;
             }());
@@ -908,7 +942,7 @@ System.register("canvas", ["404/pageManager"], function (exports_12, context_12)
                     }
                     this.switchToPanel(this.panelIds[ind]);
                 };
-                Canvas.prototype.switchToPanel = function (id) {
+                Canvas.prototype.switchToPanel = function (id, section, article) {
                     if (this.currentDisplayedPanelId) {
                         var el_1 = document.getElementById(this.currentDisplayedPanelId);
                         if (el_1) {
@@ -920,6 +954,7 @@ System.register("canvas", ["404/pageManager"], function (exports_12, context_12)
                         el.style.display = "grid"; //flex
                     }
                     this.currentDisplayedPanelId = id;
+                    this.manager["switch"](this, section, article);
                 };
                 return Canvas;
             }());

@@ -2,7 +2,7 @@ import { marked } from "marked";
 
 import { PANEL_ID_ARTICLE, PANEL_ID_START, constants } from "../constants";
 // import { getCurrentURL, redirectURL } from "../utils";
-import { urlManager } from "../urlManager";
+import { urlManager, HTMLFilesEnum } from "../urlManager";
 import { PageTagAssigner } from "./pageTagAssigner";
 import { PanelArticle, PanelNotFound, PanelStart } from "../panel";
 import { ServerRequest } from "../request";
@@ -26,7 +26,8 @@ class PageManager{
         if (!urlManager.runsLocally()){
             return (urlManager.getCurrentURL() == constants.HOME_URL) || (urlManager.getCurrentURL() == constants.HOME_URL+"/");
              }
-        return true;
+        // check locally
+        return urlManager.getCurrentURL().includes(HTMLFilesEnum.HOME);
         }
 
     private articleExists(article:string){
@@ -65,6 +66,20 @@ class PageManager{
         this.assigner.make(PANEL_ID_ARTICLE, article);
         return new PanelNotFound(canvas);
     }
+
+    switch(canvas: Canvas, section?: string, article?: string){
+        if (urlManager.runsLocally()){
+            console.log(section==undefined);
+            return urlManager.redirectLocalURL(section==undefined, article);
+        }
+        let new_url = constants.SITE_NAME;
+        if (article){
+            new_url = `${constants.SITE_NAME}/${article}`;
+        }
+        
+        return urlManager.redirectURL(new_url);
+    }
+        
 }
 
 export {PageManager};

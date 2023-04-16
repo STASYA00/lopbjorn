@@ -23,6 +23,7 @@ class BlogStructure{
     }
 
     getSections(): SectionStructure[]{
+        
         let _sections = this.sections.map(x => x);
         return _sections;
     }
@@ -30,8 +31,14 @@ class BlogStructure{
     load(){
         let s = new ServerRequest("");
         s.url = constants.STRUCTURE_URL;
+        
         return s.call().then( r => {
             let res = r[constants.RESPONSE_PARSE_KEY];
+            for (let r in res){
+                let structure = new SectionStructure(r);
+                structure.add(res[r]);
+                this.sections.push(structure);
+            }
             // make sections
             localStorage.setItem(constants.CACHE_KEY_STRUCTURE, res);
             return res;
