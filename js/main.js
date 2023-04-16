@@ -1094,6 +1094,8 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                 PageManager.prototype.articleExists = function (article) {
                     var s = new request_3.ServerRequest({ "name": article }, constants_10.constants.ARTICLEEXISTS_URL);
                     return s.call().then(function (r) {
+                        console.log("RESPONSE:", r);
+                        console.log(r[constants_10.constants.RESPONSE_PARSE_KEY]);
                         var res = marked_2.marked.parse(r[constants_10.constants.RESPONSE_PARSE_KEY]);
                         localStorage.setItem(article, res);
                         return res;
@@ -1106,7 +1108,6 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                         this.assigner.make(constants_10.PANEL_ID_START, constants_10.constants.SITE_NAME);
                         return new Promise(function (res) { return res(new panel_1.PanelStart(canvas)); });
                     }
-                    console.log("getting article");
                     var article = this.getArticle();
                     return this.articleExists(article).then(function (res) {
                         console.log("result", res);

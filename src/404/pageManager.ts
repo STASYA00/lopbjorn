@@ -33,9 +33,11 @@ class PageManager{
         return urlManager.getCurrentURL().includes(HTMLFilesEnum.HOME);
         }
 
-    private articleExists(article:string){
+    private articleExists(article:string):Promise<string>{
         let s = new ServerRequest({"name": article}, constants.ARTICLEEXISTS_URL);
         return s.call().then( r => {
+            console.log("RESPONSE:", r);
+            console.log(r[constants.RESPONSE_PARSE_KEY]);
             let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
             localStorage.setItem(article, res);
             return res;
@@ -50,7 +52,7 @@ class PageManager{
             
             return new Promise((res)=>res(new PanelStart(canvas)));
         }
-        console.log("getting article");
+        
         let article = this.getArticle();
         
         return this.articleExists(article).then(res =>{
