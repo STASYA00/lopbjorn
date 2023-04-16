@@ -1096,9 +1096,9 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     return s.call().then(function (r) {
                         console.log("RESPONSE:", r);
                         console.log(r[constants_10.constants.RESPONSE_PARSE_KEY]);
-                        var res = marked_2.marked.parse(r[constants_10.constants.RESPONSE_PARSE_KEY]);
-                        localStorage.setItem(article, res);
-                        return res;
+                        var res = marked_2.marked.parse(r[constants_10.constants.RESPONSE_PARSE_KEY]["text"]);
+                        localStorage.setItem(article, r[constants_10.constants.RESPONSE_PARSE_KEY]);
+                        return r[constants_10.constants.RESPONSE_PARSE_KEY];
                     });
                 };
                 PageManager.prototype.start = function (canvas) {
@@ -1111,16 +1111,16 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     var article = this.getArticle();
                     return this.articleExists(article).then(function (res) {
                         console.log("result", res);
-                        var section = "Tech";
+                        var section = res["section"];
                         try {
-                            urlManager_2.urlManager.rewriteURL(article);
+                            urlManager_2.urlManager.rewriteURL(res["article"]);
                         }
                         catch (e) {
                             console.log(e);
                             console.log("Local dev environment, no URL rewriting possible");
                         }
-                        _this.assigner.make(constants_10.PANEL_ID_ARTICLE, article);
-                        return new panel_1.PanelArticle(canvas, section, article);
+                        _this.assigner.make(constants_10.PANEL_ID_ARTICLE, res["article"]);
+                        return new panel_1.PanelArticle(canvas, res["section"], res["article"]);
                     });
                     // if (this.articleExists(article)){
                     //     let section = "Tech";

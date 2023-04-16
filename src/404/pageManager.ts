@@ -9,6 +9,13 @@ import { ServerRequest } from "../request";
 import { Canvas } from "../canvas";
 import { Panel } from "../uiElements";
 
+interface ArticleResponse{
+    section: string,
+    text: string,
+    article: string,
+    meta: string, 
+    updated: string
+}
 class PageManager{
     private assigner: PageTagAssigner;
     constructor(){
@@ -33,14 +40,14 @@ class PageManager{
         return urlManager.getCurrentURL().includes(HTMLFilesEnum.HOME);
         }
 
-    private articleExists(article:string):Promise<string>{
+    private articleExists(article:string):Promise<ArticleResponse>{
         let s = new ServerRequest({"name": article}, constants.ARTICLEEXISTS_URL);
         return s.call().then( r => {
             console.log("RESPONSE:", r);
             console.log(r[constants.RESPONSE_PARSE_KEY]);
-            let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
-            localStorage.setItem(article, res);
-            return res;
+            let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]["text"]);
+            localStorage.setItem(article, r[constants.RESPONSE_PARSE_KEY]);
+            return r[constants.RESPONSE_PARSE_KEY];
         });
     }
 
@@ -57,16 +64,16 @@ class PageManager{
         
         return this.articleExists(article).then(res =>{
             console.log("result", res);
-            let section = "Tech";
+            let section = res["section"];
             try{
-                urlManager.rewriteURL(article);
+                urlManager.rewriteURL(res["article"]);
             }
             catch (e){
                 console.log(e as Error);
                 console.log("Local dev environment, no URL rewriting possible");
             }
-            this.assigner.make(PANEL_ID_ARTICLE, article);
-            return new PanelArticle(canvas, section, article);
+            this.assigner.make(PANEL_ID_ARTICLE, res["article"]);
+            return new PanelArticle(canvas, res["section"], res["article"]);
 
         });
         // if (this.articleExists(article)){
