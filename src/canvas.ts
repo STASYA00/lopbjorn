@@ -1,8 +1,4 @@
-import * as uuid from "uuid";
-import { PanelArticle, PanelStart } from "./panel";
 import { PageManager } from "./404/pageManager";
-import { Pane } from "./uiElements";
-import { PANEL_ID_START } from "./constants";
 
 
   enum PanelEnum{
