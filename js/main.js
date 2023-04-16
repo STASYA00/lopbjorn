@@ -83,7 +83,10 @@ System.register("urlManager", ["constants"], function (exports_2, context_2) {
                 };
                 urlManager.redirectURL = function (url) {
                     if (url === void 0) { url = constants_1.constants.HOME_URL; }
-                    return window.location.replace(url);
+                    console.log("redirecting from ".concat(urlManager.getCurrentURL(), " to ").concat(url));
+                    if (urlManager.getCurrentURL() != url && urlManager.getCurrentURL() != url + "/") {
+                        return window.location.replace(url);
+                    }
                 };
                 urlManager.redirectLocalURL = function (toHome, article) {
                     if (toHome === void 0) { toHome = true; }

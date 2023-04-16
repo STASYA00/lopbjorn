@@ -10,7 +10,11 @@ class urlManager{
       }
     
     static redirectURL(url: string = constants.HOME_URL): void{
-      return window.location.replace(url);
+      console.log(`redirecting from ${urlManager.getCurrentURL()} to ${url}`)
+      if (urlManager.getCurrentURL()!=url && urlManager.getCurrentURL() != url + "/"){
+        return window.location.replace(url);
+      }
+      
     }
 
     static redirectLocalURL(toHome:boolean=true, article?:string): void{
