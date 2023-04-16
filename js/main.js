@@ -1205,8 +1205,6 @@ System.register("canvas", ["404/pageManager"], function (exports_14, context_14)
                         el.style.display = "grid"; //flex
                     }
                     this.currentDisplayedPanelId = id;
-                    console.log(window.location.href);
-                    throw new Error();
                     this.manager["switch"](this, section, article);
                 };
                 return Canvas;
