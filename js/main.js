@@ -689,6 +689,8 @@ System.register("404/pageTagger", ["constants", "404/tagManager", "404/tagsetter
                     if (article === void 0) { article = ""; }
                     this.setData(id, article);
                     for (var tag in tagManager_2.TAGS) {
+                        console.log(tag);
+                        console.log(this.tagsetters[tag]);
                         this.tags[tag] = this.tagsetters[tag].get(this.id, this.name);
                     }
                 };

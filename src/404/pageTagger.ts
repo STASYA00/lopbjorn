@@ -28,6 +28,8 @@ class PageTagger{
     make(id: string, article: string=""){
         this.setData(id, article);
         for (let tag in TAGS){
+            console.log(tag);
+            console.log(this.tagsetters[tag]);
             this.tags[tag] = this.tagsetters[tag].get(this.id, this.name);
         }
     }   
