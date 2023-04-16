@@ -894,19 +894,19 @@ System.register("structure", ["constants", "request"], function (exports_10, con
         }
     };
 });
-System.register("utils", ["emoji-js"], function (exports_11, context_11) {
+System.register("utils", ["emoji-js/lib/emoji.js"], function (exports_11, context_11) {
     "use strict";
-    var emoji_js_1;
+    var EmojiConvertor;
     var __moduleName = context_11 && context_11.id;
     function emoji(content) {
-        var em = new emoji_js_1["default"]();
+        var em = new EmojiConvertor();
         return em.replace_colons(content);
     }
     exports_11("emoji", emoji);
     return {
         setters: [
-            function (emoji_js_1_1) {
-                emoji_js_1 = emoji_js_1_1;
+            function (EmojiConvertor_1) {
+                EmojiConvertor = EmojiConvertor_1;
             }
         ],
         execute: function () {
