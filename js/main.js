@@ -1229,8 +1229,6 @@ System.register("main", ["canvas", "urlManager"], function (exports_15, context_
         execute: function () {
             c = new canvas_1.Canvas();
             console.log(window.location.href);
-            console.log("error");
-            throw new Error();
             console.log(urlManager_3.urlManager.getCurrentURL());
             c.make();
         }
