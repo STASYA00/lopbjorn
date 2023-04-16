@@ -63,8 +63,7 @@ class Canvas {
       el.style.display = "grid"; //flex
     }
     this.currentDisplayedPanelId = id;
-    console.log(window.location.href);
-    throw new Error();
+    
     this.manager.switch(this, section, article);
   } 
 
