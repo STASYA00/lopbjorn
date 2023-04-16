@@ -7,13 +7,13 @@ class TagManager{
     collection: EnumDictionary<string, Tag>;
     constructor(){
         this.attr = "content";
-        this.collection = {};
+        this.collection = { };
         this.load();
     }
 
     private load(){
         
-        for (let tag in TAGS){
+        for (let tag of TagIterator.run()){
             this.collection[tag] = TagFactory.make(tag);
         }
     }
@@ -25,8 +25,11 @@ class TagManager{
             query.setAttribute(this.attr, content);
             return true;
         }
-        console.log(`${tag.property} of meta "${tag.name}" was not found in the document.`)
-        return false;        
+        let t = document.createElement("meta") as HTMLMetaElement;
+        t.setAttribute(tag.property, tag.name);
+        t.setAttribute(this.attr, content);
+        document.getElementsByTagName("head")[0].appendChild(t);
+        return true;        
     }
 }
 
@@ -59,6 +62,17 @@ enum TAGS {
     LOCALE="og:locale",
 }
 
+class TagIterator{
+    static run(){
+        // embarassing piece of code
+        return [TAGS.DESCR, TAGS.KEYWORDS, TAGS.LOCALE, 
+            TAGS.IMAGE, TAGS.SITE_NAME, TAGS.TITLE, TAGS.TYPE, TAGS.URL]
+    }
+}
+
+
+
+
 enum LANGUAGES{
     ENG= "en_GB",
     IT="it_IT",
@@ -77,10 +91,12 @@ enum PAGETYPES {
 const tagDict: EnumDictionary<string, string> = {
     [TAGS.DESCR]: TAGTYPES.NAME,
     [TAGS.KEYWORDS]: TAGTYPES.NAME,
+    [TAGS.LOCALE]: TAGTYPES.NAME,
+    [TAGS.SITE_NAME]: TAGTYPES.NAME,
     [TAGS.TITLE]: TAGTYPES.PROPERTY,
     [TAGS.TYPE]: TAGTYPES.PROPERTY,
     [TAGS.IMAGE]: TAGTYPES.PROPERTY,
     [TAGS.URL]: TAGTYPES.PROPERTY,
 }
 
-export {TAGS, LANGUAGES, TagManager, EnumDictionary, PAGETYPES};
+export {TAGS, LANGUAGES, TagManager, EnumDictionary, PAGETYPES, TagIterator};

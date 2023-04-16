@@ -1,6 +1,8 @@
 import {TAGS, EnumDictionary, LANGUAGES, PAGETYPES} from "./tagManager"
 import { urlManager } from "../urlManager";
+import { PanelEnum } from "../canvas";
 import { constants, PANEL_ID_START, PANEL_ID_ARTICLE, PANEL_ID_NOTFOUND } from "../constants";
+
 
 class TagSetterFactory{
     private content: EnumDictionary<TAGS, typeof TagSetter>;
@@ -85,12 +87,15 @@ class TagSetterType extends TagSetter{
     constructor(tag:TAGS=TAGS.TYPE){
         super(tag);
         this.pagetypes = {
-            PANEL_ID_START : PAGETYPES.WEBSITE, 
-            PANEL_ID_ARTICLE : PAGETYPES.ARTICLE,
-            PANEL_ID_NOTFOUND: PAGETYPES.ARTICLE
-        }
+            [PANEL_ID_START]: PAGETYPES.WEBSITE,
+            [PANEL_ID_ARTICLE]: PAGETYPES.ARTICLE,
+            [PANEL_ID_NOTFOUND]: PAGETYPES.ARTICLE
+        };
+        
     }
     get(id:string, article:string=""): string {
+        console.log(this.pagetypes);
+        console.log(id);
         return this.pagetypes[id];
     }
 }

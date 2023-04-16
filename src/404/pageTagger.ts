@@ -1,5 +1,5 @@
 import { PANEL_ID_ARTICLE, PANEL_ID_START } from "../constants";
-import { TAGS, PAGETYPES, EnumDictionary, LANGUAGES} from "./tagManager";
+import { TAGS, PAGETYPES, EnumDictionary, LANGUAGES, TagIterator} from "./tagManager";
 import { tagsettersdict, TagSetterFactory, TagSetter } from "./tagsetter";
 
 
@@ -20,16 +20,13 @@ class PageTagger{
     }
     private init(){
         let a = Object.getOwnPropertyDescriptors(TAGS);
-        for (let i=0; i<Object(TAGS).length; i++){
-            console.log(a[i]);
-            this.tagsetters[a[i].value] = this.factory.make(a[i].value);
+        for (let tag of TagIterator.run()){
+            this.tagsetters[tag] = this.factory.make(tag);
         }
     }
     make(id: string, article: string=""){
         this.setData(id, article);
-        for (let tag in TAGS){
-            console.log(tag);
-            console.log(this.tagsetters[tag]);
+        for (let tag of TagIterator.run()){
             this.tags[tag] = this.tagsetters[tag].get(this.id, this.name);
         }
     }   

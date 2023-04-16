@@ -23,8 +23,11 @@ class PageManager{
     }
 
     private isHome(): boolean{
-        return (urlManager.getCurrentURL() == constants.HOME_URL) || (urlManager.getCurrentURL() == constants.HOME_URL+"/");
-    }
+        if (!urlManager.runsLocally()){
+            return (urlManager.getCurrentURL() == constants.HOME_URL) || (urlManager.getCurrentURL() == constants.HOME_URL+"/");
+             }
+        return true;
+        }
 
     private articleExists(article:string){
         let s = new ServerRequest(article, constants.ARTICLEEXISTS_URL);
@@ -38,7 +41,8 @@ class PageManager{
     start(canvas: Canvas): Panel{
         
         if (this.isHome()){
-            this.assigner.make(PANEL_ID_START);
+            console.log("Home panel");
+            this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
             return new PanelStart(canvas);
         }
         let article = this.getArticle();
@@ -47,7 +51,14 @@ class PageManager{
         if (this.articleExists(article)){
             let section = "Tech";
             let article1 = "Parsing_ifc_file";
-            urlManager.rewriteURL(article1);
+            try{
+                urlManager.rewriteURL(article1);
+            }
+            catch (e){
+                console.log(e as Error);
+                console.log("Local dev environment, no URL rewriting possible");
+            }
+            
             this.assigner.make(PANEL_ID_ARTICLE, article);
             return new PanelArticle(canvas, section, article);
         }

@@ -1,7 +1,15 @@
+import * as uuid from "uuid";
 import { PanelArticle, PanelStart } from "./panel";
 import { PageManager } from "./404/pageManager";
 import { Pane } from "./uiElements";
+import { PANEL_ID_START } from "./constants";
 
+
+  enum PanelEnum{
+    PANEL_START,
+    PANEL_ARTICLE,
+    PANEL_NOTFOUND
+  }
 class Canvas {
   currentDisplayedPanelId: string;
   panelIds: string[];
@@ -59,9 +67,7 @@ class Canvas {
       el.style.display = "grid"; //flex
     }
     this.currentDisplayedPanelId = id;
-  }
-
-  
+  } 
 }
 
-export { Canvas };
+export { Canvas , PanelEnum};

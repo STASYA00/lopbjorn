@@ -48,10 +48,11 @@ System.register("constants", ["uuid"], function (exports_1, context_1) {
                 ROOT_CLASSNAME: "root",
                 ARTICLE_CLASSNAME: "article",
                 SECTION_CLASSNAME: "section",
-                SERVERURL: "https://get-uuklxqul3q-uc.a.run.app/",
-                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/",
-                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/",
+                SERVERURL: "https://get-uuklxqul3q-uc1.a.run.app/",
+                STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc1.a.run.app/",
+                ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc1.a.run.app/",
                 RESPONSE_PARSE_KEY: "content",
+                NOTFOUND: uuid.v4(),
                 CACHE_KEY_STRUCTURE: "Blog_Structure",
                 LOCAL_STORAGE: true
             });
@@ -395,6 +396,9 @@ System.register("urlManager", ["constants"], function (exports_6, context_6) {
                     history.pushState({ "name": "lopbjorn" }, "", endpoint);
                     return "".concat(constants_5.constants.HOME_URL, "/").concat(endpoint) == this.getCurrentURL();
                 };
+                urlManager.runsLocally = function () {
+                    return window.location.protocol == 'file:';
+                };
                 return urlManager;
             }());
             exports_6("urlManager", urlManager);
@@ -403,7 +407,7 @@ System.register("urlManager", ["constants"], function (exports_6, context_6) {
 });
 System.register("404/tagManager", [], function (exports_7, context_7) {
     "use strict";
-    var _a, TagManager, TagFactory, TAGTYPES, TAGS, LANGUAGES, PAGETYPES, tagDict;
+    var _a, TagManager, TagFactory, TAGTYPES, TAGS, TagIterator, LANGUAGES, PAGETYPES, tagDict;
     var __moduleName = context_7 && context_7.id;
     return {
         setters: [],
@@ -415,7 +419,8 @@ System.register("404/tagManager", [], function (exports_7, context_7) {
                     this.load();
                 }
                 TagManager.prototype.load = function () {
-                    for (var tag in TAGS) {
+                    for (var _i = 0, _a = TagIterator.run(); _i < _a.length; _i++) {
+                        var tag = _a[_i];
                         this.collection[tag] = TagFactory.make(tag);
                     }
                 };
@@ -426,8 +431,11 @@ System.register("404/tagManager", [], function (exports_7, context_7) {
                         query.setAttribute(this.attr, content);
                         return true;
                     }
-                    console.log("".concat(tag.property, " of meta \"").concat(tag.name, "\" was not found in the document."));
-                    return false;
+                    var t = document.createElement("meta");
+                    t.setAttribute(tag.property, tag.name);
+                    t.setAttribute(this.attr, content);
+                    document.getElementsByTagName("head")[0].appendChild(t);
+                    return true;
                 };
                 return TagManager;
             }());
@@ -455,6 +463,17 @@ System.register("404/tagManager", [], function (exports_7, context_7) {
                 TAGS["LOCALE"] = "og:locale";
             })(TAGS || (TAGS = {}));
             exports_7("TAGS", TAGS);
+            TagIterator = /** @class */ (function () {
+                function TagIterator() {
+                }
+                TagIterator.run = function () {
+                    // embarassing piece of code
+                    return [TAGS.DESCR, TAGS.KEYWORDS, TAGS.LOCALE,
+                        TAGS.IMAGE, TAGS.SITE_NAME, TAGS.TITLE, TAGS.TYPE, TAGS.URL];
+                };
+                return TagIterator;
+            }());
+            exports_7("TagIterator", TagIterator);
             (function (LANGUAGES) {
                 LANGUAGES["ENG"] = "en_GB";
                 LANGUAGES["IT"] = "it_IT";
@@ -471,6 +490,8 @@ System.register("404/tagManager", [], function (exports_7, context_7) {
             tagDict = (_a = {},
                 _a[TAGS.DESCR] = TAGTYPES.NAME,
                 _a[TAGS.KEYWORDS] = TAGTYPES.NAME,
+                _a[TAGS.LOCALE] = TAGTYPES.NAME,
+                _a[TAGS.SITE_NAME] = TAGTYPES.NAME,
                 _a[TAGS.TITLE] = TAGTYPES.PROPERTY,
                 _a[TAGS.TYPE] = TAGTYPES.PROPERTY,
                 _a[TAGS.IMAGE] = TAGTYPES.PROPERTY,
@@ -608,17 +629,20 @@ System.register("404/tagsetter", ["404/tagManager", "urlManager", "constants"], 
             TagSetterType = /** @class */ (function (_super) {
                 __extends(TagSetterType, _super);
                 function TagSetterType(tag) {
+                    var _a;
                     if (tag === void 0) { tag = tagManager_1.TAGS.TYPE; }
                     var _this = _super.call(this, tag) || this;
-                    _this.pagetypes = {
-                        PANEL_ID_START: tagManager_1.PAGETYPES.WEBSITE,
-                        PANEL_ID_ARTICLE: tagManager_1.PAGETYPES.ARTICLE,
-                        PANEL_ID_NOTFOUND: tagManager_1.PAGETYPES.ARTICLE
-                    };
+                    _this.pagetypes = (_a = {},
+                        _a[constants_6.PANEL_ID_START] = tagManager_1.PAGETYPES.WEBSITE,
+                        _a[constants_6.PANEL_ID_ARTICLE] = tagManager_1.PAGETYPES.ARTICLE,
+                        _a[constants_6.PANEL_ID_NOTFOUND] = tagManager_1.PAGETYPES.ARTICLE,
+                        _a);
                     return _this;
                 }
                 TagSetterType.prototype.get = function (id, article) {
                     if (article === void 0) { article = ""; }
+                    console.log(this.pagetypes);
+                    console.log(id);
                     return this.pagetypes[id];
                 };
                 return TagSetterType;
@@ -680,17 +704,16 @@ System.register("404/pageTagger", ["constants", "404/tagManager", "404/tagsetter
                 }
                 PageTagger.prototype.init = function () {
                     var a = Object.getOwnPropertyDescriptors(tagManager_2.TAGS);
-                    for (var i = 0; i < Object(tagManager_2.TAGS).length; i++) {
-                        console.log(a[i]);
-                        this.tagsetters[a[i].value] = this.factory.make(a[i].value);
+                    for (var _i = 0, _a = tagManager_2.TagIterator.run(); _i < _a.length; _i++) {
+                        var tag = _a[_i];
+                        this.tagsetters[tag] = this.factory.make(tag);
                     }
                 };
                 PageTagger.prototype.make = function (id, article) {
                     if (article === void 0) { article = ""; }
                     this.setData(id, article);
-                    for (var tag in tagManager_2.TAGS) {
-                        console.log(tag);
-                        console.log(this.tagsetters[tag]);
+                    for (var _i = 0, _a = tagManager_2.TagIterator.run(); _i < _a.length; _i++) {
+                        var tag = _a[_i];
                         this.tags[tag] = this.tagsetters[tag].get(this.id, this.name);
                     }
                 };
@@ -738,10 +761,11 @@ System.register("404/pageTagAssigner", ["constants", "404/pageTagger", "404/tagM
                 }
                 PageTagAssigner.prototype.make = function (id, article) {
                     if (id === void 0) { id = constants_8.PANEL_ID_START; }
-                    if (article === void 0) { article = ""; }
+                    if (article === void 0) { article = constants_8.constants.SITE_NAME; }
                     this.tagger.make(id, article);
                     var result = this.tagger.getContent();
-                    for (var tag in tagManager_3.TAGS) {
+                    for (var _i = 0, _a = tagManager_3.TagIterator.run(); _i < _a.length; _i++) {
+                        var tag = _a[_i];
                         this.manager.updateTag(tag, result[tag]);
                     }
                 };
@@ -787,7 +811,10 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     return url.substring(url.lastIndexOf("/"), url.length);
                 };
                 PageManager.prototype.isHome = function () {
-                    return (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL) || (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL + "/");
+                    if (!urlManager_2.urlManager.runsLocally()) {
+                        return (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL) || (urlManager_2.urlManager.getCurrentURL() == constants_9.constants.HOME_URL + "/");
+                    }
+                    return true;
                 };
                 PageManager.prototype.articleExists = function (article) {
                     var s = new request_3.ServerRequest(article, constants_9.constants.ARTICLEEXISTS_URL);
@@ -799,7 +826,8 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                 };
                 PageManager.prototype.start = function (canvas) {
                     if (this.isHome()) {
-                        this.assigner.make(constants_9.PANEL_ID_START);
+                        console.log("Home panel");
+                        this.assigner.make(constants_9.PANEL_ID_START, constants_9.constants.SITE_NAME);
                         return new panel_1.PanelStart(canvas);
                     }
                     var article = this.getArticle();
@@ -807,7 +835,13 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                     if (this.articleExists(article)) {
                         var section = "Tech";
                         var article1 = "Parsing_ifc_file";
-                        urlManager_2.urlManager.rewriteURL(article1);
+                        try {
+                            urlManager_2.urlManager.rewriteURL(article1);
+                        }
+                        catch (e) {
+                            console.log(e);
+                            console.log("Local dev environment, no URL rewriting possible");
+                        }
                         this.assigner.make(constants_9.PANEL_ID_ARTICLE, article);
                         return new panel_1.PanelArticle(canvas, section, article);
                     }
@@ -822,7 +856,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
 });
 System.register("canvas", ["404/pageManager"], function (exports_12, context_12) {
     "use strict";
-    var pageManager_1, Canvas;
+    var pageManager_1, PanelEnum, Canvas;
     var __moduleName = context_12 && context_12.id;
     return {
         setters: [
@@ -831,6 +865,12 @@ System.register("canvas", ["404/pageManager"], function (exports_12, context_12)
             }
         ],
         execute: function () {
+            (function (PanelEnum) {
+                PanelEnum[PanelEnum["PANEL_START"] = 0] = "PANEL_START";
+                PanelEnum[PanelEnum["PANEL_ARTICLE"] = 1] = "PANEL_ARTICLE";
+                PanelEnum[PanelEnum["PANEL_NOTFOUND"] = 2] = "PANEL_NOTFOUND";
+            })(PanelEnum || (PanelEnum = {}));
+            exports_12("PanelEnum", PanelEnum);
             Canvas = /** @class */ (function () {
                 function Canvas() {
                     this.currentDisplayedPanelId = "";

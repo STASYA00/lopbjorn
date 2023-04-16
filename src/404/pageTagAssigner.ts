@@ -1,6 +1,6 @@
-import { PANEL_ID_START } from "../constants";
+import { constants, PANEL_ID_START } from "../constants";
 import { PageTagger } from "./pageTagger";
-import { TagManager, TAGS } from "./tagManager";
+import { TagIterator, TagManager, TAGS } from "./tagManager";
 
 
 class PageTagAssigner{
@@ -11,10 +11,10 @@ class PageTagAssigner{
         this.manager = new TagManager();
     }
 
-    make(id: string=PANEL_ID_START, article: string=""){
+    make(id: string=PANEL_ID_START, article: string=constants.SITE_NAME){
         this.tagger.make(id, article);
         let result = this.tagger.getContent();
-        for (let tag in TAGS){
+        for (let tag of TagIterator.run()){
             this.manager.updateTag(tag, result[tag]);
         }
         
