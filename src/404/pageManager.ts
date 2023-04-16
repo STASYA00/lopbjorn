@@ -70,7 +70,7 @@ class PageManager{
     switch(canvas: Canvas, section?: string, article?: string){
         if (urlManager.runsLocally()){
             console.log(section==undefined);
-            return urlManager.  (section==undefined, article);
+            return urlManager.redirectLocalURL(section==undefined, article);
         }
         let new_url = constants.SITE_NAME;
         if (article){
