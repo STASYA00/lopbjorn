@@ -18,7 +18,8 @@ class PageManager{
 
     private getArticle(): string{
         let url = urlManager.getCurrentURL();
-        url = url.substring(0, url.length-1);
+        
+        url = url.endsWith("/") ? url.substring(0, url.length): url;
         return url.substring(url.lastIndexOf("/") + 1, url.length);
     }
 
