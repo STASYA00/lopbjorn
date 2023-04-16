@@ -84,7 +84,8 @@ System.register("urlManager", ["constants"], function (exports_2, context_2) {
                 urlManager.redirectURL = function (url) {
                     if (url === void 0) { url = constants_1.constants.HOME_URL; }
                     console.log("redirecting from ".concat(urlManager.getCurrentURL(), " to ").concat(url));
-                    if (urlManager.getCurrentURL() != url && urlManager.getCurrentURL() != url + "/") {
+                    if (urlManager.getCurrentURL() != url && urlManager.getCurrentURL() != url + "/"
+                        && urlManager.getCurrentURL() + "/" != url) {
                         console.log("executing redirect");
                         return window.location.replace(url);
                     }
@@ -1117,6 +1118,7 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                             console.log(e);
                             console.log("Local dev environment, no URL rewriting possible");
                         }
+                        throw new Error();
                         this.assigner.make(constants_10.PANEL_ID_ARTICLE, article);
                         return new panel_1.PanelArticle(canvas, section, article);
                     }

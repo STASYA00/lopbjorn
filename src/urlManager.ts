@@ -11,7 +11,8 @@ class urlManager{
     
     static redirectURL(url: string = constants.HOME_URL): void{
       console.log(`redirecting from ${urlManager.getCurrentURL()} to ${url}`);
-      if (urlManager.getCurrentURL()!=url && urlManager.getCurrentURL() != url + "/"){
+      if (urlManager.getCurrentURL()!=url && urlManager.getCurrentURL() != url + "/"
+            && urlManager.getCurrentURL() + "/" != url ){
         console.log("executing redirect");
         return window.location.replace(url);
       }
