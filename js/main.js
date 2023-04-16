@@ -1125,13 +1125,10 @@ System.register("404/pageManager", ["marked", "constants", "urlManager", "404/pa
                         throw new Error();
                         return urlManager_2.urlManager.redirectLocalURL(section == undefined, article);
                     }
-                    var new_url = constants_10.constants.SITE_NAME;
-                    console.log(new_url);
+                    var new_url = constants_10.constants.HOME_URL;
                     if (article) {
-                        new_url = "".concat(constants_10.constants.SITE_NAME, "/").concat(article);
+                        new_url = "".concat(constants_10.constants.HOME_URL, "/").concat(article);
                     }
-                    console.log(new_url);
-                    throw new Error();
                     return urlManager_2.urlManager.redirectURL(new_url);
                 };
                 return PageManager;

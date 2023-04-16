@@ -77,13 +77,10 @@ class PageManager{
             throw new Error();
             return urlManager.redirectLocalURL(section==undefined, article);
         }
-        let new_url = constants.SITE_NAME;
-        console.log(new_url);
+        let new_url = constants.HOME_URL;
         if (article){
-            new_url = `${constants.SITE_NAME}/${article}`;
+            new_url = `${constants.HOME_URL}/${article}`;
         }
-        console.log(new_url);
-        throw new Error();
         
         return urlManager.redirectURL(new_url);
     }
