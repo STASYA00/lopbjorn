@@ -27,7 +27,7 @@ class ArticleRenderer{
         return {"section": section, "name": name};
     }
     static make(section:string, name:string){
-        
+        let e = new EmojiConvertor();
         if (constants.LOCAL_STORAGE){
             if (localStorage.getItem(name)!=null){
                 return new Promise((res)=>res(marked.parse(JSON.parse(localStorage.getItem(name))["text"])));
