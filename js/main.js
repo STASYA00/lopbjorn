@@ -931,7 +931,7 @@ System.register("articleRenderer", ["marked", "constants", "request"], function 
                 ArticleRenderer.make = function (section, name) {
                     if (constants_8.constants.LOCAL_STORAGE) {
                         if (localStorage.getItem(name) != null) {
-                            return new Promise(function (res) { return res(JSON.parse(localStorage.getItem(name))["text"]); });
+                            return new Promise(function (res) { return res(marked_1.marked.parse(JSON.parse(localStorage.getItem(name))["text"])); });
                         }
                     }
                     var s = new request_2.ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
