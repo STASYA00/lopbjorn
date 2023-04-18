@@ -1,5 +1,4 @@
 import { marked } from "marked";
-import {EmojiConvertor} from "emoji-js";
 import {constants} from "./constants";
 import { ServerRequest } from "./request";
 
@@ -27,10 +26,7 @@ class ArticleRenderer{
         return {"section": section, "name": name};
     }
     static make(section:string, name:string){
-        let EmojiConvertor = require("emoji-js");
-        let e = new EmojiConvertor();
         
-        console.log(e.replace_colons(":smile:"));
         if (constants.LOCAL_STORAGE){
             if (localStorage.getItem(name)!=null){
                 return new Promise((res)=>res(marked.parse(JSON.parse(localStorage.getItem(name))["text"])));
