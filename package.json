@@ -23,16 +23,17 @@
   },
   "homepage": "https://github.com/STASYA00/lopbjorn#readme",
   "dependencies": {
+    "@google-cloud/storage": "^6.9.5",
+    "@types/emoji-js": "^3.5.0",
     "@types/marked": "^4.0.8",
     "@types/uuid": "^9.0.1",
-    "@types/emoji-js": "^3.5.0",
     "cors": "^2.8.5",
     "emoji-js": "^3.5.0",
+    "node-html-parser": "^6.1.5",
     "typescript": "^5.0.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1"
   }

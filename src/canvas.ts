@@ -23,17 +23,20 @@ class Canvas {
   make() {
     //this.switchToPanel(this.panelIds[0]);
     console.log("new canvas!");
-    this.manager.start(this).then(p => {
+    this.manager.start(this);
+    // .then(p => {
       
-      p.add();
-      this.panelIds.push(p.id);
-      let article, section = undefined;
-      if (p instanceof PanelArticle){
-        section= p.section;
-        article =p.article;
-      }
-      this.switchToPanel(p.id, section, article);     
-    });
+    //   p.add();
+      
+    //   this.panelIds.push(p.id);
+    //   let article, section = undefined;
+    //   if (p instanceof PanelArticle){
+    //     section= p.section;
+    //     article =p.article;
+    //   }
+    //   console.log(p.id, section, article);
+    //   this.switchToPanel(p.id, section, article);  
+    // });
   }
 
   nextPage() {

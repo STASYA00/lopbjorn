@@ -73,5 +73,15 @@ class ServerRequest {
     }
 }
 
+class LocalServerRequest extends ServerRequest{
+    
+    constructor(params: any, url?: string | null) {
+        super(params, url?url:constants.LOCALHOST_URL);
+        this.method="GET"
+    }
 
-export {ServerRequest};
+
+}
+
+
+export {ServerRequest, LocalServerRequest};

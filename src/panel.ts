@@ -3,9 +3,8 @@ import { Canvas } from "./canvas";
 import {
   Panel, PanelText, PanelElement
 } from "./uiElements";
-import {Article, Section} from "./section"
-import { BlogStructure } from "./structure";
-import { ArticleRenderer } from "./articleRenderer";
+import {Article, Section} from "../.srvr/.node_srvr/src/section"
+import { BlogStructure } from "../.srvr/.node_srvr/src/structure";
 
 class PanelStart extends Panel {
     constructor(parent: Canvas) {
@@ -47,19 +46,20 @@ class PanelStart extends Panel {
 class PanelArticle extends Panel{
   section: string;
   article: string;
-  constructor(parent: Canvas, section:string, article:string) {
+  content: string;
+  constructor(parent: Canvas, section:string, article:string, content: string) {
     super(PANEL_ID_ARTICLE, parent);
     this.section = section;
     this.article = article;
+    this.content = content;
     this.classname = "panelarticle";
   }
 
   getElements(): Promise<PanelElement[]> {
     
-    return ArticleRenderer.make(this.section, this.article).then(r => [
-      new PanelText(r, "articletext")
-    ]);
-    
+    return new Promise((res)=>res([
+      new PanelText(this.content, "articletext")
+    ]));
   }
 }
 

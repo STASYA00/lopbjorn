@@ -138,5 +138,16 @@ body {
 
   .articletext{
     color: var(--main-text-color);
+    margin-left: 17%;
+    margin-right: 34%;
+  }
+
+  a:link{
+    color: white;
+    font-weight: bold;
+  }
+  a:visited{
+    color: white;
+    font-weight: bold;
   }
   

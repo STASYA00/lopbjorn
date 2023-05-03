@@ -1,11 +1,10 @@
-import { marked } from "marked";
 
 import { PANEL_ID_ARTICLE, PANEL_ID_START, constants } from "../constants";
 // import { getCurrentURL, redirectURL } from "../utils";
-import { urlManager, HTMLFilesEnum } from "../urlManager";
-import { PageTagAssigner } from "./pageTagAssigner";
-import { PanelArticle, PanelNotFound, PanelStart } from "../panel";
-import { ServerRequest } from "../request";
+import { urlManager, HTMLFilesEnum, UrlHolder } from "../../.srvr/.node_srvr/src/urlManager";
+
+import { PanelArticle, PanelStart } from "../panel";
+import { LocalServerRequest, ServerRequest } from "../request";
 import { Canvas } from "../canvas";
 import { Panel } from "../uiElements";
 
@@ -17,9 +16,9 @@ interface ArticleResponse{
     updated: string
 }
 class PageManager{
-    private assigner: PageTagAssigner;
+    //private assigner: PageTagAssigner;
     constructor(){
-        this.assigner = new PageTagAssigner();
+        //this.assigner = new PageTagAssigner();
         
     }
 
@@ -40,50 +39,64 @@ class PageManager{
         return urlManager.getCurrentURL().includes(HTMLFilesEnum.HOME);
         }
 
-    private articleExists(article:string):Promise<ArticleResponse>{
-        let s = new ServerRequest({"name": article}, constants.ARTICLEEXISTS_URL);
+    private articleExists(article:string):Promise<string>{
+        let s = urlManager.runsLocally() ? new LocalServerRequest({}, `${UrlHolder.get(true)}/:${article}`) : 
+                                           new ServerRequest({"name": article}, UrlHolder.get(false));
         return s.call().then( r => {
-            r = r as ArticleResponse;
+            //r = r as ArticleResponse;
             console.log("RESPONSE:", r);
             console.log(r[constants.RESPONSE_PARSE_KEY]);
+            if (constants.LOCAL_STORAGE){
+                localStorage.setItem(article, JSON.stringify(r[constants.RESPONSE_PARSE_KEY]));
+            }
             
-            localStorage.setItem(article, JSON.stringify(r[constants.RESPONSE_PARSE_KEY]));
             return r[constants.RESPONSE_PARSE_KEY];
         });
     }
 
-    start(canvas: Canvas): Promise<Panel>{
+    start(canvas: Canvas): void{
         
         if (this.isHome()){
             console.log("Home panel");
-            this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
-            
-            return new Promise((res)=>res(new PanelStart(canvas)));
+            //this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
+            //return new Promise((res)=>res(new PanelStart(canvas)));
         }
+
         
-        let article = this.getArticle();
+        let article = urlManager.runsLocally() ? constants.TEST_ARTICLE: this.getArticle();
+        console.log("article: ", article);
         
-        return this.articleExists(article).then(res =>{
+        this.articleExists(article).then(res =>{
             console.log("result", res);
-            let section = res["section"];
+            let html = document.querySelector("html")
+            if (html){
+                console.log("HTML");
+                html.innerHTML = res;
+            }
+            
+            
             try{
-                urlManager.rewriteURL(res["article"]);
+                urlManager.rewriteURL(article);
             }
             catch (e){
                 console.log(e as Error);
                 console.log("Local dev environment, no URL rewriting possible");
             }
-            this.assigner.make(PANEL_ID_ARTICLE, res["article"]);
-            return new PanelArticle(canvas, res["section"], res["article"]);
+            
+            //this.assigner.make(PANEL_ID_ARTICLE, res.article);
+            
+            //return new Promise((r)=>r(new PanelArticle(canvas, res.section, res.article, res.text)));
 
         });
     }
 
     switch(canvas: Canvas, section?: string, article?: string){
+        
         if (urlManager.runsLocally()){
             console.log(section==undefined);
             return urlManager.redirectLocalURL(section==undefined, article);
         }
+        
         let new_url = constants.HOME_URL;
         if (article){
             new_url = `${constants.HOME_URL}/${article}`;

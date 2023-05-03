@@ -12,11 +12,16 @@ export const constants = {
     ARTICLE_CLASSNAME: "article" as string,
     SECTION_CLASSNAME: "section" as string,
 
+    TEST_ARTICLE: "Simple_website_with_Typescript" as string, //"30_dagar_av_poke" as string,
+
+    SERVERNAME: `uuklxqul3q-uc1.a.run.app/` as string,
     SERVERURL: "https://get-uuklxqul3q-uc1.a.run.app/" as string,
     STRUCTURE_URL: "https://get-structure-uuklxqul3q-uc.a.run.app/" as string,
     ARTICLEEXISTS_URL: "https://article-exists-uuklxqul3q-uc.a.run.app/" as string,
     RESPONSE_PARSE_KEY: "content" as string,
     NOTFOUND: uuid.v4() as string,
+
+    LOCALHOST_URL: "http://localhost:3001" as string,
     
     CACHE_KEY_STRUCTURE: "Blog_Structure" as string,
 

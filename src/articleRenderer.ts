@@ -1,45 +1,56 @@
-import { marked } from "marked";
-import {constants} from "./constants";
-import { ServerRequest } from "./request";
+// import { marked } from "marked";
+// import {constants} from "./constants";
+// import { ServerRequest, LocalServerRequest } from "./request";
+// import { urlManager } from "./urlManager";
 
 
-interface ArticleReqInterface{
-    section: string,
-    name: string
-}
-class ArticleRenderer{
-    constructor(){
+// interface ArticleReqInterface{
+//     section: string,
+//     name: string
+// }
+// class ArticleRenderer{
+//     constructor(){
 
-    }
-    static _make(content:string){
-        if (localStorage.getItem(content)!=null){
-            return new Promise((res)=>res(localStorage.getItem(content)))
-        }
-        let s = new ServerRequest(content);
-        return s.call().then( r => {
-            let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
-            localStorage.setItem(content, res);
-            return res;
-        });
-    }
-    static makeArticleInterface(section:string, name:string):ArticleReqInterface{
-        return {"section": section, "name": name};
-    }
-    static make(section:string, name:string){
+//     }
+//     static _make(content:string){
+//         if (localStorage.getItem(content)!=null){
+//             return new Promise((res)=>res(localStorage.getItem(content)))
+//         }
+//         let s = new ServerRequest(content);
+//         return s.call().then( r => {
+//             let res = r;// r[constants.RESPONSE_PARSE_KEY];
+//             localStorage.setItem(content, res);
+//             return res;
+//         });
+//     }
+//     static makeArticleInterface(section:string, name:string):ArticleReqInterface{
+//         return {"section": section, "name": name};
+//     }
+//     static make(section:string, name:string){
+
+//         if (urlManager.runsLocally()){
+//             let s = new LocalServerRequest(ArticleRenderer.makeArticleInterface(section, name), 
+//                                            constants.LOCALHOST_URL + "/article");
+//             return s.call().then( r => {
+//                 let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
+//                 localStorage.setItem(name, res);
+//                 return res;
+//             });
+//         }
         
-        if (constants.LOCAL_STORAGE){
-            if (localStorage.getItem(name)!=null){
-                return new Promise((res)=>res(marked.parse(JSON.parse(localStorage.getItem(name))["text"])));
-            }
-        }
+//         if (constants.LOCAL_STORAGE){
+//             if (localStorage.getItem(name)!=null){
+//                 return new Promise((res)=>res(marked.parse(JSON.parse(localStorage.getItem(name))["text"])));
+//             }
+//         }
         
-        let s = new ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
-        return s.call().then( r => {
-            let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
-            localStorage.setItem(name, res);
-            return res;
-        });
-    }
-}
+//         let s = new ServerRequest(ArticleRenderer.makeArticleInterface(section, name));
+//         return s.call().then( r => {
+//             let res = marked.parse(r[constants.RESPONSE_PARSE_KEY]);
+//             localStorage.setItem(name, res);
+//             return res;
+//         });
+//     }
+// }
 
-export {ArticleRenderer};
+// export {ArticleRenderer};
