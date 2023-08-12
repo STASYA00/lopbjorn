@@ -41,9 +41,10 @@ def get_home_page(request):
     if content.status_code==status_code.value:
         content = HomePage.make(content.json())
     else:
-        content = {}
+        
         print(content.status_code)
         print(content.text)
+        content = {}
 
         status_code = HTTPStatus.BAD_REQUEST
 
