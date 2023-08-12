@@ -1,14 +1,14 @@
 steps:
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  args:
-  - gcloud
-  - functions
-  - deploy
-  - get_structure
-  - --region=us-central1
-  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
-  - --trigger-http
-  - --runtime=python310
+# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#   args:
+#   - gcloud
+#   - functions
+#   - deploy
+#   - get_structure
+#   - --region=us-central1
+#   - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
+#   - --trigger-http
+#   - --runtime=python310
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args:
   - gcloud
