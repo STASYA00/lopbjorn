@@ -10,4 +10,4 @@ class ENVVAR(Enum):
     KEY = "content"
 
 class ENDPOINTS(Enum):
-    STRUCTURE = "https://us-central1-website-382116.cloudfunctions.net/get-structure"
+    STRUCTURE = "https://us-central1-website-382116.cloudfunctions.net/get_structure"
