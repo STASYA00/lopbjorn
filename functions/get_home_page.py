@@ -1,6 +1,7 @@
 
 import functions_framework
 from http import HTTPStatus
+import json
 import requests
 
 from functions.src.constants import ENDPOINTS
@@ -36,7 +37,9 @@ def get_home_page(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    content = requests.get(ENDPOINTS.STRUCTURE.value)
+    content = requests.post( ENDPOINTS.STRUCTURE.value, 
+                  headers={"Content-Type": "application/json"},
+                  data=json.dumps({"content": "value"}))
     status_code = HTTPStatus.OK
     if content.status_code==status_code.value:
         content = HomePage.make(content.json())
