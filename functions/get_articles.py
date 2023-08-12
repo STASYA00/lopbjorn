@@ -2,7 +2,7 @@
 import functions_framework
 from http import HTTPStatus
 from google.cloud import storage
-from functinos.src.utils import get_request_input, build_response, get_env
+from functions.src.utils import get_request_input, build_response, get_env
 from functions.src.bucket_manager import BucketManager
 
 
