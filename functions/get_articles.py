@@ -7,7 +7,7 @@ from src.bucket_manager import BucketManager
 
 
 @functions_framework.http
-def article(request):
+def get_article(request):
     """HTTP Cloud Function. 
 
     This function gets an article asset from the blog bucket.
