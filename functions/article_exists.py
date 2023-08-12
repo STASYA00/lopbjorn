@@ -2,7 +2,7 @@
 import functions_framework
 from google.cloud import storage
 
-from utils import build_response, env_vars, get_request_input
+from functions.src.utils import build_response, env_vars, get_request_input
 
 
 

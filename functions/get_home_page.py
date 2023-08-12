@@ -2,9 +2,9 @@
 import functions_framework
 import requests
 
-from src.constants import ENDPOINTS
-from src.page import HomePage
-from src.utils import build_response
+from functions.src.constants import ENDPOINTS
+from functions.src.page import HomePage
+from functions.src.utils import build_response
 
 
 @functions_framework.http

@@ -2,8 +2,8 @@
 
 import functions_framework
 from http import HTTPStatus
-from src.utils import build_response
-from src.bucket_manager import BucketManager
+from functions.src.utils import build_response
+from functions.src.bucket_manager import BucketManager
 
 
 @functions_framework.http

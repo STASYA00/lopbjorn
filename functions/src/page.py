@@ -4,8 +4,8 @@ from dominate.util import raw
 
 from uuid import uuid4
 
-from src.constants import ENVVAR
-from src.bucket_manager import BlogStructure
+from functions.src.constants import ENVVAR
+from functions.src.bucket_manager import BlogStructure
 
 class Page:
     def __init__(self) -> None:
