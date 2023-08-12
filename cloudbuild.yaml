@@ -6,7 +6,7 @@ steps:
   - deploy
   - get_structure
   - --region=us-central1
-  - --source=https://source.developers.google.com/projects/website-382116/repos/lopbjorn/moveable-aliases/server
+  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
   - --trigger-http
   - --runtime=python310
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -16,7 +16,7 @@ steps:
   - deploy
   - get_home_page
   - --region=us-central1
-  - --source=https://source.developers.google.com/projects/website-382116/repos/lopbjorn/moveable-aliases/server
+  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
   - --trigger-http
   - --runtime=python310
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -26,7 +26,7 @@ steps:
   - deploy
   - get_articles
   - --region=us-central1
-  - --source=https://source.developers.google.com/projects/website-382116/repos/lopbjorn/moveable-aliases/server
+  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
   - --trigger-http
   - --runtime=python310
 options:
