@@ -3,10 +3,8 @@ import { PANEL_ID_ARTICLE, PANEL_ID_START, constants } from "../constants";
 // import { getCurrentURL, redirectURL } from "../utils";
 import { urlManager, HTMLFilesEnum, UrlHolder } from "../../.srvr/.node_srvr/src/urlManager";
 
-import { PanelArticle, PanelStart } from "../panel";
 import { LocalServerRequest, ServerRequest } from "../request";
 import { Canvas } from "../canvas";
-import { Panel } from "../uiElements";
 
 interface ArticleResponse{
     section: string,
@@ -39,9 +37,9 @@ class PageManager{
         return urlManager.getCurrentURL().includes(HTMLFilesEnum.HOME);
         }
 
-    private articleExists(article:string):Promise<string>{
-        let s = urlManager.runsLocally() ? new LocalServerRequest({}, `${UrlHolder.get(true)}/:${article}`) : 
-                                           new ServerRequest({"name": article}, UrlHolder.get(false));
+    private sendArticleRequest(article:string=""):Promise<string>{
+        let s = urlManager.runsLocally() ? new LocalServerRequest({}, `${UrlHolder.get(true, true)}/:${article}`) : 
+                                           new ServerRequest({"name": article}, UrlHolder.get(false, true));
         return s.call().then( r => {
             //r = r as ArticleResponse;
             console.log("RESPONSE:", r);
@@ -53,11 +51,29 @@ class PageManager{
             return r[constants.RESPONSE_PARSE_KEY];
         });
     }
+    private sendStructureRequest():Promise<string>{
+        let s = urlManager.runsLocally() ? new LocalServerRequest({}, `${UrlHolder.get(true)}`) : 
+                                           new ServerRequest({}, UrlHolder.get(false));
+        return s.call().then( r => {
+            //r = r as ArticleResponse;
+            console.log("RESPONSE:", r);
+            console.log(r[constants.RESPONSE_PARSE_KEY]);
+            if (constants.LOCAL_STORAGE){
+                localStorage.setItem(constants.CACHE_KEY_STRUCTURE, JSON.stringify(r[constants.RESPONSE_PARSE_KEY]));
+            }
+            
+            return r[constants.RESPONSE_PARSE_KEY];
+        });
+    }
 
     start(canvas: Canvas): void{
         
         if (this.isHome()){
             console.log("Home panel");
+            this.sendStructureRequest().then(res =>{
+                console.log(res);
+            });
+            return;
             //this.assigner.make(PANEL_ID_START, constants.SITE_NAME);
             //return new Promise((res)=>res(new PanelStart(canvas)));
         }
@@ -66,7 +82,7 @@ class PageManager{
         let article = urlManager.runsLocally() ? constants.TEST_ARTICLE: this.getArticle();
         console.log("article: ", article);
         
-        this.articleExists(article).then(res =>{
+        this.sendArticleRequest(article).then(res =>{
             console.log("result", res);
             let html = document.querySelector("html")
             if (html){

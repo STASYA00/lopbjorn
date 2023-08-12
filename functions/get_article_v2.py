@@ -5,10 +5,9 @@ import os
 import functions_framework
 from google.cloud import storage
 
+from utils import build_response, env_vars
 
 
-def env_vars(var_name):
-    return os.environ.get(var_name, 'Specified environment variable is not set.')
 
 @functions_framework.http
 def article(request):
@@ -64,11 +63,6 @@ def article(request):
     except Exception as e:
         content = "Fail {}".format(e)
 
-    response = make_response({"content": content}, 200)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add('Access-Control-Allow-Headers', "*")
-    response.headers.add('Access-Control-Allow-Methods', "*")
-
-    return response
+    return build_response(content)
 
 

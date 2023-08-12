@@ -1,42 +1,22 @@
-import { PageManager } from "./404/pageManager";
-//import { PanelArticle } from "./panel";
+import { PanelElement } from "./uiElements";
+import { constants } from "./constants";
+import { Header, Footer, PanelStart } from "./panel";
 
-
-  enum PanelEnum{
-    PANEL_START,
-    PANEL_ARTICLE,
-    PANEL_NOTFOUND
-  }
 class Canvas {
   currentDisplayedPanelId: string;
   panelIds: string[];
-  manager: PageManager;
 
   constructor() {
+    console.log("init canvas");
     this.currentDisplayedPanelId = "";
     this.panelIds = [];
-    this.manager = new PageManager();
-    console.log("canvas initiated");
-    
   }
 
   make() {
-    //this.switchToPanel(this.panelIds[0]);
-    console.log("new canvas!");
-    this.manager.start(this);
-    // .then(p => {
-      
-    //   p.add();
-      
-    //   this.panelIds.push(p.id);
-    //   let article, section = undefined;
-    //   if (p instanceof PanelArticle){
-    //     section= p.section;
-    //     article =p.article;
-    //   }
-    //   console.log(p.id, section, article);
-    //   this.switchToPanel(p.id, section, article);  
-    // });
+    this.addHeader();
+    this.addPanels();
+    this.addFooter();
+    this.switchToPanel(this.panelIds[0]);
   }
 
   nextPage() {
@@ -59,7 +39,7 @@ class Canvas {
     this.switchToPanel(this.panelIds[ind]);
   }
 
-  switchToPanel(id: string, section?: string, article?: string): void {
+  switchToPanel(id: string): void {
     if (this.currentDisplayedPanelId) {
       let el = document.getElementById(this.currentDisplayedPanelId);
       if (el) {
@@ -68,14 +48,30 @@ class Canvas {
     }
     let el = document.getElementById(id);
     if (el) {
-      el.style.display = "grid"; //flex
+      el.style.display = "flex";
     }
     this.currentDisplayedPanelId = id;
-    
-    this.manager.switch(this, section, article);
-    
-  } 
+  }
 
+  addHeader() {
+    var h = new Header();
+    h.add();
+  }
+
+  addPanels() {
+    let panels = [
+      new PanelStart(this)
+    ];
+    panels.forEach((panel) => {
+      panel.add();
+      this.panelIds.push(panel.id);
+    });
+  }
+
+  addFooter() {
+    var h = new Footer(constants.FOOTER, this);
+    h.add();
+  }
 }
 
-export { Canvas , PanelEnum};
+export { Canvas };
