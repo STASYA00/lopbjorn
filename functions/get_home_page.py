@@ -1,17 +1,14 @@
 
 import functions_framework
-from google.cloud import storage
-from http import HTTPStatus
-import dominate
 import requests
 
 from src.constants import ENDPOINTS
 from src.page import HomePage
-from src.utils import build_response, get_request_input, env_vars
+from src.utils import build_response
 
 
 @functions_framework.http
-def get_structure(request):
+def get_home_page(request):
     """HTTP Cloud Function. 
 
     This function gets the blog structure from the blog bucket.

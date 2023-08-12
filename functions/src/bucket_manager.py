@@ -34,9 +34,15 @@ class BucketManager:
     def is_article(title, current_section)->bool:
         return (title.startswith(current_section) and current_section!="" and title[-1]=="/")
     
-    def get_article(self, section, article):
-        return self.get_element("{}/{}/{}.md".format(section, article,
+    def get_article(self, article, section=None):
+        if section:
+            return self.get_element("{}/{}/{}.md".format(section, article,
                                                      ENVVAR.ARTICLE_PREFIX.value ))
+        else:
+            structure = self.get_structure()
+            for key, value in structure.content.items():
+                if article in value:
+                    return self.get_article(article, key)
 
     def get_element(self, name):
         blob = self._bucket.blob(name)

@@ -1,12 +1,10 @@
 
-from flask import make_response
-import os
 
 import functions_framework
-from google.cloud import storage
+from http import HTTPStatus
 
-from utils import build_response, env_vars
-
+from src.utils import build_response, env_vars, get_request_input
+from src.bucket_manager import BucketManager
 
 
 @functions_framework.http
@@ -36,33 +34,18 @@ def article(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    request_json = request.get_json(silent=True)
-    request_args = request.args
-    section_key = env_vars('SECTION_KEY')
-    article_key = env_vars('ARTICLE_KEY')
+    article_name, status_code = get_request_input(request, env_vars('KEY'))
+    if status_code==HTTPStatus.OK:
 
-    if request_json and section_key in request_json and article_key in request_json:
-        section_name = str(request_json[section_key])
-        article_name = str(request_json[article_key])
-    elif request_args and section_key in request_args and article_key in request_args:
-        section_name = str(request_args[section_key])
-        article_name = str(request_args[article_key])
-    else:
-        section_name = env_vars('DEFAULT')
-        article_name = env_vars('DEFAULT')
+        try:
+            manager = BucketManager()
+            content = manager.get_article(article_name)
+        
+        except Exception as e:
+            print(e)
+            content = {}
+            status_code = HTTPStatus.FAILED_DEPENDENCY
 
-    try:
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(env_vars('BUCKET_NAME'))
-
-        blob = bucket.blob("{}/{}/{}.md".format(section_name, 
-                                                article_name,
-                                                 env_vars('ARTICLE_PREFIX') ))
-        content = blob.open("r").read()
-    
-    except Exception as e:
-        content = "Fail {}".format(e)
-
-    return build_response(content)
+    return build_response(content, status_code)
 
 
