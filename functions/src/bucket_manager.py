@@ -1,8 +1,9 @@
-
-from constants import ENVVAR
-from utils import get_env
-
 from google.cloud import storage
+
+
+from functions.src.constants import ENVVAR
+from functions.src.utils import get_env
+
 
 class BlogStructure:
     def __init__(self) -> None:
