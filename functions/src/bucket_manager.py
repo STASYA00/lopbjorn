@@ -25,7 +25,7 @@ class BucketManager:
     def __init__(self) -> None:
         
         self._client = storage.Client()
-        self._bucket = self._client.bucket(get_env(ENVVAR.BUCKET.value))
+        self._bucket = self._client.bucket(ENVVAR.BUCKET.value)
 
     @staticmethod
     def is_section(title)->bool:
