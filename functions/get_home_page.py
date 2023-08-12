@@ -1,5 +1,6 @@
 
 import functions_framework
+from http import HTTPStatus
 import requests
 
 from functions.src.constants import ENDPOINTS
@@ -35,9 +36,17 @@ def get_home_page(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    content, status_code = requests.get(ENDPOINTS.STRUCTURE.value)
-    content = HomePage.make(content)
+    content = requests.get(ENDPOINTS.STRUCTURE.value)
+    status_code = HTTPStatus.OK
+    if content.status_code==status_code.value:
+        content = HomePage.make(content.json())
+    else:
+        content = {}
+        print(content.status_code)
+        print(content.text)
 
-    return build_response(content, status_code.value)
+        status_code = HTTPStatus.BAD_REQUEST
+
+    return build_response(content, status_code)
 
 
