@@ -2,7 +2,7 @@
 import functions_framework
 from google.cloud import storage
 
-from functions.src.utils import build_response, env_vars, get_request_input
+from functions.src.utils import build_response, get_env, get_request_input
 
 
 
@@ -34,24 +34,15 @@ def article_exists(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    request_json = request.get_json(silent=True)
-    request_args = request.args
-    article_key = env_vars('ARTICLE_KEY')
+    
 
-    if request_json and article_key in request_json:
-        article_name = str(request_json[article_key])
-    elif request_args and article_key in request_args:
-        article_name = str(request_args[article_key])
-    else:
-        article_name = env_vars('DEFAULT')
-
-    article_name, status_code = get_request_input(request, key=env_vars('ARTICLE_KEY'), 
+    article_name, status_code = get_request_input(request, key=get_env('ARTICLE_KEY'), 
                                          default="")
     content = {}
     if article_name:
         try:
             storage_client = storage.Client()
-            bucket = storage_client.bucket(env_vars('BUCKET_NAME'))
+            bucket = storage_client.bucket(get_env('BUCKET_NAME'))
             blobs=bucket.list_blobs()
             
             current_section = ""
@@ -69,7 +60,7 @@ def article_exists(request):
                                 content["section"] = current_section
                                 blob = bucket.blob("{}/{}/{}.md".format(current_section, 
                                                     article_name,
-                                                    env_vars('ARTICLE_PREFIX') ))
+                                                    get_env('ARTICLE_PREFIX') ))
                                 content["text"] = blob.open("r").read()
                                 content["meta"] = blob.metadata
                                 content["updated"] = str(blob.updated)

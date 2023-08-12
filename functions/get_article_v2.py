@@ -3,7 +3,7 @@
 import functions_framework
 from http import HTTPStatus
 
-from functions.src.utils import build_response, env_vars, get_request_input
+from functions.src.utils import build_response, get_env, get_request_input
 from functions.src.bucket_manager import BucketManager
 
 
@@ -34,7 +34,7 @@ def article(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    article_name, status_code = get_request_input(request, env_vars('KEY'))
+    article_name, status_code = get_request_input(request, get_env('KEY'))
     if status_code==HTTPStatus.OK:
 
         try:

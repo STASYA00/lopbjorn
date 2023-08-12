@@ -3,7 +3,7 @@ import os
 import requests
 from http import HTTPStatus
 
-def env_vars(var_name):
+def get_env(var_name):
     return os.environ.get(var_name, 'Specified environment variable is not set.')
 
 def build_response(content, status_code:HTTPStatus= HTTPStatus.OK):
