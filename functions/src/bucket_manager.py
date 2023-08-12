@@ -12,6 +12,9 @@ class BlogStructure:
     @property
     def content(self)->dict:
         return {key:value for key, value in self._content.items()}
+    @content.setter
+    def content(self, value)->None:
+        self._content = value
     
     def __call__(self, section, article=None)->None:
         if not section in self._content.keys():
