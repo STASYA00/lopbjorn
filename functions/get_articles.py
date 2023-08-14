@@ -37,8 +37,7 @@ def get_article(request):
     if status_code==HTTPStatus.OK:
 
         try:
-            manager = BucketManager()
-            content = manager.get_article(article_name)
+            content = BucketManager.get_article(article_name)
         
         except Exception as e:
             print(e)

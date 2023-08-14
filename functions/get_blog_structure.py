@@ -38,8 +38,7 @@ def get_structure(request):
 
     try:
 
-        manager = BucketManager()
-        content = manager.get_structure().content
+        content = BucketManager.get_structure().content
 
     except Exception as e:
         print(e)

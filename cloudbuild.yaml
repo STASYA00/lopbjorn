@@ -1,14 +1,14 @@
 steps:
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   args:
-#   - gcloud
-#   - functions
-#   - deploy
-#   - get_structure
-#   - --region=us-central1
-#   - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
-#   - --trigger-http
-#   - --runtime=python310
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - get_structure
+  - --region=us-central1
+  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
+  - --trigger-http
+  - --runtime=python310
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   args:
   - gcloud
@@ -19,16 +19,26 @@ steps:
   - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
   - --trigger-http
   - --runtime=python310
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   args:
-#   - gcloud
-#   - functions
-#   - deploy
-#   - get_article
-#   - --region=us-central1
-#   - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
-#   - --trigger-http
-#   - --runtime=python310
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - get_article_page
+  - --region=us-central1
+  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
+  - --trigger-http
+  - --runtime=python310
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args:
+  - gcloud
+  - functions
+  - deploy
+  - get_article
+  - --region=us-central1
+  - --source=https://source.developers.google.com/projects/website-382116/repos/github_stasya00_lopbjorn/moveable-aliases/server
+  - --trigger-http
+  - --runtime=python310
 options:
   logging: CLOUD_LOGGING_ONLY
 timeout: "1600s"

@@ -14,8 +14,8 @@ class Page:
     @staticmethod
     def header(doc):
         with doc.head:
-            link(rel='stylesheet', href='style.css')
-            script(type='text/javascript', src='script.js')
+            link(rel='stylesheet', href='./css/style.css')
+            script(type='text/javascript', src='./js/request.js')
             meta(name="description", content="test description")
 
     @classmethod
@@ -38,22 +38,30 @@ class HomePage(Page):
         super().__init__()
 
     @staticmethod
-    def section(name):
-        return div(name, id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
+    def section(name=""):
+        if name:
+            return div(name, id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
+        return div(id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
     
     @staticmethod
-    def article(name):
-        return div(name, id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value)
+    def article(name=""):
+        if name:
+            return div(name, id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
+            onclick=loadPage("Article", "", name))
+        return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value,
+            onclick=loadPage("Article", "", name))
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
         with doc:
             with div(id='root'):
                 with div(id="panel"):
-                    for section in value.content.keys():
-                        cls.section(section)
-                        for article in value.content[section]:
-                            cls.article(article)
+                    for section in value.content:
+                        # cls.section()
+                        with cls.section():
+                            raw(section.logo)
+                        for article in section.articles:
+                            cls.article()
 
 class ArticlePage(Page):
     def __init__(self) -> None:
