@@ -1,33 +1,31 @@
-var constants = {
+const constants = {
     ROOT_CLASSNAME: "root",
     DROPDOWN_CLASSNAME: "dropdown",
     DROPDOWNID: "dropdownid",
     DROPDOWN_CONTENT_CLASSNAME: "dropdown-content",
     DROPDOWN_BUTTON_ID: "dropdownbutton",
-    SERVERURL: "https://us-central1-rfid-test-app-d7b8.cloudfunctions.net",
-    GET_EPC_END: "get_epc",
-    GET_STORES_END: "get_stores",
-    EPC_POS_END: "get_positions",
-    STORE_ANALYSIS_END: "analyze_store",
-    CALC_METRICS_END: "calculate_metrics",
-    UNIQUE_END: "article",
-    LOG_BQ_END: "log_bq",
-    TEST_URL: "result",
-    ANALYZE_STORE_URL: "analyze_store",
-    RESPONSE_PARSE_KEY: "content",
-    LOCALHOST_URL: `http://localhost:3002`,
+    SERVERURL: "https://us-central1-website-382116.cloudfunctions.net",
+    HOME_ENDPOINT: "get_home_page",
+    SECTION_EMDPOINT: "get_section_page",
+    ARTICLE_ENDPOINT: "get_article_page",
     LOCAL_STORAGE: false,
+    KEY:"content",
 };
 
+function loadPage(panel, value, params=""){
+    DirectRequest(panel, value, params).then(r=>{
+        document.getElementsByTagName("html")[0].innerHTML = r[constants.KEY]})
+}
 function DirectRequest(panel, value, params = ""){
     let SubmitMap = {
-        "Store Analysis": `${constants.STORE_ANALYSIS_END}`,
-        "Aggregation Level": `${constants.UNIQUE_END}`,
+        "Home": `${constants.SERVERURL}/${constants.HOME_ENDPOINT}`,
+        "Section": `${constants.SERVERURL}/${constants.SECTION_EMDPOINT}`,
+        "Article": `${constants.SERVERURL}/${constants.ARTICLE_ENDPOINT}`,
     };
     if (Object.keys(SubmitMap).includes(panel)) {
         let url = value == undefined ? SubmitMap[panel] : `${SubmitMap[panel]}/${value}`;
         // let url = SubmitMap[panel];
-        return SubmitRequest(url);
+        return SubmitRequest(url, params);
     }
 
 }
@@ -41,7 +39,7 @@ class Result {
 
 function SubmitRequest(url, params = "") {
     console.log(url);
-    let req = new ServerRequest(params==""?{}:Result.get(params), url, "GET");
+    let req = new ServerRequest(params==""?{}:Result.get(params), url, "POST");
     return req.call().then(x => { console.log(x); return x; });
 }
 
@@ -49,7 +47,7 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 class ServerRequest {
-    constructor(params, url, method = "GET") {
+    constructor(params, url, method = "POST") {
         this.params = params;
         this.method = method;
         this.url = url ? url : constants.SERVERURL;
@@ -117,10 +115,4 @@ class ServerRequest {
         });
     }
 }
-function a(){
-    let r = new ServerRequest("", "https://us-central1-website-382116.cloudfunctions.net/get_home_page", "POST");
-    r.call().then(r=>{
-        
-        document.getElementsByTagName("html")[0].innerHTML = r["content"]})
-}
-a();
+
