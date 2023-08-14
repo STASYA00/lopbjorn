@@ -14,8 +14,8 @@ class Page:
     @staticmethod
     def header(doc):
         with doc.head:
-            link(rel='stylesheet', href='style.css')
-            script(type='text/javascript', src='script.js')
+            link(rel='stylesheet', href='./css/style.css')
+            # script(type='text/javascript', src='script.js')
             meta(name="description", content="test description")
 
     @classmethod

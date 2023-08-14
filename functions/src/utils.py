@@ -8,8 +8,7 @@ def env_vars(var_name):
 
 def build_response(content, status_code:HTTPStatus= HTTPStatus.OK):
     response = make_response({"content": content}, status_code.value)
-    response.headers.add("Access-Control-Allow-Origin",
-                        "*")
+    response.headers.add("Access-Control-Allow-Origin", "*")
     response.headers.add('Access-Control-Allow-Headers', "*")
     response.headers.add('Access-Control-Allow-Methods', "*")
     # response.headers.add("Content-Type", "image/png") # multipart/form-data

@@ -118,7 +118,9 @@ class ServerRequest {
     }
 }
 function a(){
-    let r = new ServerRequest({}, "https://us-central1-website-382116.cloudfunctions.net/get_home_page", "POST");
-    r.call().then(r=>{console.log(r);})
+    let r = new ServerRequest("", "https://us-central1-website-382116.cloudfunctions.net/get_home_page", "POST");
+    r.call().then(r=>{
+        
+        document.getElementsByTagName("html")[0].innerHTML = r["content"]})
 }
 a();
