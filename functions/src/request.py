@@ -17,7 +17,7 @@ class Request:
         TOKEN = Auth.run(endpoint)
 
         return requests.post(
-            ENDPOINTS.ARTICLE.value,
+            endpoint.value,
             headers={'Authorization': f"Bearer {TOKEN}", "Content-Type": "application/json"},
             data=json.dumps(param)  # possible request parameters
         )
