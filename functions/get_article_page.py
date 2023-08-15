@@ -14,7 +14,7 @@ from functions.src.constants import ENVVAR
 
 
 @functions_framework.http
-def get_home_page(request):
+def get_article_page(request):
     """HTTP Cloud Function. 
 
     This function gets the blog structure from the blog bucket.
