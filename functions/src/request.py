@@ -3,7 +3,7 @@ import json
 import google.oauth2.id_token
 import google.auth.transport.requests
 
-from src.constants import ENDPOINTS, ENVVAR
+from functions.src.constants import ENDPOINTS, ENVVAR
 
 class Auth:
     @staticmethod
