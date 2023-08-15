@@ -9,7 +9,7 @@ import google.auth.transport.requests
 from functions.src.constants import ENDPOINTS
 from functions.src.page import ArticlePage
 from functions.src.bucket_manager import BlogStructure
-from functions.src.utils import build_response
+from functions.src.utils import build_response, get_request_input
 from functions.src.constants import ENVVAR
 
 
