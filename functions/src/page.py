@@ -46,7 +46,7 @@ class HomePage(Page):
     @staticmethod
     def article(name=""):
         if name:
-            return div(name, id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
+            return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
             onclick="loadPage('Article', '', {})".format(name))
         return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value,
             onclick="loadPage('Article', '', {})".format(name))
@@ -61,7 +61,7 @@ class HomePage(Page):
                         with cls.section():
                             raw(section_content[BlogStructure.logo_key])
                         for article in section_content[BlogStructure.article_key]:
-                            cls.article()
+                            cls.article(article)
 
 class ArticlePage(Page):
     def __init__(self) -> None:
