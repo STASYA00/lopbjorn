@@ -1,11 +1,9 @@
 
 import functions_framework
 from http import HTTPStatus
-import json
-import requests
-import google.oauth2.id_token
-import google.auth.transport.requests
 
+
+from functions.src.request import Request
 from functions.src.constants import ENDPOINTS
 from functions.src.page import HomePage
 from functions.src.bucket_manager import BlogStructure
@@ -46,16 +44,7 @@ def get_home_page(request):
     #               data=json.dumps({"content": "value"}))
     
 
-    
-    request = google.auth.transport.requests.Request()
-    
-    TOKEN = google.oauth2.id_token.fetch_id_token(request, ENDPOINTS.STRUCTURE.value)
-
-    content = requests.post(
-        ENDPOINTS.STRUCTURE.value, 
-        headers={'Authorization': f"Bearer {TOKEN}", "Content-Type": "application/json"},
-        data=json.dumps({"key": "value"})  # possible request parameters
-    )
+    content = Request.send(ENDPOINTS.STRUCTURE, {})
     status_code = HTTPStatus.OK
     if content.status_code==status_code.value:
         blog = BlogStructure()

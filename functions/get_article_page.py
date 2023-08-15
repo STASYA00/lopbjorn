@@ -1,12 +1,10 @@
 
 import functions_framework
 from http import HTTPStatus
-import json
-import requests
-import google.oauth2.id_token
-import google.auth.transport.requests
+
 
 from functions.src.constants import ENDPOINTS
+from functions.src.request import Request
 from functions.src.page import ArticlePage
 from functions.src.bucket_manager import BlogStructure
 from functions.src.utils import build_response, get_request_input
@@ -48,14 +46,8 @@ def get_article_page(request):
     content = {}
     article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
     if status_code==HTTPStatus.OK:
-        request = google.auth.transport.requests.Request()
-        TOKEN = google.oauth2.id_token.fetch_id_token(request, ENDPOINTS.STRUCTURE.value)
-
-        content = requests.post(
-            ENDPOINTS.ARTICLE.value,
-            headers={'Authorization': f"Bearer {TOKEN}", "Content-Type": "application/json"},
-            data=json.dumps({ENVVAR.KEY.value: article_name})  # possible request parameters
-        )
+        
+        content = Request.send(ENDPOINTS.ARTICLE, {ENVVAR.KEY.value: article_name})
         
         if content.status_code==status_code.value:
             

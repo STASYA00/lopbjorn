@@ -1,7 +1,6 @@
 
 import functions_framework
 from http import HTTPStatus
-from google.cloud import storage
 from functions.src.utils import get_request_input, build_response, get_env
 from functions.src.constants import ENVVAR
 from functions.src.bucket_manager import BucketManager
@@ -18,8 +17,8 @@ def get_article(request):
     DEFAULT - name of the default article that we get from storage
     KEY - key to parse the request
 
-    From terminal: curl -m 70 -X POST https://get-uuklxqul3q-uc.a.run.app -H "Content-Type: application/json" -d '{"name": "gcp_resources"}'
-
+    From terminal: curl -m 70 -X POST https://get-uuklxqul3q-uc.a.run.app -H "Content-Type: application/json" 
+    -d '{"content": "Symbolism_i_en_Familjemiddag_av_Kazuo_Ishiguro"}
     Cloud function requires following IAM roles:
     - Storage Object Viewer
     - Storage Legacy Object Reader
@@ -35,7 +34,6 @@ def get_article(request):
     """
     article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
     if status_code==HTTPStatus.OK:
-
         try:
             content = BucketManager.get_article(article_name)
         
