@@ -61,7 +61,7 @@ class BlogStructure:
 
 class BucketManager:
     _client = storage.Client()
-    _bucket = BucketManager._client.bucket(ENVVAR.BUCKET.value)
+    _bucket = _client.bucket(ENVVAR.BUCKET.value)
 
     @staticmethod
     def is_section(title)->bool:
