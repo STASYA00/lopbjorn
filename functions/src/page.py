@@ -57,10 +57,11 @@ class HomePage(Page):
             with div(id='root'):
                 with div(id="panel"):
                     for section, section_content in value.content.items():
-                        # cls.section()
                         with cls.section():
                             raw(section_content[BlogStructure.logo_key])
                         for article in section_content[BlogStructure.article_key]:
+                            print(article)
+                            print(article[0])
                             cls.article(article)
 
 class ArticlePage(Page):

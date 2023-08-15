@@ -36,7 +36,7 @@ class BlogStructure:
     @property
     def content(self)->dict:
         return {s.name: {BlogStructure.logo_key:s.logo, 
-                         BlogStructure.article_key:s.articles} for s in self._content}
+                         BlogStructure.article_key: s.articles} for s in self._content}
 
     @content.setter
     def content(self, value)->None:
