@@ -28,19 +28,22 @@ class Section:
 
 
 class BlogStructure:
+    logo_key="logo"
+    article_key = "articles"
     def __init__(self) -> None:
         self._content = []
 
     @property
     def content(self)->dict:
-        return {s.name: {"logo":s.logo, "articles":s.articles} for s in self._content}
+        return {s.name: {BlogStructure.logo_key:s.logo, 
+                         BlogStructure.article_key:s.articles} for s in self._content}
 
     @content.setter
     def content(self, value)->None:
         for key, v in value.items():
             self._content.append(Section(key))
-            self._content[-1].logo = v["logo"]
-            self._content[-1].articles = v["articles"]
+            self._content[-1].logo = v[BlogStructure.logo_key]
+            self._content[-1].articles = v[BlogStructure.article_key]
 
     
     def __call__(self, section, article=None)->None:
@@ -60,8 +63,8 @@ class BlogStructure:
 
 
 class BucketManager:
-    _client = storage.Client()
-    _bucket = _client.bucket(ENVVAR.BUCKET.value)
+    # _client = storage.Client()
+    _bucket = storage.Client().bucket(ENVVAR.BUCKET.value)
 
     @staticmethod
     def is_section(title)->bool:
@@ -88,12 +91,14 @@ class BucketManager:
         else:
             structure = cls.get_structure()
             for key, value in structure.content.items():
-                if article in value:
+                
+                if article in value[BlogStructure.article_key]:
                     return cls.get_article(article, key)
     @classmethod
     def get_element(cls, name):
         blob = cls._bucket.blob(name)
         return blob.open("r").read()
+    
     @classmethod
     def get_structure(cls)->BlogStructure:
         content = BlogStructure()

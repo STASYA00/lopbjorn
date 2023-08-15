@@ -47,9 +47,9 @@ class HomePage(Page):
     def article(name=""):
         if name:
             return div(name, id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
-            onclick=loadPage("Article", "", name))
+            onclick="loadPage("Article", "", name)")
         return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value,
-            onclick=loadPage("Article", "", name))
+            onclick="loadPage("Article", "", name)")
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
