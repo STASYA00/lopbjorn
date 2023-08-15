@@ -59,9 +59,8 @@ class HomePage(Page):
                     for section, section_content in value.content.items():
                         with cls.section():
                             raw(section_content[BlogStructure.logo_key])
-                        for article in section_content[BlogStructure.article_key]:
-                            print(article)
-                            print(article[0])
+                        for article in section_content[BlogStructure.article_key][0]:
+                            
                             cls.article(article)
 
 class ArticlePage(Page):
