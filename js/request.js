@@ -12,18 +12,18 @@ const constants = {
     KEY:"content",
 };
 
-function loadPage(panel, value, params=""){
-    DirectRequest(panel, value, params).then(r=>{
+function loadPage(panel, v, params=""){
+    DirectRequest(panel, params).then(r=>{
         document.getElementsByTagName("html")[0].innerHTML = r[constants.KEY]})
 }
-function DirectRequest(panel, value, params = ""){
+function DirectRequest(panel, params = ""){
     let SubmitMap = {
         "Home": `${constants.SERVERURL}/${constants.HOME_ENDPOINT}`,
         "Section": `${constants.SERVERURL}/${constants.SECTION_EMDPOINT}`,
         "Article": `${constants.SERVERURL}/${constants.ARTICLE_ENDPOINT}`,
     };
     if (Object.keys(SubmitMap).includes(panel)) {
-        let url = value == undefined ? SubmitMap[panel] : `${SubmitMap[panel]}/${value}`;
+        let url = SubmitMap[panel];
         // let url = SubmitMap[panel];
         return SubmitRequest(url, params);
     }
@@ -85,13 +85,14 @@ class ServerRequest {
         console.log(JSON.stringify(this.params));
         return fetch(url, {
             method: this.method,
-            // body: JSON.stringify(this.params),
+            
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'GET, POST',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                // 'Access-Control-Allow-Origin': '*',
+                // 'Access-Control-Allow-Methods': 'GET, POST',
+                // 'Access-Control-Allow-Headers': 'Content-Type'
             },
+            body: JSON.stringify({"content":"Simple_website_with_Typescript"}),
             mode: 'cors',
         }).then(result => {
             console.log("RESULT", result);
