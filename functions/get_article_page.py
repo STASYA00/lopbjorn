@@ -45,6 +45,8 @@ def get_article_page(request):
     
     content = {}
     article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
+    print(article_name)
+    print(status_code.value)
     if status_code==HTTPStatus.OK:
         
         content = Request.send(ENDPOINTS.ARTICLE, {ENVVAR.KEY.value: article_name})

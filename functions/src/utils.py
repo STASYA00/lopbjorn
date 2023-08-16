@@ -20,6 +20,7 @@ def get_request_input(request: Request, key="content", default=""):
     print("external IP:", requests.get('https://ident.me').content)
     status_code = HTTPStatus.OK
     request_json = request.get_json()
+    print(request.get_json())
     
     if request.args and key in request.args:
         return request.args.get(key), status_code
