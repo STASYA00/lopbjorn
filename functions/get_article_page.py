@@ -42,7 +42,10 @@ def get_article_page(request):
     # content = requests.post( ENDPOINTS.STRUCTURE.value, 
     #               headers={"Content-Type": "application/json"},
     #               data=json.dumps({"content": "value"}))
-    
+    print("start")
+    print(dir(request))
+    print(request.headers)
+    print(request.content_type)
     content = {}
     article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
     print(article_name)

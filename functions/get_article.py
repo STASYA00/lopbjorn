@@ -32,6 +32,8 @@ def get_article(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
+    
+    
     article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
     if status_code==HTTPStatus.OK:
         try:
