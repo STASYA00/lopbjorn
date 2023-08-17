@@ -6,8 +6,8 @@ const constants = {
     DROPDOWN_BUTTON_ID: "dropdownbutton",
     SERVERURL: "https://us-central1-website-382116.cloudfunctions.net",
     HOME_ENDPOINT: "get_home_page",
-    SECTION_EMDPOINT: "get_section_page",
-    ARTICLE_ENDPOINT: "get_article_page",
+    SECTION_ENDPOINT: "get_section_page",
+    ARTICLE_ENDPOINT: "get_article",
     LOCAL_STORAGE: false,
     KEY:"content",
 };
@@ -19,7 +19,7 @@ function loadPage(panel, v, params=""){
 function DirectRequest(panel, params = ""){
     let SubmitMap = {
         "Home": `${constants.SERVERURL}/${constants.HOME_ENDPOINT}`,
-        "Section": `${constants.SERVERURL}/${constants.SECTION_EMDPOINT}`,
+        "Section": `${constants.SERVERURL}/${constants.SECTION_ENDPOINT}`,
         "Article": `${constants.SERVERURL}/${constants.ARTICLE_ENDPOINT}`,
     };
     if (Object.keys(SubmitMap).includes(panel)) {
