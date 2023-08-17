@@ -45,7 +45,7 @@ def get_article_page(request):
     print("start")
     print(request.method)
     content = {}
-    status_code==HTTPStatus.OK
+    status_code=HTTPStatus.OK
     if (request.method!="OPTIONS"):
         article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
         print(article_name)
