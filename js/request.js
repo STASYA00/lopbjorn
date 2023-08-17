@@ -7,7 +7,7 @@ const constants = {
     SERVERURL: "https://us-central1-website-382116.cloudfunctions.net",
     HOME_ENDPOINT: "get_home_page",
     SECTION_ENDPOINT: "get_section_page",
-    ARTICLE_ENDPOINT: "get_article",
+    ARTICLE_ENDPOINT: "get_article_page",
     LOCAL_STORAGE: false,
     KEY:"content",
 };
