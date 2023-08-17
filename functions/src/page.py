@@ -1,6 +1,8 @@
 import dominate
 from dominate.tags import *
 from dominate.util import raw
+import mistune
+import emoji
 
 from uuid import uuid4
 
@@ -69,10 +71,11 @@ class ArticlePage(Page):
 
     @staticmethod
     def article(value):
-        return raw(value)
+        return mistune.markdown(emoji.emojize(raw(value)))
     
     @classmethod
     def body(cls, doc, value:str):
         with doc:
             with div(id='root'):
-                cls.article(value)
+                with div(id="article"):
+                    cls.article(value)
