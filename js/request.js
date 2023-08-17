@@ -85,15 +85,14 @@ class ServerRequest {
         console.log(JSON.stringify(this.params));
         return fetch(url, {
             method: this.method,
-            
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'GET, POST',
                 'Access-Control-Allow-Headers': 'Content-Type'
             },
-            body: JSON.stringify({}),
-            mode: 'cors',
+            body: JSON.stringify(this.params),
+            mode: 'cors'
         }).then(result => {
             console.log("RESULT", result);
             if (result.status == 200) {
