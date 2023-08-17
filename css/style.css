@@ -160,12 +160,4 @@ a:visited{
   color: white;
   font-weight: bold;
 }
-.svg{
-  width: 40%;
-  height: 40%;
-  fill: var(--main-bg-color);
-}
 
-.path{
-  fill: var(--main-bg-color);
-}
