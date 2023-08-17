@@ -71,7 +71,7 @@ class ArticlePage(Page):
 
     @staticmethod
     def article(value):
-        return mistune.markdown(emoji.emojize(raw(value)))
+        return raw(mistune.markdown(emoji.emojize(value)))
     
     @classmethod
     def body(cls, doc, value:str):
