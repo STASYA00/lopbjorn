@@ -18,6 +18,8 @@ def build_response(content, status_code:HTTPStatus= HTTPStatus.OK):
 
 def get_request_input(request: Request, key="content", default=""):
     print("external IP:", requests.get('https://ident.me').content)
+    if request.method=="OPTIONS":
+        return build_response({})
     status_code = HTTPStatus.OK
     request_json = request.get_json()
     print(request.get_json())

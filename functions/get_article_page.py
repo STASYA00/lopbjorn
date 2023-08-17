@@ -45,22 +45,24 @@ def get_article_page(request):
     print("start")
     print(request.method)
     content = {}
-    article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
-    print(article_name)
-    print(status_code.value)
-    if status_code==HTTPStatus.OK:
-        
-        content = Request.send(ENDPOINTS.ARTICLE, {ENVVAR.KEY.value: article_name})
-        
-        if content.status_code==status_code.value:
+    status_code==HTTPStatus.OK
+    if (request.method!="OPTIONS"):
+        article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
+        print(article_name)
+        print(status_code.value)
+        if status_code==HTTPStatus.OK:
             
-            article = content.json()[ENVVAR.KEY.value]
-            content = ArticlePage.make(article)
-        else:
-            print(content.status_code)
-            print(content.text)
-            content = {}
-            status_code = HTTPStatus.BAD_REQUEST
+            content = Request.send(ENDPOINTS.ARTICLE, {ENVVAR.KEY.value: article_name})
+            
+            if content.status_code==status_code.value:
+                
+                article = content.json()[ENVVAR.KEY.value]
+                content = ArticlePage.make(article)
+            else:
+                print(content.status_code)
+                print(content.text)
+                content = {}
+                status_code = HTTPStatus.BAD_REQUEST
 
     return build_response(content, status_code)
 
