@@ -14,7 +14,7 @@ class Page:
         self._content = {}
 
     @staticmethod
-    def header(doc):
+    def header(doc, page_title=""):
         with doc.head:
             link(rel='stylesheet', href='/lopbjorn/css/style.css')
             script(type='text/javascript', src='/lopbjorn/js/request.js')
@@ -22,11 +22,14 @@ class Page:
             meta(name="description", content="Stasja Fedorova's personal blog, lopbjorn.")
             meta(name="author", content="Stasya00")
             meta(name="keywords", content="lopbjorn, Stasya00, Blog, Tech, linguistics, svenska, 3D, cuisine, guide, architecture, arkitektur")
-
-            meta(property="og:title", content="Lopbjorn: en helt okritisk blog")
+            meta(property="og:url", content="https://stasya00.github.io/lopbjorn/{}".format(page_title))
+            if not page_title:
+                page_title = "Lopbjorn: en helt okritisk blog"
+                
+            meta(property="og:title", content=page_title.replace("_", " ")) # "Lopbjorn: en helt okritisk blog"
             meta(property="og:type", content="website")
             meta(property="og:image", content="/lopbjorn/assets/homepage_social_card.png")
-            meta(property="og:url", content="https://stasya00.github.io/lopbjorn/")
+            
 
     @classmethod
     def body(cls, doc, value):
