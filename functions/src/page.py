@@ -18,7 +18,15 @@ class Page:
         with doc.head:
             link(rel='stylesheet', href='/lopbjorn/css/style.css')
             script(type='text/javascript', src='/lopbjorn/js/request.js')
-            meta(name="description", content="test description")
+            meta(name="google-site-verification", content="nQFox3xYHxx1o-9IYoKZeqCV3yE2mgz-E5DXGzAoIx8")
+            meta(name="description", content="Stasja Fedorova's personal blog, lopbjorn.")
+            meta(name="author", content="Stasya00")
+            meta(name="keywords", content="lopbjorn, Stasya00, Blog, Tech, linguistics, svenska, 3D, cuisine, guide, architecture, arkitektur")
+
+            meta(property="og:title", content="Lopbjorn: en helt okritisk blog")
+            meta(property="og:type", content="website")
+            meta(property="og:image", content="/lopbjorn/assets/homepage_social_card.png")
+            meta(property="og:url", content="https://stasya00.github.io/lopbjorn/")
 
     @classmethod
     def body(cls, doc, value):
@@ -60,9 +68,10 @@ class HomePage(Page):
                 with div(id="panel"):
                     for section, section_content in value.content.items():
                         with cls.section():
+                            div(section, cls="title")
                             raw(section_content[BlogStructure.logo_key])
                         for article in section_content[BlogStructure.article_key][0]:
-                            
+                            div(article, cls="title")
                             cls.article(article)
 
 class ArticlePage(Page):
