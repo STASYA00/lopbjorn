@@ -91,12 +91,7 @@ body {
     /* width: calc(var(--main-module-dim) * 2);
     height: calc(var(--main-module-dim) * 2); */
     background-color: var(--secondary-color);
-
-    /* background-color: var(--main-bg-color);
-    box-sizing: border-box;
-    border-style: solid;
-    border-color: var(--main-text-color);
-    border-width: var(--main-stroke); */
+    padding: 15px;
 
     border-radius: 2px;
 
@@ -186,6 +181,8 @@ body {
       grid-area: 1 / 1;
       opacity: 0;
 
+      justify-self: center;
+
       font-weight: bold;
       text-transform: capitalize;
   }
@@ -193,8 +190,8 @@ body {
       opacity: 1;
   }
   .logo{
-      stroke: var(--main-bg-color);
-      stroke-width: 5;
+      /* stroke: var(--main-bg-color); */
+      /* stroke-width: 5; */
       fill: var(--main-bg-color);
   }
 
