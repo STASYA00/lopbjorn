@@ -178,6 +178,7 @@ body {
       scale: 0.5;
       display: flex;
       filter: grayscale(1);
+      grid-area: 1 / 1;
   }
 
   .title{
@@ -195,15 +196,14 @@ body {
       stroke: var(--main-bg-color);
       stroke-width: 5;
       fill: var(--main-bg-color);
-      grid-area: 1 / 1;
   }
 
   .section:hover .logo{
       filter:brightness(1.5);
+      z-index: -1
   }
   .section:hover .grey1{
       fill: var(--main-bg-color);
-      
   }
 
   .darkest{
@@ -213,7 +213,6 @@ body {
   .grey1{
       fill: var(--secondary-color);
       border: solid 1px var(--main-text-color);
-
   }
   .grey2{
       /* fill:var(--secondary-text-color); */
