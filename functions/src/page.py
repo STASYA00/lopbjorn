@@ -59,12 +59,18 @@ class HomePage(Page):
         return div(id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
     
     @staticmethod
+    def clean_name(name):
+        for s in ["/", ":", ";"]:
+            name = name.replace(s, "")
+        return name
+    
+    @staticmethod
     def article(name=""):
         if name:
             return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
-            onclick=HomePage.load_article_page.format(name))
+            onclick=HomePage.load_article_page.format(HomePage.clean_name(name)))
         return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value,
-            onclick=HomePage.load_article_page.format(name))
+            onclick=HomePage.load_article_page.format(HomePage.clean_name(name)))
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
