@@ -195,7 +195,7 @@ body {
       fill: var(--main-bg-color);
   }
 
-  .section:hover .logo{
+  .section:hover #logo{
       filter:brightness(1.5);
       z-index: -1
   }
