@@ -47,7 +47,7 @@ class Page:
         return str(doc)
 
 class HomePage(Page):
-    load_article_page = "window.location.href = window.location.host/{}"
+    load_article_page = "window.location.href = window.location.host + '/{}'"
     # "loadPage('Article', '', '{}')"
     def __init__(self) -> None:
         super().__init__()
