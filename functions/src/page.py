@@ -47,22 +47,24 @@ class Page:
         return str(doc)
 
 class HomePage(Page):
+    load_article_page = "window.location.href = window.location.host/{}"
+    # "loadPage('Article', '', '{}')"
     def __init__(self) -> None:
         super().__init__()
 
     @staticmethod
     def section(name=""):
         if name:
-            return div(name, id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
+            return div(name, id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value, onclick=HomePage.load_article_page.format(name))
         return div(id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
     
     @staticmethod
     def article(name=""):
         if name:
             return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
-            onclick="loadPage('Article', '', '{}')".format(name))
+            onclick=HomePage.load_article_page.format(name))
         return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value,
-            onclick="loadPage('Article', '', '{}')".format(name))
+            onclick=HomePage.load_article_page.format(name))
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
