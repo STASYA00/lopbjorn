@@ -1,35 +1,27 @@
-#root {
-  --main-width: 100%;
-  --main-height: 100%;
-  --main-bg-color: #111;
-  --secondary-color: #696969;
-  --tertiary-color: #3f3f3f;
-  --main-text-color: #c9c9c9;
-  --secondary-text-color: #a0a0a0;
-  --main-stroke: 4px;
 
-  --main-module-min: 100px;
-  --main-module-max: 300px;
-  --main-module-dim: 100px;
-
-  --shf: 4.9406564584124654e-322;
-
-  width: 100%;
-  height: 100%;
-  position: relative;
-  top: 0%;
-  left: 0%;
-  background-color: var(--main-bg-color);
-}
 
 body {
+  --main-width: 100%;
+    --main-height: 100%;
+    --main-bg-color: #111;
+    --secondary-color: #696969;
+    --tertiary-color: #3f3f3f;
+    --main-text-color: #c9c9c9;
+    --secondary-text-color: #a0a0a0;
+    --main-stroke: 4px;
+  
+    --main-module-min: 100px;
+    --main-module-max: 300px;
+    --main-module-dim: 100px;
+  
+    --shf: 4.9406564584124654e-322;
+
     background-color: var(--main-bg-color);
     
     background-repeat: no-repeat;
     background-attachment: fixed;
     /* background-size: 100%; */
     background-size: cover;
-  
     font-family: "Josefin Sans";
   }
   
@@ -46,6 +38,16 @@ body {
     filter: blur(35px);
   } */
   
+  #root {
+    
+  
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0%;
+    left: 0%;
+    background-color: var(--main-bg-color);
+  }
   
   #panel{
     display: grid;
@@ -61,7 +63,7 @@ body {
     align-items: flex-start;
     /* height: 80%; */
     background-color: var(--main-bg-color);
-    margin: 10px;
+    margin: 0px;
   }
   .panelarticle{
     display: grid;

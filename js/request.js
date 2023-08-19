@@ -12,7 +12,7 @@ const constants = {
     KEY:"content",
 };
 
-function loadPage(panel, v, params=""){
+function loadPage(panel, params=""){
     DirectRequest(panel, params).then(r=>{
         document.getElementsByTagName("html")[0].innerHTML = r[constants.KEY]})
 }
