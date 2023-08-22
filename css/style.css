@@ -226,3 +226,16 @@ body {
     border: 1px solid;
   }
   
+  .ad {
+    grid-column: span 3;
+    grid-row: span 2;
+    aspect-ratio: auto;
+    background-color: var(--main-bg-color);
+    /* border-color: var(--main-text-color); */
+    /* border-width: 25px; */
+    border: solid var(--main-text-color) 8px;
+    color: var(--secondary-color);
+    justify-content: space-evenly;
+    text-align: left;
+    padding: 20px;
+  }
