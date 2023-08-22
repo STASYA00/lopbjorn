@@ -119,8 +119,9 @@ class BucketManager:
                 else:
                     if cls.is_article(blob.name, current_section):
                         content(current_section, blob.name[len(current_section)+1:-1])
-                        print("METADATA", blob.metadata)
-                        print(blob.metadata.keys())
+                        print("METADATA", blob.metadata["Tag"])
+                        print(blob.updated)
+                        print(blob.created)
 
             except Exception as e:
                 print(e)
