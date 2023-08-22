@@ -79,8 +79,12 @@ class BucketManager:
         return title[:title.index("/")]
     
     @staticmethod
-    def is_article(title, current_section)->bool:
+    def is_article_folder(title, current_section)->bool:
         return (title.startswith(current_section) and current_section!="" and title[-1]=="/")
+    
+    @staticmethod
+    def is_article(title, current_section)->bool:
+        return (title.startswith(current_section) and current_section!="" and title[-1]!="/" and "article.md" in title)
 
 
     @classmethod
@@ -117,8 +121,9 @@ class BucketManager:
                     content(blob.name[:-1])
                     current_section = blob.name[:-1]
                 else:
-                    if cls.is_article(blob.name, current_section):
+                    if cls.is_article_folder(blob.name, current_section):
                         content(current_section, blob.name[len(current_section)+1:-1])
+                    elif cls.is_article(blob.name, current_section):
                         print("METADATA", blob.metadata["Tag"])
                         print(blob.updated)
                         print(blob.created)
