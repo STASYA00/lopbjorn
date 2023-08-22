@@ -124,6 +124,7 @@ class BucketManager:
                     if cls.is_article_folder(blob.name, current_section):
                         content(current_section, blob.name[len(current_section)+1:-1])
                     elif cls.is_article(blob.name, current_section):
+                        print(blob.name)
                         print("METADATA", blob.metadata["Tag"])
                         print(blob.updated)
                         print(blob.created)
