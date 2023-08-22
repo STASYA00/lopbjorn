@@ -29,6 +29,7 @@ class Section:
 
 class BlogStructure:
     logo_key="logo"
+    main_logo="main_logo"
     article_key = "articles"
     def __init__(self) -> None:
         self._content = []

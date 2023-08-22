@@ -8,6 +8,7 @@ class ENVVAR(Enum):
     TITLE = "Lopbjorn"
 
     SECTION_CLS = "section"
+    AD_CLS = "ad"
     ARTICLE_CLS = "article"
     KEY = "content"
 

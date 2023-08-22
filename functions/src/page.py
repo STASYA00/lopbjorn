@@ -59,6 +59,12 @@ class HomePage(Page):
         return div(id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
     
     @staticmethod
+    def ad(name=""):
+        if name:
+            return div(name, id="ad", cls=ENVVAR.AD_CLS.value)
+        return div(id="ad", cls=ENVVAR.AD_CLS.value)
+    
+    @staticmethod
     def clean_name(name):
         for s in ["/", ":", ";"]:
             name = name.replace(s, "")
@@ -74,16 +80,23 @@ class HomePage(Page):
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
+        n = 0
         with doc:
             with div(id='root'):
                 with div(id="panel"):
                     for section, section_content in value.content.items():
+                        if n == 5:
+                            with cls.ad():
+                                div("Lopbjorn", cls=ENVVAR.AD_CLS.value)
+                                raw(section_content[BlogStructure.logo_key])
                         with cls.section():
                             div(section, cls="title")
                             raw(section_content[BlogStructure.logo_key])
+                            n+=1
                         for article in section_content[BlogStructure.article_key][0]:
-                            div(article, cls="title")
-                            cls.article(article)
+                            with cls.article(article):
+                                div(article, cls="title")
+                            n+=1
 
 class ArticlePage(Page):
     def __init__(self) -> None:
