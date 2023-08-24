@@ -1,0 +1,4 @@
+runtime: nodejs16
+# vpc_access_connector:
+#   name: projects/website-382116/locations/us-central1/connectors/lopbjorn
+#   egress_setting: all-traffic
