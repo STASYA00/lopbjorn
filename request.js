@@ -1,76 +1,68 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Result = exports.loadPage = void 0;
-var constants_1 = require("./constants");
-var panel_1 = require("./panel");
-var Result = /** @class */ (function () {
-    function Result() {
-    }
-    Result.get = function (value) {
+const constants_1 = require("./constants");
+const panel_1 = require("./panel");
+class Result {
+    static get(value) {
         return { content: value };
-    };
-    return Result;
-}());
+    }
+}
 exports.Result = Result;
-function loadPage(panel, params) {
-    if (params === void 0) { params = ""; }
-    var r = panel_1.PanelMap.get(panel);
+function loadPage(panel, params = "") {
+    let r = panel_1.PanelMap.get(panel);
     if (r != undefined) {
         return SubmitRequest(r, params);
         // .then(r=>{
         //     document.getElementsByTagName("html")[0].innerHTML = r.content})
     }
-    return new Promise(function (res) { return res(Result.get("")); });
+    return new Promise((res) => res(Result.get("")));
 }
 exports.loadPage = loadPage;
-function SubmitRequest(url, params) {
-    if (params === void 0) { params = ""; }
+function SubmitRequest(url, params = "") {
     console.log(url);
-    var req = new ServerRequest(params == "" ? {} : Result.get(params), url, "POST");
-    return req.call().then(function (x) { console.log(x); return x; });
+    let req = new ServerRequest(params == "" ? {} : Result.get(params), url, "POST");
+    return req.call().then(x => { console.log(x); return x; });
 }
 function sleep(ms) {
-    return new Promise(function (resolve) { return setTimeout(resolve, ms); });
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
-var ServerRequest = /** @class */ (function () {
-    function ServerRequest(params, url, method) {
-        if (method === void 0) { method = "POST"; }
+class ServerRequest {
+    constructor(params, url, method = "POST") {
         this.params = params;
         this.method = method;
         this.url = url ? url : constants_1.constants.SERVERURL;
     }
-    ServerRequest.prototype.call = function () {
+    call() {
         try {
             return this.request();
         }
         catch (e) {
             console.log(e);
-            return new Promise(function (res) { return res(Result.get("")); });
+            return new Promise((res) => res(Result.get("")));
         }
-    };
-    ServerRequest.prototype.getBaseUrl = function () {
+    }
+    getBaseUrl() {
         return this.url;
-    };
-    ServerRequest.prototype.getUrl = function () {
-        var query = this.getQuery();
+    }
+    getUrl() {
+        let query = this.getQuery();
         if (this.method == "POST" || query == "") {
             return this.getBaseUrl();
         }
-        return "".concat(this.getBaseUrl(), "?").concat(query);
-    };
-    ServerRequest.prototype.getQuery = function () {
-        var s = "";
-        for (var key in this.params) {
-            s += "".concat(key, "=").concat(this.params[key], "&");
+        return `${this.getBaseUrl()}?${query}`;
+    }
+    getQuery() {
+        let s = "";
+        for (let key in this.params) {
+            s += `${key}=${this.params[key]}\&`;
         }
-        console.log("query: ".concat(s));
+        console.log(`query: ${s}`);
         return this.method == "POST" ? "" : s;
-    };
-    ServerRequest.prototype.request = function (callback) {
-        var _this = this;
-        if (callback === void 0) { callback = null; }
-        var url = this.getUrl();
-        console.log("URL: ".concat(url));
+    }
+    request(callback = null) {
+        const url = this.getUrl();
+        console.log(`URL: ${url}`);
         console.log(JSON.stringify(this.params));
         return fetch(url, {
             method: this.method,
@@ -83,26 +75,25 @@ var ServerRequest = /** @class */ (function () {
             },
             body: JSON.stringify(this.params),
             mode: 'cors'
-        }).then(function (result) {
+        }).then(result => {
             console.log("RESULT", result);
             if (result.status == 200) {
                 if (callback != undefined) {
-                    result.json().then(function (r) { callback(r); return r; });
+                    result.json().then(r => { callback(r); return r; });
                 }
                 return result.json(); //result.json();
             }
             else if (result.status == 429) {
-                return sleep(1000).then(function (r) { return _this.request(); });
+                return sleep(1000).then(r => { return this.request(); });
             }
             else if (result.status == 504) {
-                return _this.request();
+                return this.request();
             }
             else {
                 console.log(result);
-                console.log("CODE: ".concat(result.status));
+                console.log(`CODE: ${result.status}`);
             }
             return result.json();
         });
-    };
-    return ServerRequest;
-}());
+    }
+}

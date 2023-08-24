@@ -1,22 +1,21 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Timer = void 0;
-var Timer = /** @class */ (function () {
-    function Timer() {
+class Timer {
+    constructor() {
         this.current = this.reset();
     }
-    Timer.prototype.reset = function () {
+    reset() {
         return new Date().getTime();
-    };
-    Timer.prototype.get = function () {
-        var diff = this.reset() - this.current;
+    }
+    get() {
+        let diff = this.reset() - this.current;
         this.restart();
-        console.log("Operation took ".concat(Math.floor(0.001 * diff / 60), " min ").concat(0.001 * diff % 60, " s"));
+        console.log(`Operation took ${Math.floor(0.001 * diff / 60)} min ${0.001 * diff % 60} s`);
         return diff;
-    };
-    Timer.prototype.restart = function () {
+    }
+    restart() {
         this.current = this.reset();
-    };
-    return Timer;
-}());
+    }
+}
 exports.Timer = Timer;
