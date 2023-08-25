@@ -8,6 +8,7 @@ const constants = {
     HOME_ENDPOINT: "get_home_page",
     SECTION_ENDPOINT: "get_section_page",
     ARTICLE_ENDPOINT: "get_article_page",
+    TEST_ENDPOINT: "test",
     LOCAL_STORAGE: false,
     KEY:"content",
 };
@@ -21,6 +22,7 @@ function DirectRequest(panel, params = ""){
         "Home": `${constants.SERVERURL}/${constants.HOME_ENDPOINT}`,
         "Section": `${constants.SERVERURL}/${constants.SECTION_ENDPOINT}`,
         "Article": `${constants.SERVERURL}/${constants.ARTICLE_ENDPOINT}`,
+        "TEST":  `${constants.SERVERURL}/${constants.TEST_ENDPOINT}`,
     };
     if (Object.keys(SubmitMap).includes(panel)) {
         let url = SubmitMap[panel];
