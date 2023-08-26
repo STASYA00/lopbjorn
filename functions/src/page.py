@@ -46,6 +46,7 @@ class Page:
         cls.body(doc, value)
         return str(doc)
 
+
 class HomePage(Page):
     load_article_page = "window.location.href = '{}'"
     update_ad = "(event)=>{document.getElementsByClassName('main')[0].textContent = event.target.getAttribute('intro')}"
@@ -106,11 +107,39 @@ class ArticlePage(Page):
 
     @staticmethod
     def article(value):
-        return raw(mistune.markdown(emoji.emojize(value)))
+        return raw(value)
     
     @classmethod
     def body(cls, doc, value:str):
         with doc:
             with div(id='root'):
                 with div(id="article"):
-                    cls.article(value)
+                    div(ArticleSeparator.get_title(value), cls="title")
+                    div(ArticleSeparator.get_intro(value), cls="intro")
+                    div(ArticleSeparator.get_kwrd(value), cls="kwrd")
+                    with div(id="article"):
+                        cls.article(value)
+
+
+class ArticleSeparator:
+    sep = "\n\n"
+    @classmethod
+    def get_title(cls, value:str)->str:
+        v, *art = value.split(cls.sep)
+        return v
+    @classmethod
+    def get_intro(cls, value:str)->str:
+        _, v, *art = value.split(cls.sep)
+        return v
+    
+    @classmethod
+    def get_kwrd(cls, value:str)->str:
+        _, _, v, *art = value.split(cls.sep)
+        return v
+    
+    @classmethod
+    def get_main(cls, value:str)->str:
+        _, _, _, _, *v = value.split(cls.sep)
+        v = [x if x.startswith("<") else mistune.markdown(emoji.emojize(x)) for x in v]
+        v = cls.sep.join(v)
+        return v
