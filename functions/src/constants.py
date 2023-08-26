@@ -10,6 +10,8 @@ class ENVVAR(Enum):
     SECTION_CLS = "section"
     AD_CLS = "ad"
     ARTICLE_CLS = "article"
+    TITLE_CLS="title"
+    MAIN_CLS = "main"
     KEY = "content"
 
 class ENDPOINTS(Enum):

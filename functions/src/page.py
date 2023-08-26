@@ -48,6 +48,8 @@ class Page:
 
 class HomePage(Page):
     load_article_page = "window.location.href = '{}'"
+    update_ad = "(event)=>{document.getElementsByClassName('main')[0].textContent = event.target.getAttribute('intro')}"
+    reset_ad = "(event)=>{document.getElementsByClassName('main')[0].textContent = Lopbjörn}"
     # "loadPage('Article', '', '{}')"
     def __init__(self) -> None:
         super().__init__()
@@ -74,29 +76,29 @@ class HomePage(Page):
     def article(name=""):
         if name:
             return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value, 
-            onclick=HomePage.load_article_page.format(HomePage.clean_name(name)))
+            onclick=HomePage.load_article_page.format(HomePage.clean_name(name)),
+            onmouseover=HomePage.update_ad,
+            onmouseout=HomePage.reset_ad
+            )
         return div(id=str(uuid4()), cls=ENVVAR.ARTICLE_CLS.value,
             onclick=HomePage.load_article_page.format(HomePage.clean_name(name)))
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
-        n = 0
+        
         with doc:
             with div(id='root'):
                 with div(id="panel"):
                     for section, section_content in value.content.items():
-                        if n == 5:
-                            with cls.ad():
-                                div("Lopbjorn", cls=ENVVAR.AD_CLS.value)
-                                raw(section_content[BlogStructure.logo_key])
                         with cls.section():
-                            div(section, cls="title")
+                            div(section, cls=ENVVAR.TITLE_CLS.value)
                             raw(section_content[BlogStructure.logo_key])
-                            n+=1
                         for article in section_content[BlogStructure.article_key][0]:
                             with cls.article(article):
-                                div(article, cls="title")
-                            n+=1
+                                div(article, cls=ENVVAR.TITLE_CLS.value)
+                    with cls.ad():
+                        div(ENVVAR.TITLE.value, cls="{} {}".format(ENVVAR.MAIN_CLS.value, ENVVAR.TITLE_CLS.value))
+                        raw(section_content[BlogStructure.logo_key])
 
 class ArticlePage(Page):
     def __init__(self) -> None:

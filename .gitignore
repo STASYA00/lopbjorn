@@ -2,3 +2,4 @@ node_modules/*
 .srvr/.node_srvr/node_modules/*
 .srvr/node_modules/*
 .assets/*
+**/node_modules/*
