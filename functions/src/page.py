@@ -132,7 +132,7 @@ class ArticleSeparator:
     @classmethod
     def get_intro(cls, value:str)->str:
         _, v, *art = value.split(cls.sep)
-        return mistune.markdown(emoji.emojize(v))
+        return v
     
     @classmethod
     def get_kwrd(cls, value:str)->str:
