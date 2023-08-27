@@ -114,9 +114,9 @@ class ArticlePage(Page):
         with doc:
             with div(id='root'):
                 with div(id="article"):
-                    raw(ArticleSeparator.get_title(value), cls="maintitle")
-                    raw(ArticleSeparator.get_intro(value), cls="intro")
-                    raw(ArticleSeparator.get_kwrd(value), cls="kwrd")
+                    raw(ArticleSeparator.get_title(value))
+                    div(ArticleSeparator.get_intro(value), cls="intro")
+                    raw(ArticleSeparator.get_kwrd(value))
                     with div(id="article"):
                         cls.article(ArticleSeparator.get_main(value))
 
