@@ -122,11 +122,13 @@ class ArticlePage(Page):
 
 
 class ArticleSeparator:
-    sep = "\n\n"
+    sep = "\n\n\n"
+    joiner = "\n\n"
     @classmethod
     def get_title(cls, value:str)->str:
         v, *art = value.split(cls.sep)
         return mistune.markdown(emoji.emojize(v))
+    
     @classmethod
     def get_intro(cls, value:str)->str:
         _, v, *art = value.split(cls.sep)
@@ -140,7 +142,6 @@ class ArticleSeparator:
     @classmethod
     def get_main(cls, value:str)->str:
         _, _, _, _, *v = value.split(cls.sep)
-        
         v = [x if x.strip().startswith("<") else mistune.markdown(emoji.emojize(x)) for x in v]
-        v = cls.sep.join(v)
+        v = cls.joiner.join(v)
         return v
