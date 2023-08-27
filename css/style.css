@@ -259,3 +259,46 @@ body {
       color: red;
       z-index: 1;
   }
+
+  .tweet{
+    font-weight: bold;
+    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    row-gap: 60px;
+    background-color: var(--main-text-color);
+    color: var(--main-bg-color);
+    display: flex;
+    flex-direction: column;
+    justify-items: stretch;
+    justify-content: space-between;
+    align-items: start;
+    flex-wrap: wrap;
+}
+  
+  .kwrd{
+    display:flex;
+    column-gap: 10px;
+  }
+
+  .kwrd_tag{
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+    padding: 4px;
+    padding-right: 5px;
+    border-radius: 2px;
+  }
+
+  .content{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  pre{
+    white-space: pre-wrap;       /* css-3 */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word; 
+  }
