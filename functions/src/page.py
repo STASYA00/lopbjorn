@@ -115,9 +115,9 @@ class ArticlePage(Page):
             with div(id='root'):
                 with div(id="article"):
                     raw(ArticleSeparator.get_title(value))
-                    div(ArticleSeparator.get_intro(value), cls="intro")
+                    raw(ArticleSeparator.get_intro(value))
                     raw(ArticleSeparator.get_kwrd(value))
-                    with div(id="article"):
+                    with div(id="content"):
                         cls.article(ArticleSeparator.get_main(value))
 
 
@@ -140,11 +140,7 @@ class ArticleSeparator:
     @classmethod
     def get_main(cls, value:str)->str:
         _, _, _, _, *v = value.split(cls.sep)
-        a = [ x for x in v if not x.strip().startswith("<")]
-        print("---")
-        for b in a:
-            print(b)
-        print("---")
+        
         v = [x if x.strip().startswith("<") else mistune.markdown(emoji.emojize(x)) for x in v]
         v = cls.sep.join(v)
         return v
