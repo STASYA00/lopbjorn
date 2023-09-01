@@ -1,6 +1,5 @@
 
 from constants import ENVVAR
-from utils import get_env
 
 from google.cloud import storage
 
@@ -24,7 +23,17 @@ class BucketManager:
     def __init__(self) -> None:
         
         self._client = storage.Client()
-        self._bucket = self._client.bucket(get_env(ENVVAR.BUCKET.value))
+        self._bucket = self._client.bucket(ENVVAR.BUCKET.value)
+
+    def upload(self, blob_name:str, fname:str):
+        blob = self._bucket.blob(blob_name)
+        blob.upload_from_filename(fname)
+
+    def set_metadata(self, blob_name:str, d:dict):
+        blob = self._bucket.blob(blob_name)
+        metageneration_match_precondition = blob.metageneration
+        blob.metadata = d
+        blob.patch(if_metageneration_match=metageneration_match_precondition)
 
     @staticmethod
     def is_section(title)->bool:
