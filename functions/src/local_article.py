@@ -11,6 +11,7 @@ class KWRD(Enum):
     DESIGN = "Design"
     AUTOMATION = "Automation"
     DDD = "3D"
+    RESOURCES = "Resources"
     SPORT = "Sport"
 
     @classmethod
