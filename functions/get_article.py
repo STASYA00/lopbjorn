@@ -37,7 +37,7 @@ def get_article(request):
     article_name, status_code = get_request_input(request, ENVVAR.KEY.value)
     if status_code==HTTPStatus.OK:
         try:
-            content = BucketManager.get_article(article_name)
+            content = BucketManager.get_article("Articles/{}".format(article_name))
         
         except Exception as e:
             print(e)

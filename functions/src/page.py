@@ -5,9 +5,13 @@ import mistune
 import emoji
 
 from uuid import uuid4
+import sys
+sys.path.append("..")
+sys.path.append("../..")
 
 from functions.src.constants import ENVVAR
-from functions.src.bucket_manager import BlogStructure, BlogStructureUpd, Logo, RelevantContent
+from functions.src.bucket_manager import BlogStructure, \
+BlogStructureUpd, RelevantContent, BucketManager, Article
 
 class Page:
     def __init__(self) -> None:
@@ -49,8 +53,8 @@ class Page:
 
 class HomePage(Page):
     load_article_page = "window.location.href = '{}'"
-    update_ad = "(event)=>{document.getElementsByClassName('main')[0].textContent = event.target.getAttribute('intro')}"
-    reset_ad = "(event)=>{document.getElementsByClassName('main')[0].textContent = Lopbjörn}"
+    update_ad = "document.getElementsByClassName('main')[0].textContent = this.children[0].getAttribute('intro')"
+    reset_ad = "document.getElementsByClassName('main')[0].textContent = 'Lopbjörn'"
     # "loadPage('Article', '', '{}')"
     def __init__(self) -> None:
         super().__init__()
@@ -106,21 +110,24 @@ class HomePageNew(HomePage):
 
     @classmethod
     def body(cls, doc, value:BlogStructureUpd):
-        v = RelevantContent(value).content
+        v = RelevantContent.str_content(n)
         with doc:
             with div(id='root'):
                 with div(id="panel"):
+                    print(v.keys())
                     for kwrd, c in v.items():
-                        with cls.section():
-                            div(kwrd, cls=ENVVAR.TITLE_CLS.value)
-                            if len(c[value.__class__.logo_key] > 0):
-                                # svg
-                                raw(c[value.__class__.logo_key][0].content)
+                        if kwrd!=RelevantContent.other:
+                            with cls.section():
+                                div(kwrd, cls=ENVVAR.TITLE_CLS.value)
+                                if (len(c[value.__class__.logo_key]) > 0):
+                                    # svg
+                                    raw(list(c[value.__class__.logo_key][0].values())[0])
                         for article in c[value.__class__.article_key]:
-                            with cls.article(article.name):
-                                div(article.name, cls =ENVVAR.TITLE_CLS.value, 
-                                    Intro=article.intro, 
-                                    kwrd=",".join(article.kwrd))
+                            a = Article.from_dict(article)
+                            with cls.article(a.name):
+                                div(a.name, cls =ENVVAR.TITLE_CLS.value, 
+                                    Intro=a.intro, 
+                                    kwrd=",".join(a.kwrd))
                     with cls.ad():
                         div(ENVVAR.TITLE.value, cls="{} {}".format(ENVVAR.MAIN_CLS.value, ENVVAR.TITLE_CLS.value))
                         try:
@@ -167,3 +174,14 @@ class ArticleSeparator:
         v = [x if x.strip().startswith("<") else mistune.markdown(emoji.emojize(x)) for x in v]
         v = cls.joiner.join(v)
         return v
+    
+
+if __name__=="__main__":
+    n = BucketManager.get_structure()
+    
+    print("--------------------")
+    #print(RelevantContent.str_content(n))
+    content = HomePageNew.make(n)
+    print(content)
+
+    

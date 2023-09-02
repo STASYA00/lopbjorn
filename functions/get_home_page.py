@@ -47,6 +47,7 @@ def get_home_page(request):
     content = Request.send(ENDPOINTS.STRUCTURE, {})
     status_code = HTTPStatus.OK
     if content.status_code==status_code.value:
+        
         blog = BlogStructureUpd()
         blog.content = content.json()[ENVVAR.KEY.value]
         content = HomePageNew.make(blog)

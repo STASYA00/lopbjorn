@@ -4,13 +4,13 @@ sys.path.append("..")
 sys.path.append("../..")
 
 from functions.src.constants import ENVVAR
-from functions.src.utils import get_env, flatten
-from copy import deepcopy
+from functions.src.utils import flatten
 from enum import Enum
 
 class TagKeys(Enum):
     INTRO = "Intro"
     KWRD = "kwrd"
+    UPD = "upd"
 class Section:
     def __init__(self, name):
         self._name = name
@@ -35,9 +35,17 @@ class Section:
 class Article:
     def __init__(self, name:str, intro:str, kwrd:list[str], upd) -> None:
         self._name = name
+        if (isinstance(kwrd, str)):
+            kwrd = kwrd.split(",")
         self._kwrd = kwrd
         self._intro = intro
         self._upd = upd
+
+    @classmethod
+    def from_dict(cls, d):
+        key = list(d.keys())[0]
+        v = d[key]
+        return cls(key,v[TagKeys.INTRO.value], v[TagKeys.KWRD.value], v[TagKeys.UPD.value] )
 
     @property
     def name(self):
@@ -58,14 +66,19 @@ class Article:
     @property
     def to_dict(self):
         return {self._name: {
-            TagKeys.INTRO: self._intro,
-            TagKeys.KWRD: self._kwrd
+            TagKeys.INTRO.value: self._intro,
+            TagKeys.KWRD.value: self._kwrd,
+            TagKeys.UPD.value: self._upd
         }}
     
 class Logo:
     def __init__(self, name:str, svg:str) -> None:
         self._name:str = name
         self._content:str = svg
+
+    @classmethod
+    def from_dict(cls, d):
+        return cls(list(d.keys())[0], list(d.values())[0])
 
     @property
     def name(self):
@@ -124,6 +137,10 @@ class BlogStructureUpd(BlogStructure):
         self._content:list[Article] = []
 
     @property
+    def articles(self):
+        return self._content
+
+    @property
     def logos(self)->list[Logo]:
         return self._logos
 
@@ -133,6 +150,11 @@ class BlogStructureUpd(BlogStructure):
             BlogStructure.logo_key: [x.to_dict for x in self._logos], 
             BlogStructure.article_key: [x.to_dict for x in self._content]
                 }
+    @content.setter
+    def content(self, value:dict):
+        self._logos = [Logo.from_dict(x) for x in value[BlogStructure.logo_key]]
+        self._content = [Article.from_dict(x) for x in value[BlogStructure.article_key]]
+
     
     def add_logo(self, kwrd:str, svg:str):
         self._logos.append(Logo(kwrd, svg))
@@ -160,11 +182,18 @@ class RelevantContent:
 
     @classmethod
     def articles(cls, blog: BlogStructureUpd)->list[Article]:
-        return sorted(blog.content, key=lambda s: s.upd)[:cls.limit]
+        return sorted(blog.articles, key=lambda s: s.upd)[:cls.limit]
     
     @classmethod
     def tags(cls, blog: BlogStructureUpd)->list[str]:
         return list(set(flatten([x.kwrd for x in cls.articles(blog)])))
+    
+    @staticmethod
+    def get_logo(kwrd, logos):
+        res = [x for x in logos if kwrd.lower() in x.name.lower()]
+        if len(res) >0:
+            return [res[0]]
+        return [[x for x in logos if ENVVAR.TITLE.value.lower() in x.name.lower()][0]]
     
     @classmethod
     def content(cls, blog:BlogStructureUpd)->dict:
@@ -172,16 +201,28 @@ class RelevantContent:
         _cardinality = sorted(set(_kwrds), key=lambda s: _kwrds.count(s), 
                               reverse=True)
         _content = {k:{
-            blog.__class__.logo_key: [x for x in blog.logos if k in x.name],
+            blog.__class__.logo_key: cls.get_logo(k, blog.logos),
             blog.__class__.article_key: []} for k in _cardinality}
-        _content[cls.other] = []
+        _content[cls.other] = {blog.__class__.article_key: []}
         for a in cls.articles(blog):
+            added = False
             for k in _content.keys():
                 if k in a.kwrd:
                     _content[k][blog.__class__.article_key].append(a)
+                    added = True
                     break
-            _content[cls.other].append(a)
+            if not added:
+                _content[cls.other][blog.__class__.article_key].append(a)
         return _content
+    
+    @classmethod
+    def str_content(cls, blog:BlogStructureUpd)->dict:
+        _content = cls.content(blog)
+        print()
+
+        return {x:{
+            x1: [m.to_dict for m in y1] for x1, y1 in y.items()
+        } for x,y in _content.items()}
         
     
 
@@ -196,9 +237,9 @@ class BucketManager:
     def is_section(title)->bool:
         return title.index("/")==len(title)-1
 
-    @staticmethod
-    def is_logo(title)->bool:
-        return title.endswith(".svg")
+    @classmethod
+    def is_logo(cls, title)->bool:
+        return title.endswith(".svg") and title.startswith(cls.logos_folder)
 
     @staticmethod
     def get_section(title)->bool:
@@ -291,4 +332,7 @@ class BucketManager:
         return content
     
 if __name__=="__main__":
-    BucketManager.get_structure()
+    n = BucketManager.get_structure()
+    
+    print("--------------------")
+    print(RelevantContent.str_content(n))
