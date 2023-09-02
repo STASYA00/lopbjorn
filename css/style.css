@@ -167,7 +167,6 @@ body {
     padding-right: 20%;
     /* margin-top: 5%; */
     padding-top: 5%;
-    padding-bottom: 5%;
   }
 
   #logo {
@@ -187,6 +186,14 @@ body {
       
       font-weight: bold;
       text-transform: uppercase;
+
+      color: var(--main-text-color);
+      
+      width: 50;
+      font-size: 11;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    
   }
   .section:hover .title{
       opacity: 1;
@@ -231,8 +238,8 @@ body {
     /* grid-column: span 3;
     grid-row: auto;
     aspect-ratio: 1.5; */
-    grid-area: 2 / 4 / 3 / 7;
-    display: flex;
+    grid-area: 2 / 4 / 4 / 7;
+    display: grid;
     background-color: var(--main-bg-color);
     /* border-color: var(--main-text-color); */
     /* border-width: 25px; */
@@ -241,6 +248,10 @@ body {
     justify-content: space-evenly;
     text-align: left;
     padding: 20px;
+
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    aspect-ratio: 1.5;
   }
 
   .article:hover ~ .ad > .title{
@@ -306,3 +317,5 @@ body {
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word; 
   }
+  
+ 
