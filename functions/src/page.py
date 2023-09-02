@@ -110,7 +110,7 @@ class HomePageNew(HomePage):
 
     @classmethod
     def body(cls, doc, value:BlogStructureUpd):
-        v = RelevantContent.str_content(n)
+        v = RelevantContent.str_content(value)
         with doc:
             with div(id='root'):
                 with div(id="panel"):
