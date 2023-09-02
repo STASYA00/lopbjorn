@@ -14,6 +14,13 @@ def build_response(content, status_code:HTTPStatus= HTTPStatus.OK):
     # response.headers.add("Content-Type", "image/png") # multipart/form-data
     return response
 
+def flatten(l: list):
+    res = [x for x in l]
+    if len(res) > 0 and isinstance(res[0], list):
+        res = [item for sublist in l for item in sublist]
+        return flatten(res)
+    return res
+
 
 def get_request_input(request: Request, key="content", default=""):
     print("external IP:", requests.get('https://ident.me').content)

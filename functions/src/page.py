@@ -7,7 +7,7 @@ import emoji
 from uuid import uuid4
 
 from functions.src.constants import ENVVAR
-from functions.src.bucket_manager import BlogStructure
+from functions.src.bucket_manager import BlogStructure, BlogStructureUpd, Logo, RelevantContent
 
 class Page:
     def __init__(self) -> None:
@@ -86,7 +86,6 @@ class HomePage(Page):
 
     @classmethod
     def body(cls, doc, value:BlogStructure):
-        
         with doc:
             with div(id='root'):
                 with div(id="panel"):
@@ -100,6 +99,35 @@ class HomePage(Page):
                     with cls.ad():
                         div(ENVVAR.TITLE.value, cls="{} {}".format(ENVVAR.MAIN_CLS.value, ENVVAR.TITLE_CLS.value))
                         raw(section_content[BlogStructure.logo_key])
+
+class HomePageNew(HomePage):
+    def __init__(self) -> None:
+        super().__init__()
+
+    @classmethod
+    def body(cls, doc, value:BlogStructureUpd):
+        v = RelevantContent(value).content
+        with doc:
+            with div(id='root'):
+                with div(id="panel"):
+                    for kwrd, c in v.items():
+                        with cls.section():
+                            div(kwrd, cls=ENVVAR.TITLE_CLS.value)
+                            if len(c[value.__class__.logo_key] > 0):
+                                # svg
+                                raw(c[value.__class__.logo_key][0].content)
+                        for article in c[value.__class__.article_key]:
+                            with cls.article(article.name):
+                                div(article.name, cls =ENVVAR.TITLE_CLS.value, 
+                                    Intro=article.intro, 
+                                    kwrd=",".join(article.kwrd))
+                    with cls.ad():
+                        div(ENVVAR.TITLE.value, cls="{} {}".format(ENVVAR.MAIN_CLS.value, ENVVAR.TITLE_CLS.value))
+                        try:
+                            raw([x for x in value.logos if ENVVAR.BUCKET.value in x.name][0].content)
+                        except IndexError as e:
+                            print(e)
+                            print("lopbjorn not found in logos")
 
 class ArticlePage(Page):
     def __init__(self) -> None:
