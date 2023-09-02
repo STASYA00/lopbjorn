@@ -1,5 +1,7 @@
 from google.cloud import storage
-
+import sys
+sys.path.append("..")
+sys.path.append("../..")
 
 from functions.src.constants import ENVVAR
 from functions.src.utils import get_env, flatten
@@ -136,10 +138,15 @@ class BlogStructureUpd(BlogStructure):
         self._logos.append(Logo(kwrd, svg))
 
     @staticmethod
-    def get_article_name(self, filepath):
+    def get_article_name(filepath):
         return filepath[len(BucketManager.article_folder)+1: -(len(BucketManager.article_name) + 1)]
 
     def __call__(self, article_blob) -> None:
+        print(article_blob.name)
+        print(article_blob.metadata["Intro"])
+        print(article_blob.metadata["kwrd"])
+        print(article_blob.updated)
+        print("---")
         self._content.append(Article(self.get_article_name(article_blob.name), 
                                      article_blob.metadata["Intro"],
                                      article_blob.metadata["kwrd"],
@@ -230,8 +237,6 @@ class BucketManager:
     @classmethod
     def get_structure(cls)->BlogStructure:
         content = BlogStructureUpd()
-        current_section = ""
-
         try:
             blobs = cls._bucket.list_blobs()
         except Exception as e:
@@ -242,8 +247,10 @@ class BucketManager:
             try:
                 if cls.is_article(blob.name, 
                                   cls.article_folder):
+                    print("article:", blob.name)
                     content(blob)
                 elif cls.is_logo(blob.name):
+                    print("Logo", blob.name)
                     content.add_logo(blob.name[len(cls.logos_folder)+1:-4], 
                                      cls.get_element(blob.name))
 
@@ -282,3 +289,6 @@ class BucketManager:
                 print(e)
                 print("Failed on section {}, element {}".format(current_section, blob.name) )
         return content
+    
+if __name__=="__main__":
+    BucketManager.get_structure()
