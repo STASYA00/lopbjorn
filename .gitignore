@@ -3,5 +3,5 @@ node_modules/*
 .srvr/node_modules/*
 .assets/*
 **/node_modules/*
-# **/__pycache__/*
-# __pycache__/*
+**/__pycache__/*
+__pycache__/*
