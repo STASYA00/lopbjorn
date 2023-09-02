@@ -62,13 +62,18 @@ class HomePage(Page):
     @staticmethod
     def section(name=""):
         if name:
-            return div(name, id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value, onclick=HomePage.load_article_page.format(name))
-        return div(id=str(uuid4()), cls=ENVVAR.SECTION_CLS.value)
+            return div(name, id=str(uuid4()), 
+                       cls=ENVVAR.SECTION_CLS.value, 
+                       onclick=HomePage.load_article_page.format(name))
+        return div(id=str(uuid4()), 
+                   cls=ENVVAR.SECTION_CLS.value)
     
     @staticmethod
     def ad(name=""):
         if name:
-            return div(name, id="ad", cls=ENVVAR.AD_CLS.value)
+            return div(name,
+                       id="ad", 
+                       cls=ENVVAR.AD_CLS.value)
         return div(id="ad", cls=ENVVAR.AD_CLS.value)
     
     @staticmethod
@@ -178,9 +183,7 @@ class ArticleSeparator:
 
 if __name__=="__main__":
     n = BucketManager.get_structure()
-    
     print("--------------------")
-    #print(RelevantContent.str_content(n))
     content = HomePageNew.make(n)
     print(content)
 
