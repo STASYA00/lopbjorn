@@ -5,8 +5,8 @@ from http import HTTPStatus
 
 from functions.src.request import Request
 from functions.src.constants import ENDPOINTS
-from functions.src.page import HomePage
-from functions.src.bucket_manager import BlogStructure
+from functions.src.page import HomePage, HomePageNew
+from functions.src.bucket_manager import BlogStructureUpd
 from functions.src.utils import build_response
 from functions.src.constants import ENVVAR
 
@@ -47,9 +47,9 @@ def get_home_page(request):
     content = Request.send(ENDPOINTS.STRUCTURE, {})
     status_code = HTTPStatus.OK
     if content.status_code==status_code.value:
-        blog = BlogStructure()
+        blog = BlogStructureUpd()
         blog.content = content.json()[ENVVAR.KEY.value]
-        content = HomePage.make(blog)
+        content = HomePageNew.make(blog)
     else:
         print(content.status_code)
         print(content.text)
