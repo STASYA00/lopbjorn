@@ -132,7 +132,7 @@ body {
     border-color: var(--main-text-color);
     border-width: var(--main-stroke);
     
-    transform: rotateX(180deg);
+    /* transform: rotateX(180deg); */
   }
 
   .articletext{
@@ -265,10 +265,13 @@ body {
     font-size: 10pt;
 }
 
+.article:hover ~ .ad > #logo{
+  opacity: 0;
+}
 
   .article:hover > .title{
       opacity: 1;
-      font-size: 13pt;
+      font-size: 11pt;
   }
 
   .ad:hover .logo{
