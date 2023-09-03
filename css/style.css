@@ -34,13 +34,6 @@ body {
     unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB,
       U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
   }
-
-  img{
-    width: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    filter: contrast(0.87);
-  }
   /* img.background {
     filter: blur(35px);
   } */
@@ -139,7 +132,7 @@ body {
     border-color: var(--main-text-color);
     border-width: var(--main-stroke);
     
-    transform: rotateX(180deg);
+    /* transform: rotateX(180deg); */
   }
 
   .articletext{
@@ -272,10 +265,13 @@ body {
     font-size: 10pt;
 }
 
+.article:hover ~ .ad > #logo{
+  opacity: 0;
+}
 
   .article:hover > .title{
       opacity: 1;
-      font-size: 13pt;
+      font-size: 11pt;
   }
 
   .ad:hover .logo{
