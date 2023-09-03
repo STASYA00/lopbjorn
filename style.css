@@ -114,6 +114,7 @@ body {
   
 
   .article{
+    box-sizing: border-box;
     aspect-ratio: 1;
 
     background-color: var(--tertiary-color);
@@ -178,8 +179,8 @@ body {
 
       color: var(--main-text-color);
       
-      width: 50;
-      font-size: 11;
+      width: 90;
+      font-size: 13;
       white-space: pre-wrap;
       word-wrap: break-word;
     
@@ -256,8 +257,17 @@ body {
       font-size: 10pt;
   }
 
-  .article:hover ~ .ad > #logo{
-      opacity: 0;
+  .article:hover ~ .ad > .title{
+    opacity: 1;
+    width: 90%;
+    text-transform: initial;
+    font-size: 10pt;
+}
+
+
+  .article:hover > .title{
+      opacity: 1;
+      font-size: 13pt;
   }
 
   .ad:hover .logo{
