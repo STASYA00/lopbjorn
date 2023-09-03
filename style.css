@@ -186,6 +186,7 @@ body {
   }
   .main{
     font-size: 20pt;
+    width: fit-content;
   }
   .section:hover .title{
       opacity: 1;
@@ -230,6 +231,7 @@ body {
     /* grid-column: span 3;
     grid-row: auto;
     aspect-ratio: 1.5; */
+    box-sizing: border-box;
     grid-area: 2 / 4 / 4 / 7;
     display: grid;
     background-color: var(--main-bg-color);
@@ -237,6 +239,7 @@ body {
     /* border-width: 25px; */
     border: solid var(--main-text-color) 8px;
     color: var(--secondary-color);
+    align-items: center;
     justify-content: space-evenly;
     text-align: left;
     padding: 20px;
@@ -262,7 +265,6 @@ body {
   }
   .ad:hover .title{
       opacity: 1;
-      color: red;
       z-index: 1;
   }
 
