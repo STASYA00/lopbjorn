@@ -130,7 +130,7 @@ class HomePageNew(HomePage):
                         for article in c[value.__class__.article_key]:
                             a = Article.from_dict(article)
                             with cls.article(a.name):
-                                div(a.name, cls =ENVVAR.TITLE_CLS.value, 
+                                div(a.name.replace("_", " "), cls=ENVVAR.TITLE_CLS.value, 
                                     Intro=a.intro, 
                                     kwrd=",".join(a.kwrd))
                     with cls.ad():
