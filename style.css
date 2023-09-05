@@ -121,8 +121,9 @@ body {
     border-radius: 2px;
 
     align-items: center;
+    text-align: center;
     justify-content: center;
-    display: flex;
+    display: grid;
   }
 
   .article:hover{
@@ -165,6 +166,7 @@ body {
       display: flex;
       filter: grayscale(1);
       grid-area: 1 / 1;
+      stroke: white
   }
 
   .title{
@@ -181,7 +183,7 @@ body {
       color: var(--main-text-color);
       
       width: 90;
-      font-size: 13;
+      font-size: 1;
       white-space: pre-wrap;
       word-wrap: break-word;
     
@@ -192,12 +194,14 @@ body {
   }
   .section:hover .title{
       opacity: 1;
+      font-size: 14;
       z-index: 1;
   }
   .logo{
       /* stroke: var(--main-bg-color); */
       /* stroke-width: 5; */
-      fill: var(--main-bg-color);
+      fill: var(--main-bg-color); 
+      fill : #959595; 
   }
 
   .section:hover #logo{
@@ -211,6 +215,7 @@ body {
   .darkest{
       /* fill: var(--main-bg-color); */
       border: solid 1px var(--main-text-color);
+      fill: #363636
   }
   .grey1{
       fill: var(--secondary-color);
