@@ -11,7 +11,7 @@ sys.path.append("../..")
 
 from functions.src.constants import ENVVAR
 from functions.src.bucket_manager import BlogStructure, \
-BlogStructureUpd, RelevantContent, BucketManager, Article
+BlogStructureUpd, RelevantContent, BucketManager, Article, SectionStructure
 
 class Page:
     def __init__(self) -> None:
@@ -140,6 +140,42 @@ class HomePageNew(HomePage):
                         except IndexError as e:
                             print(e)
                             print("lopbjorn not found in logos")
+
+class SectionPage(Page):
+    def __init__(self) -> None:
+        super().__init__()
+
+    @staticmethod
+    def article(value):
+        return raw(value)
+    
+    @staticmethod
+    def other(name=""):
+        if name:
+            return div(name,
+                       id="other", 
+                       cls=ENVVAR.OTHER.value)
+        return div(id="other", cls=ENVVAR.OTHER.value)
+    
+    @classmethod
+    def body(cls, doc, value:SectionStructure):
+        v = RelevantContent.str_content(value)
+        with doc:
+            with div(id='root'):
+                with div(id="panel"):
+                    print(v.keys())
+                    div(value.name, cls=ENVVAR.SECTION_TITLE.value)
+                    for c in v.values():
+
+                        for article in c[value.__class__.article_key]:
+                            a = Article.from_dict(article)
+                            with div(cls=ENVVAR.SECTION_ARTICLE.value):
+                                div(a.name.replace("_", " "), cls=ENVVAR.SECTION_ARTICLE_TITLE.value)
+                                div(a.intro, cls=ENVVAR.SECTION_ARTICLE_TWEET.value)
+                                
+                    with cls.other():
+                        for tag in value.tags:
+                            div(tag.lower(), cls=ENVVAR.SECTION_OTHER.value)
 
 class ArticlePage(Page):
     def __init__(self) -> None:

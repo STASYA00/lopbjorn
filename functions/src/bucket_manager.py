@@ -175,6 +175,25 @@ class BlogStructureUpd(BlogStructure):
                                      article_blob.updated
                                      ))
 
+class SectionStructure(BlogStructureUpd):
+    def __init__(self, name:str) -> None:
+        self._name = name
+        self._tags = []
+        super().__init__()
+
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def tags(self):
+        return self._tags
+    
+    def from_blog_structure(self, value:BlogStructureUpd):
+        self._content = [x for x in value.content if self._name.lower() in [s.lower() for s in x.kwrd]]
+        self._tags = RelevantContent.tags(value)
+
+    
 
 class RelevantContent:
     limit = 50
@@ -218,7 +237,6 @@ class RelevantContent:
     @classmethod
     def str_content(cls, blog:BlogStructureUpd)->dict:
         _content = cls.content(blog)
-        print()
 
         return {x:{
             x1: [m.to_dict for m in y1] for x1, y1 in y.items()
@@ -297,7 +315,7 @@ class BucketManager:
 
             except Exception as e:
                 print(e)
-                print("Failed on section {}, element {}".format(current_section, blob.name) )
+                print("Failed on element {}".format(blob.name) )
         return content
     
     @classmethod

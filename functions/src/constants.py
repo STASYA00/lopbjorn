@@ -14,6 +14,15 @@ class ENVVAR(Enum):
     MAIN_CLS = "main"
     KEY = "content"
 
+    SECTION_TITLE = "section_title"
+    SECTION_ARTICLE = "section_article"
+    SECTION_ARTICLE_TITLE = "section_article_title"
+    SECTION_ARTICLE_TWEET = "section_article_tweet"
+    SECTION_OTHER = "section_other"
+    OTHER = "other"
+    
+
 class ENDPOINTS(Enum):
     STRUCTURE = "https://us-central1-website-382116.cloudfunctions.net/get_structure"
-    ARTICLE  = "https://us-central1-website-382116.cloudfunctions.net/get_article"
+    SECTION   = "https://us-central1-website-382116.cloudfunctions.net/get_section"
+    ARTICLE   = "https://us-central1-website-382116.cloudfunctions.net/get_article"
