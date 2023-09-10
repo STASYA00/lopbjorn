@@ -212,7 +212,10 @@ class RelevantContent:
         res = [x for x in logos if kwrd.lower() in x.name.lower()]
         if len(res) >0:
             return [res[0]]
-        return [[x for x in logos if ENVVAR.TITLE.value.lower() in x.name.lower()][0]]
+        res = [x for x in logos if ENVVAR.TITLE.value.lower() in x.name.lower()]
+        if len(res)>0:
+            return [res[0]]
+        return []
     
     @classmethod
     def content(cls, blog:BlogStructureUpd)->dict:
