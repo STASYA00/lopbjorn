@@ -190,7 +190,7 @@ class SectionStructure(BlogStructureUpd):
         return self._tags
     
     def from_blog_structure(self, value:BlogStructureUpd):
-        self._content = [x for x in value.content if self._name.lower() in [s.lower() for s in x.kwrd]]
+        self._content = [x for x in value.articles if self._name.lower() in [s.lower() for s in x.kwrd]]
         self._tags = RelevantContent.tags(value)
 
     
