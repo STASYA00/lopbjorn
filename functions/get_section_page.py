@@ -56,7 +56,7 @@ def get_section_page(request):
             
             if content.status_code==status_code.value:
 
-                section = SectionStructure()
+                section = SectionStructure(tag)
                 section.content = content.json()[ENVVAR.KEY.value]
                 content = SectionPage.make(section)
             else:
